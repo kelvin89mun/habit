@@ -1,0 +1,1280 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>营养好习惯</title>
+<meta name="description" content="每天打卡，和你的伙伴一起养一盆健康花。">
+<meta name="theme-color" content="#FFE3D3">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-32.png" sizes="32x32">
+<link rel="icon" href="icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-title" content="营养好习惯">
+<!--OG-->
+<script>window.APP_MODE='prod'</script>
+<style>html,body{margin:0;padding:0}</style>
+</head>
+<body>
+<title>营养好习惯</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@500;600&family=ZCOOL+KuaiLe&display=swap">
+<style>
+/* Layout: one phone column. A sunrise "health garden" with a growing plant leads; one big game-style button below it; rewards stack underneath (today's image, surprise card, partner question). 3-tab bottom bar. */
+:root{
+  --bg:#FFF4EE; --surface:#FFFFFF; --ink:#2B211D; --muted:#6F625C; --line:#F0DCD1;
+  --coral:#E2492F; --coral-deep:#AE2F1A; --coral-soft:#FFE2D8; --coral-text:#B3311B; --on-coral:#FFFFFF;
+  --leaf:#2F9A57; --leaf-dark:#1E6B3B; --leaf-soft:#DCF2E3; --on-leaf:#FFFFFF;
+  --gold:#9A6100; --gold-bright:#F5B731; --gold-soft:#FFF0C6;
+  --pot:#C9653C; --soil:#6B4430; --petal:#F06A86; --petal2:#FF9E78; --water:#3F9BDE;
+  --sky1:#FFD3BE; --sky2:#FFF4CC; --sun:#FFD25E;
+  --shadow:rgba(140,60,25,.13);
+  --f-body:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --f-fun:"ZCOOL KuaiLe","Noto Sans SC","PingFang SC",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#17110E; --surface:#231A16; --ink:#F7EDE8; --muted:#C3B1A9; --line:#3B2C26;
+  --coral:#FF7C62; --coral-deep:#B9452F; --coral-soft:#42231C; --coral-text:#FF9F8A; --on-coral:#23100B;
+  --leaf:#5CCF89; --leaf-dark:#4CC07C; --leaf-soft:#1C3527; --on-leaf:#0E2016;
+  --gold:#F4C45C; --gold-bright:#F4B733; --gold-soft:#3C2F18;
+  --pot:#B65A36; --soil:#4B3123; --petal:#FF8CA3; --petal2:#FFB08F; --water:#6BB8F0;
+  --sky1:#3B2420; --sky2:#2F2C1C; --sun:#D9A43C;
+  --shadow:rgba(0,0,0,.45); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17110E; --surface:#231A16; --ink:#F7EDE8; --muted:#C3B1A9; --line:#3B2C26;
+  --coral:#FF7C62; --coral-deep:#B9452F; --coral-soft:#42231C; --coral-text:#FF9F8A; --on-coral:#23100B;
+  --leaf:#5CCF89; --leaf-dark:#4CC07C; --leaf-soft:#1C3527; --on-leaf:#0E2016;
+  --gold:#F4C45C; --gold-bright:#F4B733; --gold-soft:#3C2F18;
+  --pot:#B65A36; --soil:#4B3123; --petal:#FF8CA3; --petal2:#FFB08F; --water:#6BB8F0;
+  --sky1:#3B2420; --sky2:#2F2C1C; --sun:#D9A43C;
+  --shadow:rgba(0,0,0,.45); color-scheme:dark}
+
+html{font-size:20px} html.fs-s{font-size:18px} html.fs-m{font-size:20px} html.fs-l{font-size:23px}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);line-height:1.7;-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+h1,h2,h3,h4,p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold-bright);outline-offset:2px}
+.wrap{max-width:520px;margin:0 auto;padding-inline:16px;padding-block:12px calc(6rem + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:16px}
+.muted{color:var(--muted)} .small{font-size:.85rem}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row-b{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{font-size:.8rem;font-weight:700;padding:2px 12px;border-radius:999px;background:var(--coral-soft);color:var(--coral-text);white-space:nowrap}
+.tag.ok{background:var(--leaf-soft);color:var(--leaf-dark)}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.hello{font-family:var(--f-fun);font-size:1.9rem;line-height:1.25;text-wrap:balance}
+.date{color:var(--muted);font-size:.9rem}
+.pts{flex:none;display:flex;align-items:center;gap:6px;background:var(--gold-soft);color:var(--gold);font-weight:900;border-radius:999px;padding:6px 14px 6px 8px;font-variant-numeric:tabular-nums}
+.pts svg{width:1.5rem;height:1.5rem}
+.pts.bump{animation:bump .6s}
+
+/* garden hero */
+.garden{position:relative;border-radius:28px;overflow:hidden;background:linear-gradient(180deg,var(--sky1),var(--sky2));padding:16px 16px 14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 22px var(--shadow)}
+.garden .sun{position:absolute;right:-70px;top:-70px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,var(--sun) 0 30%,transparent 70%);opacity:.45}
+.g-head{position:relative;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.stage{font-family:var(--f-fun);font-size:1.4rem;line-height:1.2;color:var(--leaf-dark)}
+.days{font-weight:900;font-size:2.3rem;line-height:1;color:var(--coral);font-variant-numeric:tabular-nums;white-space:nowrap}
+.days small{font-size:.85rem;font-weight:700;color:var(--muted);margin-left:4px}
+.days small:first-child{margin:0 6px 0 0}
+.plant{position:relative;height:12.5rem;display:flex;justify-content:center;align-items:flex-end}
+.plant svg{height:100%;width:auto;max-width:100%;overflow:visible}
+.plant svg.grow{transform-origin:50% 100%;animation:grow 1s cubic-bezier(.3,1.7,.5,1) .55s both}
+.plant .drop{position:absolute;left:50%;top:0;width:30px;margin-left:-15px;animation:drop .75s ease-in forwards}
+.plant .drop path{fill:var(--water)}
+.sway{animation:sway 5s ease-in-out infinite}
+.next{position:relative;display:flex;flex-direction:column;gap:6px}
+.bar{height:8px;border-radius:999px;background:var(--surface);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--leaf),var(--gold-bright));transition:width .8s}
+.week{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.week span{display:block;font-size:.72rem;color:var(--muted);line-height:1.4}
+.wk{width:100%;max-width:2rem;aspect-ratio:1;margin:0 auto;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px dashed var(--line);font-size:.85rem;font-weight:900}
+.wk.on{background:var(--leaf);border:2px solid var(--leaf);color:var(--on-leaf)}
+.wk.today{border-color:var(--coral);border-style:solid}
+
+/* plant parts */
+.p-pot{fill:var(--pot)} .p-rim{fill:var(--pot);filter:brightness(1.12)} .p-soil{fill:var(--soil)} .p-band{stroke:var(--surface);stroke-width:4;opacity:.35;fill:none}
+.p-stem{fill:none;stroke:var(--leaf-dark);stroke-width:5;stroke-linecap:round}
+.p-leaf{fill:var(--leaf)} .p-vein{fill:none;stroke:var(--leaf-dark);stroke-width:1.4;opacity:.55}
+.p-pet{fill:var(--petal)} .p-pet2{fill:var(--petal2)} .p-ctr{fill:var(--gold-bright)} .p-seed{fill:var(--soil)} .p-spark{fill:var(--gold-bright)}
+
+/* main button */
+.checkin{position:relative;width:100%;min-height:6rem;border:0;border-radius:999px;background:var(--coral);color:var(--on-coral);font-size:1.45rem;font-weight:900;line-height:1.3;box-shadow:0 7px 0 var(--coral-deep),0 14px 26px var(--shadow);display:flex;align-items:center;justify-content:center;gap:14px;padding:14px 20px;margin-bottom:6px;text-align:left}
+.checkin::after{content:"";position:absolute;inset:-7px;border-radius:inherit;border:3px solid var(--coral);opacity:0;animation:ring 2.2s ease-out infinite;pointer-events:none}
+.checkin:active{transform:translateY(6px);box-shadow:0 1px 0 var(--coral-deep),0 6px 14px var(--shadow)}
+.checkin .ic{flex:none;width:2.8rem;height:2.8rem;border-radius:50%;background:var(--on-coral);color:var(--coral);display:grid;place-items:center}
+.checkin .ic svg{width:1.3rem}
+.checkin .sub{display:block;font-size:.8rem;font-weight:500;opacity:.92}
+.checkin[disabled]{opacity:.45;cursor:not-allowed;animation:none}
+.checkin[disabled]::after{display:none}
+.done{position:relative;display:flex;flex-direction:column;gap:12px;background:var(--surface);border-radius:22px;padding:16px 18px;box-shadow:0 2px 12px var(--shadow)}
+.done-top{display:flex;align-items:center;gap:14px}
+.done-t{font-size:1.25rem;line-height:1.3}
+.done .reply{border-top:1px solid var(--line);padding-top:12px;align-items:center}
+.done .avatar{width:2.2rem;height:2.2rem;font-size:.9rem}
+.gold{color:var(--gold);font-weight:700}
+.stamp{flex:none;width:3.8rem;height:3.8rem;border-radius:50%;border:4px double var(--coral);color:var(--coral);display:grid;place-items:center;font-family:var(--f-fun);font-size:1rem;line-height:1.1;text-align:center;transform:rotate(-12deg)}
+.stamp.new{animation:stamp .55s cubic-bezier(.2,1.6,.4,1)}
+.float{position:absolute;left:50%;top:-6px;font-weight:900;font-size:1.5rem;color:var(--gold);text-shadow:0 2px 0 var(--surface);animation:floatUp 1.4s ease-out forwards;pointer-events:none;white-space:nowrap}
+.link-btn{align-self:flex-start;background:none;border:0;padding:8px 0;min-height:44px;color:var(--coral-text);font-weight:700;text-decoration:underline;text-underline-offset:4px;text-align:left}
+</style>
+<style>
+/* plant palette: flowers and pots are content colours, so only leaves, stem and shadow shift in dark mode */
+:root{--leaf-a:#2F8A55;--leaf-b:#7DCB8F;--stem:#3E7D50;--pk0:#C23A60;--pk1:#E2557A;--pk2:#F59AB0;--pk3:#FFE4EB;--cr0:#C9472A;--cr1:#E8693F;--cr2:#FAAA88;--cr3:#FFE7DC;--bl1:#3F8FD8;--bl2:#86C2F2;--bl3:#DDF0FF;
+  --pot-a:#E58C5E;--pot-b:#CC6A40;--pot-c:#A24D2B;--glz-a:#BFE3D5;--glz-b:#86C2AC;--glz-c:#5B9D87;--stamen:#B8800F;--plant-shadow:rgba(90,40,15,.16);--hi:rgba(255,255,255,.3);--pot-bloom:rgba(255,255,255,.88)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--leaf-a:#3FA56A;--leaf-b:#93DDA5;--stem:#5AA672;--plant-shadow:rgba(0,0,0,.45)}}
+:root[data-theme="dark"]{--leaf-a:#3FA56A;--leaf-b:#93DDA5;--stem:#5AA672;--plant-shadow:rgba(0,0,0,.45)}
+.p-stemf{fill:var(--stem)} .p-petiole{fill:none;stroke:var(--stem);stroke-width:1.6;stroke-linecap:round}
+.p-vein{fill:none;stroke:var(--leaf-a);stroke-width:.9;opacity:.55}
+.p-sepal{fill:var(--leaf-a)} .p-stamen{fill:var(--stamen)} .p-shadow{fill:var(--plant-shadow)}
+.p-hi{fill:none;stroke:var(--hi);stroke-width:3.5;stroke-linecap:round} .p-pblm{fill:var(--pot-bloom)} .p-shine{fill:var(--hi)}
+.p-goldline{stroke:var(--gold-bright);stroke-width:2} .p-body{fill:var(--ink)} .p-ground{fill:var(--leaf-soft)} .p-fall{fill:var(--pk2)}
+.hl{opacity:.6;animation:hlp 1.3s ease-in-out infinite alternate}
+@keyframes hlp{from{opacity:.25}to{opacity:.9}}
+.change{position:relative;align-self:center;max-width:100%;display:block;text-align:center;font-weight:700;font-size:.9rem;line-height:1.5;color:var(--leaf-dark);text-wrap:balance}
+.change.mute{color:var(--muted);font-weight:500;box-shadow:none}
+.change.new{animation:pop .6s ease-out 1.1s both}
+.change .spark{color:var(--gold-bright);font-size:1.1rem;margin-right:4px}
+/* cards */
+.card{background:var(--surface);border-radius:22px;padding:18px;box-shadow:0 2px 12px var(--shadow);display:flex;flex-direction:column;gap:12px}
+.card h3{font-size:1.15rem;line-height:1.4}
+.eyebrow{font-size:.8rem;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.btn{min-height:3rem;border-radius:999px;padding:8px 20px;border:2px solid var(--leaf);background:var(--surface);color:var(--leaf-dark);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;text-align:center}
+.btn.solid{background:var(--leaf);color:var(--on-leaf)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* morning image */
+.frame{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:4/5;width:100%;max-width:100%;background:linear-gradient(160deg,var(--sky1),var(--sky2))}
+.frame img{display:block;width:100%;height:100%;object-fit:cover;-webkit-touch-callout:default;user-select:auto}
+.frame img.reveal{animation:reveal .9s ease-out}
+.blurimg{position:absolute;inset:-30px;background-size:cover;background-position:center;filter:blur(16px) saturate(1.2)}
+.lock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:16px}
+.lock .ring{width:4.4rem;height:4.4rem;border-radius:50%;background:var(--coral);color:var(--on-coral);display:grid;place-items:center;box-shadow:0 6px 18px var(--shadow)}
+.lock .ring svg{width:2rem;height:2rem}
+.lock .pill{background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 18px;font-weight:700;box-shadow:0 4px 14px var(--shadow)}
+.loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted)}
+
+/* partner question */
+.care{border:2px solid var(--gold-bright);background:var(--gold-soft);box-shadow:none}
+.care .eyebrow{color:var(--gold)}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{min-height:3.2rem;border-radius:16px;border:2px solid var(--line);background:var(--surface);text-align:left;padding:10px 16px;font-weight:500}
+.opt:active,.opt.sel{border-color:var(--leaf);background:var(--leaf-soft)}
+.reply{display:flex;gap:10px;align-items:flex-start}
+.avatar{flex:none;width:2.6rem;height:2.6rem;border-radius:50%;background:var(--coral-soft);color:var(--coral-text);display:grid;place-items:center;font-weight:900}
+.bubble{background:var(--surface);border:2px solid var(--coral-soft);border-radius:4px 18px 18px 18px;padding:10px 14px;min-width:0}
+.bubble b{display:block;font-size:.8rem;color:var(--coral-text)}
+
+/* surprise card */
+.flip{width:100%;min-height:4.2rem;border-radius:22px;border:2px solid var(--coral-soft);background:var(--surface);color:var(--coral-text);font-size:1.1rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 2px 12px var(--shadow)}
+.flip .gift svg{width:1.6rem;height:1.6rem;display:block}
+.prize{border-radius:22px;background:var(--surface);border:2px solid var(--coral-soft);padding:16px 18px;text-align:center;animation:pop .5s ease-out}
+.prize .p-big{font-family:var(--f-fun);font-size:1.4rem;color:var(--coral-text);line-height:1.3}
+.frame.teaser{aspect-ratio:16/9}
+
+/* log page */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.cal .wd{font-size:.8rem;color:var(--muted)}
+.cal .d{aspect-ratio:1;max-width:100%;border-radius:50%;display:grid;place-items:center;font-variant-numeric:tabular-nums;font-size:.95rem}
+.cal .d.on{background:var(--leaf);color:var(--on-leaf);font-weight:700}
+.cal .d.today{box-shadow:inset 0 0 0 3px var(--coral)}
+.cal .d.pre{color:var(--line)}
+.path{display:flex;flex-direction:column}
+.stone{display:grid;grid-template-columns:3rem 1fr;gap:12px;align-items:center;position:relative;padding-bottom:14px}
+.stone:not(:last-child)::before{content:"";position:absolute;left:1.42rem;top:3rem;bottom:0;width:3px;background:var(--line)}
+.stone.got:not(:last-child)::before{background:var(--leaf)}
+.mini{width:3rem;height:3rem;border-radius:50%;background:var(--bg);border:3px solid var(--line);display:grid;place-items:center;overflow:hidden}
+.mini svg{height:2.5rem;width:auto}
+.stone.got .mini{border-color:var(--leaf);background:var(--leaf-soft)}
+.stone.next .mini{border-color:var(--gold-bright)}
+.stone.next .mini svg{opacity:.85}
+.mini.secret{font-family:var(--f-fun);font-size:1.4rem;color:var(--muted);border-style:dashed}
+.stone h4{font-size:1.05rem}
+.fsopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fsopt{min-height:5rem;border-radius:16px;border:2px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px;font-weight:700}
+.fsopt[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft);color:var(--leaf-dark)}
+.qa{display:flex;flex-direction:column;gap:10px}
+.qa div{border-bottom:1px solid var(--line);padding-bottom:8px}
+.qa div:last-child{border:0}
+
+/* feelings */
+.metric{display:flex;flex-direction:column;gap:6px}
+.faces{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.face{min-height:3.2rem;border-radius:14px;border:2px solid var(--line);background:var(--surface);font-size:1.5rem;line-height:1}
+.face[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft)}
+textarea,input[type=text]{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:10px 14px;min-height:3rem}
+textarea{min-height:5.5rem;resize:vertical}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.85rem}
+.legend span::before{content:"";display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:6px;vertical-align:middle;background:var(--c)}
+.chart{width:100%;height:auto;display:block}
+.note{font-size:.85rem;color:var(--muted);border-left:3px solid var(--line);padding-left:10px}
+
+/* nav, overlay, misc */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;z-index:5}
+nav.tabs .in{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:100%;max-width:520px}
+nav.tabs button{border:0;background:none;min-height:3.6rem;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);font-size:.9rem;font-weight:700}
+nav.tabs button svg{width:1.5rem;height:1.5rem}
+nav.tabs button[aria-current="page"]{color:var(--coral-text);background:var(--coral-soft)}
+#overlay{position:fixed;inset:0;background:rgba(20,10,6,.6);display:grid;place-items:center;padding:16px;z-index:10}
+#overlay .box{background:var(--surface);border-radius:28px;padding:24px 22px;max-width:420px;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;animation:pop .5s ease-out}
+#overlay .box svg{height:9rem;width:auto}
+#overlay .medal{font-family:var(--f-fun);font-size:2.1rem;color:var(--coral-text);line-height:1.2}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:20;width:100%;height:100%}
+details.demo{border:1px dashed var(--line);border-radius:16px;padding:8px 14px;color:var(--muted);font-size:.85rem}
+details.demo summary{cursor:pointer;min-height:44px;display:flex;align-items:center}
+footer.fine{font-size:.78rem;color:var(--muted);text-align:center;line-height:1.6}
+
+@keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+@keyframes grow{0%{transform:scale(.9)}55%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes drop{0%{transform:translateY(-30px);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translateY(7rem) scale(.6);opacity:0}}
+@keyframes ring{0%{opacity:.7;transform:scale(.97)}100%{opacity:0;transform:scale(1.07)}}
+@keyframes stamp{0%{transform:scale(2.4) rotate(-12deg);opacity:0}100%{transform:scale(1) rotate(-12deg);opacity:1}}
+@keyframes bump{40%{transform:scale(1.25)}}
+@keyframes floatUp{0%{transform:translate(-50%,0);opacity:0}15%{opacity:1}100%{transform:translate(-50%,-80px);opacity:0}}
+@keyframes pop{from{transform:scale(.85);opacity:.3}to{transform:none;opacity:1}}
+@keyframes reveal{from{filter:blur(16px);transform:scale(1.06)}to{filter:none;transform:none}}
+@keyframes glow{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+@keyframes wiggle{0%,86%,100%{transform:rotate(0)}90%{transform:rotate(-2deg)}94%{transform:rotate(2deg)}}
+@media (prefers-reduced-motion:reduce){*,*::after{animation:none!important;transition:none!important}.drop{display:none}}
+</style>
+
+<div class="wrap" id="app"></div>
+<nav class="tabs" id="nav" aria-label="主要页面"><div class="in">
+  <button data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21v-7"/><path d="M12 14c0-4 3-6 7-6 0 4-3 6-7 6zM12 12c0-3-2.5-5-6-5 0 3.5 2.5 5 6 5z"/></svg>今天</button>
+  <button data-tab="log"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8.5 15l2 2 4-4"/></svg>记录</button>
+  <button data-tab="feel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/></svg>感觉</button>
+</div></nav>
+<div id="overlay" hidden></div>
+<canvas id="fx" hidden></canvas>
+<style>
+/* Morning-garden scene: a full-width sky that follows the time of day, hills at the bottom, the plant standing on the front hill */
+:root{--blush:#FFF3EE}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--blush:#2B201E}}
+:root[data-theme="dark"]{--blush:#2B201E}
+.scene{position:relative;margin:-12px -16px 0;padding:18px 20px 16px;border-radius:0 0 34px 34px;overflow:hidden;display:flex;flex-direction:column;gap:8px;
+  background:linear-gradient(180deg,var(--s1),var(--s2) 45%,var(--s3));color:var(--si);box-shadow:0 8px 24px var(--shadow)}
+.sc-am{--s1:#FFD3BE;--s2:#FFE6CF;--s3:#F9F1DC;--h1:#CFE8C6;--h2:#AFDBA6;--si:#5A3427}
+.sc-day{--s1:#9FD3F2;--s2:#CBE8F8;--s3:#EEF7F0;--h1:#BFE3B4;--h2:#97D093;--si:#21425C}
+.sc-dusk{--s1:#F2A493;--s2:#E6A2BE;--s3:#CDB8E6;--h1:#C2C7A4;--h2:#9FBA8A;--si:#4A2537}
+.sc-night{--s1:#16203C;--s2:#26345E;--s3:#45487A;--h1:#2B4545;--h2:#34574A;--si:#F3EEF8}
+.sky,.hills{position:absolute;left:0;width:100%;pointer-events:none}
+.sky{top:0;height:17rem}
+.hills{bottom:0;height:11rem}
+.scene .dim{position:absolute;inset:0;background:rgba(8,6,16,.42);pointer-events:none;display:none}
+.scene>*:not(.sky):not(.hills):not(.dim):not(.ff){position:relative;z-index:1}
+.sc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.sc-top .date{color:inherit;opacity:.8}
+.glass{background:rgba(255,255,255,.74);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.sc-night .glass{background:rgba(22,20,40,.58);color:#F3EEF8}
+.chip{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:3px 12px;border-radius:999px;font-size:.85rem;font-weight:700;color:var(--leaf-dark)}
+.chip b{font-size:1.05rem;color:var(--coral-text)}
+.sc-night .chip{color:#9EE3B8} .sc-night .chip b{color:#FFB3A2}
+.scene .change{padding:6px 16px;border-radius:999px}
+.sc-night .change:not(.mute){color:#9EE3B8}
+.sc-prog{border-radius:18px;padding:10px 14px;display:flex;flex-direction:column;gap:6px;font-size:.85rem}
+.sc-prog .bar{background:rgba(0,0,0,.08)}
+.sc-night .sc-prog .bar{background:rgba(255,255,255,.16)}
+.cl{animation:drift 46s ease-in-out infinite alternate}
+.cl.b{animation-duration:62s;animation-direction:alternate-reverse}
+@keyframes drift{from{transform:translateX(-26px)}to{transform:translateX(26px)}}
+.star{animation:tw 3s ease-in-out infinite alternate}
+@keyframes tw{from{opacity:.25}to{opacity:1}}
+.ff{position:absolute;width:7px;height:7px;border-radius:50%;background:#FFF3A0;box-shadow:0 0 10px 4px rgba(255,236,140,.55);z-index:1;pointer-events:none;animation:ffly 6s ease-in-out infinite alternate}
+@keyframes ffly{0%{transform:translate(0,0);opacity:.2}50%{opacity:1}100%{transform:translate(18px,-26px);opacity:.35}}
+.scene.sc-mini{padding-bottom:4.6rem}
+.scene.sc-mini .hills{height:5rem}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .scene:not(.sc-night) .dim{display:block}
+  :root:not([data-theme="light"]) .scene{--si:#F6EFE9}
+  :root:not([data-theme="light"]) .scene .glass{background:rgba(22,18,30,.58);color:#F6EFE9}}
+:root[data-theme="dark"] .scene:not(.sc-night) .dim{display:block}
+:root[data-theme="dark"] .scene{--si:#F6EFE9}
+:root[data-theme="dark"] .scene .glass{background:rgba(22,18,30,.58);color:#F6EFE9}
+/* card headings with a small round icon */
+.ch{display:flex;align-items:center;gap:10px}
+.ci{flex:none;width:2rem;height:2rem;border-radius:50%;display:grid;place-items:center;background:var(--coral-soft);color:var(--coral-text)}
+.ci svg{width:1.1rem;height:1.1rem;display:block}
+.ci.g{background:var(--leaf-soft);color:var(--leaf-dark)}
+.ci.y{background:var(--gold-soft);color:var(--gold)}
+.card.blush{background:var(--blush)}
+.care .eyebrow.ch{gap:8px}
+.care .eyebrow .ci{width:1.6rem;height:1.6rem}
+@media (prefers-reduced-motion:reduce){.cl,.star,.ff{animation:none!important}}
+</style>
+<style>
+/* the pet wanders across the hill; festival things sit beside the pot */
+.pet{position:absolute;bottom:0;left:0;width:calc(min(7.6rem,39vw)*var(--ps,1));z-index:2;pointer-events:none;opacity:0}
+.pet-j.jump{animation:hop .7s ease-out .25s 2}
+@keyframes hop{0%,100%{transform:translateY(0)}45%{transform:translateY(-16px)}}
+.pet-in{transform-origin:50% 100%}
+.pet-in.mirror{transform:scaleX(-1)}
+.pet svg,.deco svg,.ball svg{width:100%;height:auto;display:block;max-width:none}
+.eyes{transform-box:fill-box;transform-origin:50% 50%;animation:blink 4.6s infinite}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+.ear{transform-box:fill-box;transform-origin:50% 100%;animation:twitch 6.5s infinite}
+@keyframes twitch{0%,86%,100%{transform:rotate(0)}89%{transform:rotate(-16deg)}92%{transform:rotate(0)}95%{transform:rotate(-9deg)}98%{transform:rotate(0)}}
+.flop{transform-box:fill-box;transform-origin:50% 0;animation:flop 5.8s infinite}
+@keyframes flop{0%,86%,100%{transform:rotate(0)}90%{transform:rotate(9deg)}94%{transform:rotate(-4deg)}97%{transform:rotate(2deg)}}
+.breath2{transform-box:fill-box;transform-origin:50% 100%;animation:breath2 3.2s ease-in-out infinite}
+@keyframes breath2{50%{transform:scaleY(1.025)}}
+.breath{transform-box:fill-box;transform-origin:50% 100%;animation:breath 2.6s ease-in-out infinite}
+@keyframes breath{50%{transform:scaleY(1.045)}}
+.ball{position:absolute;bottom:0;left:0;width:1.25rem;z-index:2;pointer-events:none}
+.deco{position:absolute;bottom:2px;left:calc(50% + 2.6rem);width:min(4.6rem,24vw);z-index:1;pointer-events:none}
+.chip.fest{color:var(--gold);margin-left:6px}
+.sc-night .chip.fest{color:#FFD98A}
+.petpick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pp{border:2px solid var(--line);background:var(--surface);border-radius:18px;padding:6px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:700}
+.pp svg{width:86%;height:auto;display:block}
+.pp[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft);color:var(--leaf-dark)}
+select{font:inherit;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:8px 12px;min-height:3rem}
+.petrow{display:flex;gap:14px;align-items:center}
+.furpick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.fp{border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:2px 2px 6px;display:flex;flex-direction:column;align-items:center;font-weight:700;font-size:.9rem;color:var(--ink);min-width:0}
+.fp svg{width:100%;height:auto;display:block}
+.fp[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft);color:var(--leaf-dark)}
+.petbox{flex:none;width:7rem;border-radius:18px;background:linear-gradient(var(--sky1),var(--sky2));padding:6px}
+.petbox svg{width:100%;height:auto;display:block}
+/* weekly message */
+.ntag{display:inline-block;flex:none;font-size:.8rem;font-weight:700;padding:1px 10px;border-radius:99px;background:var(--sky-soft,#E3F0FB);color:#2F6FA3;line-height:1.7}
+.ntag.g{background:var(--leaf-soft);color:var(--leaf-dark)}
+.ntag.gold{background:var(--gold-soft);color:var(--gold)}
+.ndot{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;background:var(--coral);margin-left:6px;vertical-align:middle}
+.ntitle2{font-weight:700;font-size:1.08rem;margin:4px 0 10px}
+#overlay .box.news{text-align:left;align-items:stretch;max-height:calc(100vh - 32px);overflow:auto}
+#overlay .box.news .ntag{align-self:flex-start}
+.ntitle{font-size:1.35rem;line-height:1.35;margin:0}
+.nimg{width:100%;border-radius:16px;max-height:38vh;object-fit:cover;display:block}
+.nbody{white-space:pre-line;font-size:1.05rem;margin:0}
+.nlist{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.nitem{display:flex;gap:10px;align-items:center;text-align:left;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 12px;font:inherit;color:var(--ink);min-height:3.2rem}
+.nitem .nt{font-weight:700;min-width:0}
+/* stage 2-3 surprise cards and the before-and-after card */
+.prize .ntag{margin-bottom:6px}
+.p-fact{font-size:1.12rem;font-weight:700;margin:4px 0 6px;line-height:1.55}
+.qopts{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.qopts .opt{width:100%;text-align:center}
+.chg{display:grid;grid-template-columns:3.2em 1fr auto;gap:10px;align-items:center;margin-top:10px}
+.chg-l{font-weight:700}
+.chg-bars{display:flex;flex-direction:column;gap:4px}
+.chg-bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+.chg-bar i{display:block;height:100%;border-radius:99px;background:#F6C7B6}
+.chg-bar.now i{background:var(--coral)}
+.chg-t{font-size:.9rem;color:var(--muted,#7a6a62)}
+.chg-t.up{color:var(--leaf-dark)}
+.ov-pics{display:flex;justify-content:center;align-items:flex-end;gap:6px}
+#overlay .box .ov-pics svg{height:7rem;width:auto}
+#overlay .box .ov-pics svg:last-child{height:5.4rem}
+@media (prefers-reduced-motion:reduce){.pet-j.jump,.breath,.breath2,.eyes,.ear,.flop{animation:none!important}}
+</style>
+<script>
+/* demo: the claude.ai preview, or ?demo on the real site (kept apart from real data) */
+const DEMO=window.APP_MODE==='demo'||/[?&]demo\b/.test(location.search);
+const KEY='yyhabit_v2'+(DEMO&&window.APP_MODE!=='demo'?'_demo':'');
+const MILES=[
+  {id:'m1',n:1,name:'启程',stage:'发芽',gift:'电子贺卡 + 伙伴语音祝福'},
+  {id:'m7',n:7,name:'第一周',stage:'长高一大截',gift:'好习惯勋章 + 团队群表扬'},
+  {id:'m21',n:18,name:'21 天',stage:'长出新枝',gift:'分格营养盒'},
+  {id:'m30',n:25,name:'第一个月',stage:'结出花苞',gift:'精美保温杯'},
+  {id:'m66',n:55,name:'66 天 习惯养成',stage:'开花',gift:'营养品大礼'},
+  {id:'m90',n:75,name:'90 天 毕业',stage:'开满枝头',gift:'毕业证书 + 营养品'}
+];
+const STAGES=[[0,'一颗种子'],[1,'发芽了'],[7,'小苗长高了'],[18,'长出新枝'],[25,'结出花苞'],[55,'开花了'],[75,'花开满枝']];
+const TIPS=['每天喝够水，小口慢慢喝，身体更舒服。','饭后散步十五分钟，消化好，心情也好。','早一点睡，睡前少看手机。','每一餐有一半是蔬菜，颜色越多越好。','早上晒晒太阳，十多分钟就够了。','打个电话给老朋友，聊聊天，笑一笑。','营养跟着三餐一起吃，比较不容易忘记。','口渴就喝白开水，少喝甜饮料。','坐久了站起来，伸伸腰，动一动。','慢慢吸气，慢慢吐气，做三次深呼吸。','吃饭细嚼慢咽，七分饱刚刚好。','今天给自己一点时间，做喜欢的事。','照顾好自己，才能照顾好家人。','坚持一点点，每天都在变好。'];
+const BLESS=['愿你今天平安喜乐','家和万事兴，身体最要紧','笑口常开，好运自然来','福气满满，心情美美','天天开心，事事顺心','今天的你，又多爱了自己一点'];
+const REPLIES=['{n}，今天也棒棒的 ❤️','收到你的打卡啦，继续加油！','{n}好有恒心，我为你骄傲 👍','记得多喝水哦，明天见！','看到你天天打卡，我很开心 🌸'];
+const THEMES=[
+  {bg:'#E4EADF',deep:'#CEDBC6',ink:'#2E4233',acc:'#5C8364',pet:'#FAFCF7'},
+  {bg:'#F6E6E0',deep:'#EED0C6',ink:'#58342B',acc:'#C0705C',pet:'#FFF8F5'},
+  {bg:'#F3EBDD',deep:'#E8D7BA',ink:'#4A3A25',acc:'#AE8446',pet:'#FFFCF4'},
+  {bg:'#E3EAF0',deep:'#CBD8E4',ink:'#2A3D50',acc:'#6686A4',pet:'#F8FBFD'},
+  {bg:'#ECE6F1',deep:'#DACEE7',ink:'#3E3355',acc:'#8A73AA',pet:'#FCFAFF'},
+  {bg:'#F9E8DA',deep:'#F2CFB3',ink:'#56351E',acc:'#CD8350',pet:'#FFF9F3'}
+];
+const CARE={
+  1:{t:'第 1 天 · 伙伴关心',q:'营养开始吃了吗？你打算每天什么时候吃？',o:['早餐后吃','午餐后吃','晚餐后吃','还没开始吃'],
+     r:a=>a==='还没开始吃'?'没关系，{p} 会联系你，帮你安排好。':'好的！以后每天'+a.replace('吃','')+'，打开这里点一下就好。'},
+  3:{t:'第 3 天 · 伙伴关心',q:'吃了三天，身体感觉怎样？',o:['精神好像好一点','还没有什么感觉','肠胃有一点不习惯','有问题想问伙伴'],
+     r:a=>({'精神好像好一点':'太好了，继续保持！','还没有什么感觉':'很正常，营养需要时间，坚持就对了。'})[a]||'点下面的按钮告诉 {p}，很快就会联系你。'},
+  7:{t:'第 7 天 · 伙伴关心',q:'一个星期了！你每天都记得吃吗？',o:['每天都记得','偶尔会忘记','常常忘记'],
+     r:a=>({'每天都记得':'好厉害！习惯已经在慢慢养成了。','偶尔会忘记':'小方法：把营养放在早餐桌上，看到就会记得。'})[a]||'{p} 会跟你一起想办法，比如设个闹钟。'},
+  14:{t:'第 14 天 · 伙伴关心',q:'两个星期了，和第一天比较，精神、睡眠、肠胃有没有不一样？',o:['去记录我的感觉','等一下再说'],
+     r:a=>a==='去记录我的感觉'?'好的，记录完 {p} 也会看到。':'好的，有空再记录。'},
+  21:{t:'第 21 天 · 伙伴关心',q:'身边有没有朋友，也想一起照顾身体？',o:['有，请伙伴联系她','暂时没有'],
+     r:a=>a==='暂时没有'?'没关系，你照顾好自己最重要。':'谢谢你！{p} 会先问过你，再联系她。'},
+  28:{t:'第 28 天 · 伙伴关心',q:'你的营养还剩多少？',o:['还有很多','剩一个星期左右','已经吃完了'],
+     r:a=>a==='还有很多'?'好的，继续每天吃。':'{p} 会联系你安排补货，不用中断。'},
+  45:{t:'第 45 天 · 伙伴关心',q:'一个半月了，你觉得哪方面改变最多？',o:['精神','睡眠','肠胃','还在观察'],
+     r:a=>a==='还在观察'?'每个人的身体不一样，继续记录，慢慢就会看到。':'谢谢你告诉我们！{p} 知道了一定很开心。'},
+  60:{t:'第 60 天 · 伙伴关心',q:'两个月了！想不想请伙伴帮你看看这两个月的变化？',o:['好，请伙伴联系我','暂时不用'],
+     r:a=>a==='暂时不用'?'好的，有需要随时找 {p}。':'好的，{p} 会联系你，一起看看你的记录。'},
+  90:{t:'第 90 天 · 伙伴关心',q:'90 天到了！接下来你想怎样继续照顾自己？',o:['继续每天打卡','想请伙伴给我建议'],
+     r:a=>a==='继续每天打卡'?'太好了，我们继续一起加油！':'好的，{p} 会联系你，给你一些建议。'}
+};
+const COIN=`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" style="fill:var(--gold-bright)"/><circle cx="12" cy="12" r="7" style="fill:none;stroke:var(--gold);stroke-width:1.6"/><path d="M12 8.6v6.8M9.4 12h5.2" style="fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round"/></svg>`;
+const DROP=`<svg viewBox="0 0 24 32" aria-hidden="true"><path d="M12 1S2 13.5 2 20.5a10 10 0 0 0 20 0C22 13.5 12 1 12 1z" style="fill:currentColor"/></svg>`;
+const LOCK=`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10.5" rx="3" style="fill:currentColor"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" style="fill:none;stroke:currentColor;stroke-width:2.4"/></svg>`;
+
+let S, tab='today', justChecked=false, draft={e:0,s:0,g:0}, draftName='', draftAnchor='', draftOk=false, draftPet='cat', draftFur='', draftPetName='招财', draftBM='', draftBD='';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const pd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)};
+const add=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return ymd(d)};
+const diff=(a,b)=>Math.round((pd(b)-pd(a))/864e5);
+const hash=s=>{let x=7;for(const c of s)x=(x*31+c.charCodeAt(0))>>>0;return x};
+const today=()=>add(ymd(new Date()),S.offset||0);
+const dayNum=()=>diff(S.start,today())+1;
+const count=()=>Object.keys(S.checks).length;
+const fill=s=>s.replace(/\{n\}/g,S.name).replace(/\{p\}/g,S.partner);
+const nextMile=()=>MILES.find(m=>count()<m.n);
+const stageName=n=>[...STAGES].reverse().find(s=>n>=s[0])[1];
+let demoP='';
+function period(){if(demoP)return demoP;const h=new Date().getHours();return h>=5&&h<11?'am':h>=11&&h<17?'day':h>=17&&h<19?'dusk':'night'}
+function greetWord(){const p=period(),h=new Date().getHours();return p==='am'?'早安':p==='day'?(demoP||h<14?'午安':'下午好'):'晚上好'}
+function imgWord(){const p=period();return p==='am'?'早安':p==='day'?'午安':'晚安'}
+function dateLine(){const d=pd(today());return (d.getMonth()+1)+'月'+d.getDate()+'日 星期'+'日一二三四五六'[d.getDay()]}
+
+function seed(){
+  const t=ymd(new Date()),start=add(t,-6),checks={};
+  for(let i=0;i<6;i++)checks[add(start,i)]=1;
+  return {sample:true,seen:[],pet:'cat',fur:'orange',petName:'招财',bday:'',onboarded:true,name:'陈姐',partner:PI.name||'Kelvin',anchor:'早餐后',start,checks,offset:0,points:85,
+    answers:{1:{a:'早餐后吃',d:start},3:{a:'精神好像好一点',d:add(start,2)}},
+    feel:[{d:start,day:1,e:2,s:2,g:3}],questions:[],gifts:{m1:start},flips:{},fs:'m'};
+}
+function fresh(){return {sample:false,seen:[],pet:'cat',fur:'',petName:'招财',bday:'',onboarded:false,name:'',partner:PI.name||'Kelvin',anchor:'',start:ymd(new Date()),checks:{},offset:0,points:0,answers:{},feel:[],questions:[],gifts:{},flips:{},fs:'m'}}
+function load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+/* answers that need the partner to act */
+const NEED={1:['还没开始吃'],3:['肠胃有一点不习惯','有问题想问伙伴'],7:['常常忘记'],21:['有，请伙伴联系她'],28:['剩一个星期左右','已经吃完了'],60:['好，请伙伴联系我'],90:['想请伙伴给我建议']};
+/* stage 2-3 surprise cards: everyday facts and small quizzes (no health claims) */
+const FACTS=["一个盘子分四份：一半蔬菜水果，四分之一蛋白质，四分之一五谷。", "蔬菜的颜色越多，得到的营养种类也越多。", "口渴才喝水已经有点迟了，白天要常常喝几口。", "早上晒十多分钟太阳，帮助身体分清白天和晚上。", "饭后散步十五分钟，比坐着休息更舒服。", "坐了一个小时，就站起来走动两三分钟。", "吃饭细嚼慢咽，七分饱刚刚好。", "甜饮料里的糖很多，口渴时白开水最好。", "少淋一点酱料和汤汁，盐就会吃得少一点。", "糙米、燕麦这些全谷类，比白米、白面包更耐饱。", "水果当点心比饼干好，一次一份就够。", "鸡蛋、鱼、豆腐、鸡肉，都是很好的蛋白质。", "睡前一小时放下手机，比较容易睡着。", "每天差不多同一个时间睡、同一个时间起，身体会更有规律。", "慢慢吸气、慢慢吐气，做三次深呼吸，心情会平静一点。", "和家人一起吃饭，常常会吃得更慢、更开心。", "营养是每天的事，天天吃一点，比偶尔吃很多更好。", "坚果很好，但一小把就够了。", "买包装食物时看一看成分表，排在前面的成分最多。", "笑一笑、和朋友聊聊天，也是照顾身体的一部分。", "爬楼梯、做家务，都是很好的活动。", "天气热的时候，记得多补充水分。", "煮菜多用蒸、煮、炒，少用油炸。", "晚餐吃早一点、清淡一点，睡得比较舒服。", "久坐以后伸伸腿、转转肩，身体会轻松很多。", "一天两份水果、三份蔬菜，是很好的目标。", "豆类和豆腐，是来自植物的好蛋白质。", "早餐吃得好，上午比较有精神。", "香肠、火腿少吃，新鲜的肉比较好。", "照顾好自己，才能照顾好家人。"];
+const QUIZ=[{"q": "吃饭时，盘子里哪一样最好占一半？", "o": ["蔬菜和水果", "白饭", "肉"], "a": 0, "w": "一半蔬菜水果，四分之一蛋白质，四分之一五谷。"}, {"q": "什么时候喝水最好？", "o": ["口渴了才喝", "白天常常喝几口"], "a": 1, "w": "口渴才喝已经有点迟了，常常喝几口最好。"}, {"q": "口渴的时候，喝哪一种最好？", "o": ["白开水", "汽水", "奶茶"], "a": 0, "w": "白开水没有糖，最适合解渴。"}, {"q": "睡前一小时，做什么比较容易睡着？", "o": ["继续看手机", "放下手机，把灯调暗"], "a": 1, "w": "手机的光会让脑袋以为还是白天。"}, {"q": "吃完饭，做什么比较舒服？", "o": ["马上躺下", "慢慢散步十五分钟"], "a": 1, "w": "饭后轻松走一走，肚子比较舒服。"}, {"q": "坐了一个小时，最好怎样？", "o": ["继续坐着", "站起来走动一下"], "a": 1, "w": "每坐一个小时，就起来动两三分钟。"}, {"q": "下面哪一样是好的蛋白质？", "o": ["鸡蛋", "薯片", "饼干"], "a": 0, "w": "鸡蛋、鱼、豆腐、鸡肉都是好的蛋白质。"}, {"q": "营养怎么吃比较好？", "o": ["想起来才吃很多", "每天固定时间吃"], "a": 1, "w": "天天吃一点，比偶尔吃很多更好。"}, {"q": "煮菜用哪一种方法比较健康？", "o": ["油炸", "蒸或煮"], "a": 1, "w": "蒸、煮、炒用的油比较少。"}, {"q": "哪一样比较耐饱？", "o": ["燕麦", "白面包"], "a": 0, "w": "全谷类的纤维多，比较耐饱。"}, {"q": "吃饭吃到几分饱刚刚好？", "o": ["七分饱", "十分饱"], "a": 0, "w": "七分饱，身体比较轻松。"}, {"q": "早上晒太阳，多久就够？", "o": ["十多分钟", "一整个早上"], "a": 0, "w": "十多分钟就够了，记得避开正午的大太阳。"}];
+
+/* each partner shares the same link with their own WhatsApp number at the end: …#60123456789-Kelvin */
+const PI=(()=>{const m=(location.hash||'').slice(1).match(/^(\d{8,15})(?:-([A-Za-z][A-Za-z0-9._~]{0,19}))?$/);return m?{phone:m[1],name:m[2]||''}:{phone:'',name:''}})();
+const waLink=t=>`https://wa.me/${PI.phone||(S&&S.pphone)||''}?text=${encodeURIComponent(t)}`;
+const askText=q=>`${S.partner} 你好，我是${S.name}（营养打卡第 ${dayNum()} 天）。我想问：${q}`;
+
+/* ---------- growth plan: one visible change per check-in, a bigger change on gift days ---------- */
+const f1=v=>Math.round(v*10)/10;
+function grow(n){
+  const P={cot:false,main:0,big:false,branches:false,bl:0,buds:[],pot:0,bf:0,glow:false,ground:0,today:[],label:''};
+  for(let d=1;d<=n;d++){
+    let T=[],L='';
+    if(d===1){P.cot=true;T=['cot'];L='种子发芽了，长出两片小嫩叶'}
+    else if(d<=6||(d>=8&&d<=17)){P.main++;T=['m'+(P.main-1)];L=`长出第 ${P.main} 片叶子`}
+    else if(d===7){P.main+=2;P.big=true;P.bf=1;T=['m'+(P.main-2),'m'+(P.main-1),'bf0'];L='一下子长高了，叶子变大，还飞来一只蝴蝶'}
+    else if(d===18){P.branches=true;P.bl=4;T=['b0','b1','b2','b3'];L='长出两根新枝，多了 4 片叶子'}
+    else if(d<=24){P.bl++;T=['b'+(P.bl-1)];L=`长出第 ${P.main+P.bl} 片叶子`}
+    else if(d===25){P.pot=1;[0,1,2].forEach(s=>P.buds.push({s,st:0}));T=['k0','k1','k2','pot'];L='结出第一批花苞，还换上了新花盆'}
+    else if(d<=54){
+      if((d-26)%2===0){const s=P.buds.length;P.buds.push({s,st:0});T=['k'+s];L=`又多了一个花苞，现在有 ${P.buds.length} 个`}
+      else{const b=P.buds.find(b=>b.st===0);b.st=1;T=['k'+b.s];L='一个花苞变红了，快要开了'}
+    }
+    else if(d===55){P.buds.forEach(b=>b.st=2);P.bf=2;T=['allk','bf1'];L=`花开了！一下子开了 ${P.buds.length} 朵`}
+    else if(d<=73){const b=P.buds.find(b=>b.st===2&&b.s)||P.buds.find(b=>b.st===2);if(b){b.st=3;T=['k'+b.s]}L='一朵花开得更大、更漂亮了'}
+    else if(d===74){P.buds[0].st=4;T=['k0'];L='最顶上的花，开成了最大的一朵'}
+    else if(d===75){P.glow=true;P.bf=3;T=['glow','bf2'];L='花开满枝，好习惯养成了！'}
+    else if(P.ground<15){P.ground++;T=['g'+(P.ground-1)];L=`花盆旁边开出一朵小花（第 ${P.ground} 朵）`}
+    else L='今天的花园，也开得很美';
+    if(d===n){P.today=T;P.label=L}
+  }
+  return P;
+}
+
+/* ---------- plant drawing ---------- */
+const NODE=17;
+const BSLOT=[0,0,0,['m',7,1],['L',.7],['R',.7],['m',6,-1],['L',.5],['R',.5],['m',5,1],['L',.3],['R',.3],['m',4,-1],['m',7,-1],['m',6,1],['m',5,-1],['m',4,1],['m',3,-1]];
+const BLEAF=[['L',.42,1],['R',.42,-1],['L',.72,-1],['R',.72,1],['L',.22,-1],['R',.22,1],['L',.57,1],['R',.57,-1],['L',.88,1],['R',.88,-1]];
+const GROUND=[[30,252],[170,252],[16,257],[184,257],[44,256],[156,256],[22,246],[178,246],[38,245],[162,245],[9,250],[191,250],[50,249],[150,249],[30,259]];
+const qp=(p,t)=>[(1-t)*(1-t)*p[0]+2*t*(1-t)*p[2]+t*t*p[4],(1-t)*(1-t)*p[1]+2*t*(1-t)*p[3]+t*t*p[5]];
+const qa=(p,t)=>Math.atan2(2*(1-t)*(p[3]-p[1])+2*t*(p[5]-p[3]),2*(1-t)*(p[2]-p[0])+2*t*(p[4]-p[2]))*180/Math.PI;
+const plantH=P=>P.cot?16+P.main*8.5+(P.big?6:0):0;
+const vbY0=P=>Math.max(0,Math.min(104,Math.round(196-plantH(P)-46)));
+const pt2=p=>f1(p[0])+' '+f1(p[1]);
+
+function taper(pts,w0,w1){
+  const L=[],R=[],n=pts.length;
+  for(let i=0;i<n;i++){const a=pts[Math.max(0,i-1)],b=pts[Math.min(n-1,i+1)];let dx=b[0]-a[0],dy=b[1]-a[1];const d=Math.hypot(dx,dy)||1;dx/=d;dy/=d;
+    const w=(w0+(w1-w0)*i/(n-1))/2;L.push([pts[i][0]-dy*w,pts[i][1]+dx*w]);R.push([pts[i][0]+dy*w,pts[i][1]-dx*w])}
+  return 'M'+L.map(pt2).join('L')+'L'+R.reverse().map(pt2).join('L')+'Z';
+}
+function defs(u){
+  const st=(o,v,a)=>`<stop offset="${o}" style="stop-color:var(${v})${a!=null?';stop-opacity:'+a:''}"/>`;
+  const rad=(id,a,b,c)=>`<radialGradient id="${u+id}" cx=".5" cy="1" r="1.1">${st(0,a)}${st(.55,b)}${st(1,c)}</radialGradient>`;
+  return `<defs><linearGradient id="${u}lf">${st(0,'--leaf-a')}${st(1,'--leaf-b')}</linearGradient>`+
+    rad('pa','--pk1','--pk2','--pk3')+rad('pa2','--pk0','--pk1','--pk2')+rad('pb','--cr1','--cr2','--cr3')+rad('pb2','--cr0','--cr1','--cr2')+rad('pw','--bl1','--bl2','--bl3')+
+    `<linearGradient id="${u}bg" x1="0" y1="1" x2="0" y2="0">${st(0,'--leaf-a')}${st(1,'--leaf-b')}</linearGradient>`+
+    `<linearGradient id="${u}bp" x1="0" y1="1" x2="0" y2="0">${st(0,'--leaf-b')}${st(.45,'--pk2')}${st(1,'--pk1')}</linearGradient>`+
+    `<linearGradient id="${u}pt">${st(0,'--pot-a')}${st(.5,'--pot-b')}${st(1,'--pot-c')}</linearGradient>`+
+    `<linearGradient id="${u}pg">${st(0,'--glz-a')}${st(.5,'--glz-b')}${st(1,'--glz-c')}</linearGradient>`+
+    `<radialGradient id="${u}hl">${st(0,'--gold-bright',.85)}${st(1,'--gold-bright',0)}</radialGradient></defs>`;
+}
+function leaf(x,y,s,ang,u){
+  return `<g transform="translate(${f1(x)} ${f1(y)}) rotate(${f1(ang)})"><path class="p-petiole" d="M0 0L${f1(s*.2)} 0"/><path fill="url(#${u}lf)" d="M${f1(s*.16)} 0C${f1(s*.34)} ${f1(-s*.44)} ${f1(s*.86)} ${f1(-s*.46)} ${f1(s*1.16)} ${f1(-s*.05)}C${f1(s*.88)} ${f1(s*.3)} ${f1(s*.4)} ${f1(s*.36)} ${f1(s*.16)} 0Z"/><path class="p-vein" d="M${f1(s*.18)} 0Q${f1(s*.62)} ${f1(-s*.07)} ${f1(s*1.1)} ${f1(-s*.05)}"/></g>`;
+}
+function cot(x,y,s,ang,u){return `<g transform="translate(${f1(x)} ${f1(y)}) rotate(${ang})"><path fill="url(#${u}lf)" d="M0 0C${f1(s*.2)} ${f1(-s*.7)} ${f1(s*1.15)} ${f1(-s*.68)} ${f1(s*1.15)} 0C${f1(s*1.1)} ${f1(s*.5)} ${f1(s*.3)} ${f1(s*.48)} 0 0Z"/></g>`}
+function bud(x,y,pink,u){
+  const h=pink?11:9,w=pink?5.6:4.6;
+  return `<g transform="translate(${f1(x)} ${f1(y)})"><path fill="url(#${u}${pink?'bp':'bg'})" d="M0 ${-h}C${w} ${-h*.62} ${w} 1 0 2C${-w} 1 ${-w} ${-h*.62} 0 ${-h}Z"/><path class="p-sepal" d="M-5 2Q-4.5-3-1.5-5Q-1 0 0 2Q1 0 1.5-5Q4.5-3 5 2Q0 4.5-5 2Z"/></g>`;
+}
+function petal(len,w,rot,g){return `<path transform="rotate(${f1(rot)})" fill="url(#${g})" d="M0 0C${f1(-w)} ${f1(-len*.28)} ${f1(-w*1.05)} ${f1(-len*.86)} ${f1(-w*.42)} ${f1(-len)}Q0 ${f1(-len*.88)} ${f1(w*.42)} ${f1(-len)}C${f1(w*1.05)} ${f1(-len*.86)} ${f1(w)} ${f1(-len*.28)} 0 0Z"/>`}
+function flower(x,y,r,lv,alt,u){
+  const G=u+(alt?'pb':'pa'),G2=u+(alt?'pb2':'pa2');let s=`<g transform="translate(${f1(x)} ${f1(y)})">`;
+  const ring=(k,len,w,off,g)=>{for(let i=0;i<k;i++)s+=petal(len,w,i*360/k+off,g)};
+  if(lv>=3){ring(8,r,r*.5,0,G);ring(6,r*.76,r*.5,22,G2);ring(5,r*.52,r*.42,8,G2)}
+  else if(lv>=2){ring(6,r,r*.58,0,G);ring(5,r*.62,r*.48,36,G2)}
+  else ring(5,r,r*.62,0,G);
+  const c=r*(lv>=3?.2:.24);s+=`<circle class="p-ctr" r="${f1(c)}"/>`;
+  for(let i=0;i<7;i++){const a=i*2*Math.PI/7;s+=`<circle class="p-stamen" cx="${f1(Math.cos(a)*c*1.3)}" cy="${f1(Math.sin(a)*c*1.3)}" r="${f1(Math.max(.6,c*.24))}"/>`}
+  return s+'</g>';
+}
+function bfly(x,y,i,still,u){
+  const f=`url(#${u}${['pa','pw','pb'][i%3]})`,d=(.42+i*.07).toFixed(2);
+  const flap=still?'':`<animateTransform attributeName="transform" type="scale" values="1 1;.3 1;1 1" dur="${d}s" repeatCount="indefinite"/>`;
+  const hov=still?'':`<animateTransform attributeName="transform" type="translate" values="0 0;${i%2?-7:7} -6;0 0" dur="${3+i}s" repeatCount="indefinite"/>`;
+  return `<g transform="translate(${x} ${y})"><g>${hov}<g>${flap}<path fill="${f}" d="M0 0C-6-11-15-12-14-3C-13 2-6 3 0 0Z"/><path fill="${f}" d="M0 0C6-11 15-12 14-3C13 2 6 3 0 0Z"/><path fill="${f}" opacity=".8" d="M0 0C-5 3-10 10-6 11C-3 12-1 5 0 0Z"/><path fill="${f}" opacity=".8" d="M0 0C5 3 10 10 6 11C3 12 1 5 0 0Z"/><circle class="p-pblm" cx="-9" cy="-5" r="1.4"/><circle class="p-pblm" cx="9" cy="-5" r="1.4"/></g><ellipse class="p-body" cx="0" cy="1" rx="1.3" ry="5.5"/></g></g>`;
+}
+function potBloom(x,y){let s='';for(let i=0;i<5;i++){const a=i*Math.PI*.4-Math.PI/2;s+=`<circle class="p-pblm" cx="${f1(x+Math.cos(a)*2.3)}" cy="${f1(y+Math.sin(a)*2.3)}" r="1.7"/>`}return s+`<circle class="p-ctr" cx="${x}" cy="${y}" r="1"/>`}
+
+let UID=0;
+function plantSVG(n,o={}){
+  const P=grow(n),HL=new Set(o.hl?P.today:[]),has=k=>HL.has(k),still=calm(),u='g'+(++UID)+'_';
+  const H=plantH(P),top=196-H,SW=22,y0=vbY0(P);
+  const sx=t=>100+3*t*(1-t)*(1-2*t)*SW,xs=y=>sx((196-y)/(H||1));
+  const glow=(x,y,r)=>`<circle class="hl" fill="url(#${u}hl)" cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}"/>`;
+  let g='',hl='',lv='',tp='',back='',front='';const BR={};
+  if(P.cot){
+    const pts=[];for(let i=0;i<=14;i++){const t=i/14;pts.push([sx(t),196-H*t])}
+    g+=`<path class="p-stemf" d="${taper(pts,5.6,1.8)}"/>`;
+    if(P.branches){
+      BR.L=[xs(136),136,52,128,40,72];BR.R=[xs(116),116,152,110,162,58];
+      for(const k of ['L','R']){const q=[];for(let i=0;i<=10;i++)q.push(qp(BR[k],i/10));g+=`<path class="p-stemf" d="${taper(q,3.6,1.4)}"/>`}
+    }
+    if(!P.branches){const s=P.big?12:10;lv+=cot(100,186,s,-16,u)+cot(100,186,s,196,u);if(has('cot'))hl+=glow(100,182,18)}
+    for(let i=0;i<P.main;i++){
+      const k=i>>1,side=i%2?-1:1,y=196-(18+k*NODE),x=xs(y),age=P.main-1-i;
+      const s=(P.big?22:16)*(1-.22*k/8)*Math.min(1,.6+.2*age),ang=side>0?-16-16*k/8:196+16*k/8;
+      lv+=leaf(x,y,s,ang,u);
+      if(has('m'+i)){const a=ang*Math.PI/180;hl+=glow(x+Math.cos(a)*s*.7,y+Math.sin(a)*s*.7,s*.85)}
+    }
+    for(let j=0;j<P.bl;j++){
+      const[k,t,sd]=BLEAF[j],p=BR[k],[x,y]=qp(p,t),ang=qa(p,t)+sd*55,age=P.bl-1-j,s=19*(1-.2*t)*Math.min(1,.6+.2*age);
+      lv+=leaf(x,y,s,ang,u);
+      if(has('b'+j)){const a=ang*Math.PI/180;hl+=glow(x+Math.cos(a)*s*.7,y+Math.sin(a)*s*.7,s*.85)}
+    }
+    for(const b of P.buds){
+      let x,y,ax,ay;
+      if(b.s===0){ax=sx(1);ay=top;x=ax;y=top-7}
+      else if(b.s<3){const p=BR[b.s===1?'L':'R'];ax=p[4];ay=p[5];x=ax+(b.s===1?-4:4);y=ay-8}
+      else{const sp=BSLOT[b.s];
+        if(sp[0]==='m'){ay=196-(18+sp[1]*NODE)-3;ax=xs(ay);x=ax+sp[2]*13;y=ay-10}
+        else{[ax,ay]=qp(BR[sp[0]],sp[1]);x=ax+(sp[0]==='L'?-2:2);y=ay-12}}
+      tp+=`<path class="p-petiole" d="M${f1(ax)} ${f1(ay)}Q${f1((ax+x)/2)} ${f1(y+2)} ${f1(x)} ${f1(y+2)}"/>`;
+      tp+=b.st<2?bud(x,y,b.st===1,u):flower(x,y,b.st===4?18:b.st===3?11:8.5,b.st-1,b.s%2,u);
+      if(has('k'+b.s)||has('allk'))hl+=glow(x,y,b.st===4?28:b.st>=2?17:11);
+    }
+  }
+  if(P.glow){
+    back+=`<circle cx="100" cy="95" r="105" fill="url(#${u}hl)" opacity=".7"/>`;
+    if(!still)[[30,0],[72,1.3],[128,2.2],[168,.6],[96,3],[50,3.8]].forEach(([x,b])=>{front+=`<ellipse class="p-fall" cx="${x}" cy="0" rx="3.2" ry="2.2" opacity="0"><animate attributeName="cy" values="20;250" dur="5.5s" begin="${b}s" repeatCount="indefinite"/><animate attributeName="cx" values="${x};${x+14};${x-6}" dur="5.5s" begin="${b}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;.9;.9;0" dur="5.5s" begin="${b}s" repeatCount="indefinite"/></ellipse>`})}
+  if(P.ground){back+=`<ellipse class="p-ground" cx="100" cy="255" rx="98" ry="8"/>`;
+    for(let i=0;i<P.ground;i++){const[x,y]=GROUND[i];front+=`<path class="p-petiole" d="M${x} ${y}v-7"/>`+flower(x,y-8,5.5,1,i%2,u);if(has('g'+i))back+=glow(x,y-8,11)}}
+  back+=`<ellipse class="p-shadow" cx="100" cy="258.5" rx="46" ry="4"/>`;
+  [[150,142],[34,160],[166,28]].slice(0,P.bf).forEach(([x,y],i)=>{front+=bfly(x,y,i,still,u);if(has('bf'+i))back+=glow(x,y,19)});
+  if(has('pot'))back+=glow(100,226,50);
+  const pot=(P.pot
+    ?`<path fill="url(#${u}pg)" d="M61 205H139L130.5 249Q128.5 258 120 258H80Q71.5 258 69.5 249Z"/>${potBloom(84,230)}${potBloom(113,239)}${potBloom(124,222)}<path class="p-goldline" d="M72 247H128"/><path class="p-hi" d="M70 211L76 249"/><rect fill="url(#${u}pg)" x="53" y="192" width="94" height="15" rx="6"/><path class="p-goldline" d="M56 207H144"/>`
+    :`<path fill="url(#${u}pt)" d="M63 205H137L128.5 251Q127 258 120 258H80Q73 258 71.5 251Z"/><path class="p-band" d="M68 224H132"/><path class="p-hi" d="M71 211L77 251"/><rect fill="url(#${u}pt)" x="55" y="193" width="90" height="15" rx="5"/>`)
+    +`<ellipse class="p-soil" cx="100" cy="194.5" rx="38" ry="4.2"/>`;
+  return `<svg ${o.cls?`class="${o.cls}"`:''} viewBox="0 ${y0} 200 ${260-y0}" role="img" aria-label="${stageName(n)}">${defs(u)}${back}<g class="sway" style="transform-origin:100px 196px">${hl}${g}${lv}${tp}</g>${pot}${P.cot?'':'<ellipse class="p-seed" cx="100" cy="188" rx="10" ry="7"/><ellipse class="p-shine" cx="97" cy="185.6" rx="3.2" ry="1.7"/>'}${front}</svg>`;
+}
+/* ---------- today's image: a calm daily-calendar card, no names (long-press to save/forward) ---------- */
+let MCACHE={key:'',url:''},mBusy=null;
+const MONTHS=['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+function wrapLines(x,text,maxW){
+  const out=[];let cur='';
+  for(const ch of text){const t=cur+ch;
+    if(x.measureText(t).width>maxW&&cur){if('，。！？、'.includes(ch)){out.push(t);cur='';continue}out.push(cur);cur=ch}else cur=t}
+  if(cur)out.push(cur);return out;
+}
+function cLeaf(x,cx,cy,len,ang,col){
+  x.save();x.translate(cx,cy);x.rotate(ang);x.beginPath();x.moveTo(0,0);
+  x.quadraticCurveTo(len*.5,-len*.34,len,0);x.quadraticCurveTo(len*.5,len*.34,0,0);x.fillStyle=col;x.fill();x.restore();
+}
+function cBloom(x,cx,cy,r,th){
+  for(let i=0;i<5;i++){const a=i*Math.PI*.4-Math.PI/2;x.beginPath();x.arc(cx+Math.cos(a)*r*.62,cy+Math.sin(a)*r*.62,r*.5,0,Math.PI*2);
+    x.fillStyle=th.pet;x.fill();x.globalAlpha=.35;x.strokeStyle=th.acc;x.lineWidth=2;x.stroke();x.globalAlpha=1}
+  x.beginPath();x.arc(cx,cy,r*.26,0,Math.PI*2);x.fillStyle=th.acc;x.fill();
+}
+function sprig(x,X,Y,len,lean,th,n){
+  const tx=X+lean,ty=Y-len,cx=X-lean*.4+30,cy=Y-len*.55;
+  x.strokeStyle=th.acc;x.lineWidth=5;x.lineCap='round';x.beginPath();x.moveTo(X,Y);x.quadraticCurveTo(cx,cy,tx,ty);x.stroke();
+  for(let i=0;i<n;i++){const t=.2+i*(.72/n),px=(1-t)*(1-t)*X+2*t*(1-t)*cx+t*t*tx,py=(1-t)*(1-t)*Y+2*t*(1-t)*cy+t*t*ty;
+    x.globalAlpha=i%2?.92:.7;cLeaf(x,px,py,118-i*10,-Math.PI/2+(i%2?.9:-.9),th.acc)}
+  x.globalAlpha=1;
+  [[0,-4,17],[-24,20,11],[22,26,9]].forEach(([dx,dy,r])=>cBloom(x,tx+dx,ty+dy,r,th));
+}
+function morningURL(){
+  const g=imgWord(),key=today()+g;
+  if(MCACHE.key===key)return Promise.resolve(MCACHE.url);
+  if(mBusy&&mBusy.key===key)return mBusy.p;
+  const p=(async()=>{
+    const W=900,H=1125,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+    const th=THEMES[hash(today())%THEMES.length],tip=TIPS[hash(today())%TIPS.length],bl=BLESS[hash(today()+'b')%BLESS.length];
+    const d=pd(today()),num=String(d.getDate()),wk='星期'+'日一二三四五六'[d.getDay()],mo=MONTHS[d.getMonth()];
+    try{await Promise.race([Promise.all([document.fonts.load('300px "DM Serif Display"',num),document.fonts.load('600 56px "Noto Serif SC"',g+tip+bl+wk+mo)]),new Promise(r=>setTimeout(r,3500))])}catch(e){}
+    x.fillStyle=th.bg;x.fillRect(0,0,W,H);
+    x.fillStyle=th.deep;x.beginPath();x.arc(650,300,240,0,Math.PI*2);x.fill();
+    x.strokeStyle=th.deep;x.lineWidth=3;x.beginPath();x.arc(650,300,298,0,Math.PI*2);x.stroke();
+    sprig(x,760,H+20,440,-80,th,7);sprig(x,870,H+20,300,-30,th,5);
+    x.textAlign='left';x.textBaseline='alphabetic';x.fillStyle=th.ink;
+    x.font='600 56px "Noto Serif SC","Songti SC",serif';x.fillText(g,92,160);
+    x.font='300px "DM Serif Display","Noto Serif SC",serif';x.fillText(num,78,450);
+    const nw=x.measureText(num).width;
+    x.font='600 50px "Noto Serif SC","Songti SC",serif';x.fillText(mo,78+nw+34,335);
+    x.font='500 40px "Noto Serif SC","Songti SC",serif';x.globalAlpha=.72;x.fillText(wk,78+nw+34,400);x.globalAlpha=1;
+    x.fillStyle=th.acc;x.fillRect(92,525,72,6);
+    x.fillStyle=th.ink;x.font='500 48px "Noto Serif SC","Songti SC",serif';
+    wrapLines(x,tip,520).forEach((l,i)=>x.fillText(l,92,625+i*84));
+    x.font='500 36px "Noto Serif SC","Songti SC",serif';x.globalAlpha=.7;x.fillText(bl,92,H-96);x.globalAlpha=1;
+    const url=c.toDataURL('image/jpeg',.9);MCACHE={key,url};return url;
+  })();
+  mBusy={key,p};return p;
+}
+async function fillMorning(){
+  if(!$('#mimg')&&!$('#mblur'))return;
+  try{const url=await morningURL();
+    const i2=$('#mimg'),b2=$('#mblur');
+    if(i2){i2.src=url;i2.hidden=false;const ld=$('#mload');if(ld)ld.hidden=true}
+    if(b2)b2.style.backgroundImage=`url(${url})`;
+  }catch(e){}
+}
+
+/* ---------- the pet: four-legged, walks and runs around the hill, grows on gift days, dresses up on festivals ---------- */
+const PETN={cat:'招财',dog:'旺财'};
+const PET_TXT=['在小篮子里睡觉','刚睁开眼睛','戴上了有名字的项圈','有了自己的小软垫','学会招手了','长大了，还有了玩具球','戴上了毕业帽'];
+const PET_MS={m1:'睁开眼睛了',m7:'戴上了有名字的项圈',m21:'有了自己的小软垫',m30:'学会招手了',m66:'长大了，还有了玩具球',m90:'戴上了毕业帽'};
+const petStage=n=>n>=75?6:n>=55?5:n>=25?4:n>=18?3:n>=7?2:n>=1?1:0;
+const petScale=st=>st<=1?.8:st<=4?.9:1;
+/* festival calendar (dates checked against the Malaysian calendar) */
+const FEST=[
+  ['2026-11-08','2026-11-08','','屠妖节快乐','lamp'],
+  ['2026-12-22','2026-12-22','winter','冬至快乐',''],
+  ['2026-12-24','2026-12-25','xmas','圣诞快乐',''],
+  ['2026-12-31','2027-01-01','party','新年快乐',''],
+  ['2027-02-06','2027-02-20','cny','新年快乐，恭喜发财','']
+];
+const FRI=['sun','straw','sport','scarf'];
+const DEMO_COS=[{cos:'',label:'屠妖节快乐',deco:'lamp'},{cos:'winter',label:'冬至快乐'},{cos:'xmas',label:'圣诞快乐'},{cos:'party',label:'新年快乐'},{cos:'cny',label:'新年快乐，恭喜发财'},{cos:'bday',label:'生日快乐！'},{cos:'sun',label:'星期五装扮日'},{cos:'straw',label:'星期五装扮日'},{cos:'sport',label:'星期五装扮日'},{cos:'scarf',label:'星期五装扮日'}];
+let demoCos=-1;
+function costume(){
+  if(demoCos>=0)return Object.assign({deco:''},DEMO_COS[demoCos]);
+  const t=today();
+  if(S.bday&&t.slice(5)===S.bday)return {cos:'bday',label:'生日快乐！',deco:''};
+  const f=FEST.find(f=>t>=f[0]&&t<=f[1]);if(f)return {cos:f[2],label:f[3],deco:f[4]};
+  if(pd(t).getDay()===5){const w=Math.floor(diff('2026-01-02',t)/7);return {cos:FRI[((w%4)+4)%4],label:'星期五装扮日',deco:''}}
+  return {cos:'',label:'',deco:''};
+}
+/* festival things that sit on the ground beside the pot */
+const LAMPS=`<svg viewBox="0 0 92 34" aria-hidden="true">${[[14,26],[46,30],[78,26]].map(([x,y])=>`<ellipse cx="${x}" cy="${y-12}" rx="9" ry="9" fill="#FFD36E" opacity=".35"/><path d="M${x} ${y-19}q4 5 0 9q-4-4 0-9z" fill="#FFB703"/><path d="M${x-10} ${y-8}h20q-2 8-10 8t-10-8z" fill="#C8643B"/><path d="M${x-10} ${y-8}h20" stroke="#F5B731" stroke-width="1.6"/>`).join('')}</svg>`;
+const ITEM={
+  cny:`<svg viewBox="0 0 92 34" aria-hidden="true"><path d="M24 18h44l-5 14H29z" fill="#C98A4E"/><path d="M27 23h38M29 28h34" stroke="#A8703C" stroke-width="1.4"/><circle cx="36" cy="15" r="7" fill="#FF9F1C"/><circle cx="50" cy="13" r="7.5" fill="#FFA62B"/><circle cx="62" cy="15.5" r="6.5" fill="#FF9F1C"/><path d="M50 6q4-4 8-1q-4 2-8 1z" fill="#3E9B5B"/><rect x="40" y="20" width="12" height="9" rx="1.5" fill="#D7263D"/><text x="46" y="27.6" font-size="7" text-anchor="middle" fill="#F5B731" font-weight="700">福</text></svg>`,
+  winter:`<svg viewBox="0 0 92 34" aria-hidden="true"><path d="M30 16h32q-2 15-16 15T30 16z" fill="#fff" stroke="#E7D3C8" stroke-width="1.5"/><circle cx="40" cy="15" r="5" fill="#FFD1DC"/><circle cx="48" cy="13.5" r="5" fill="#fff" stroke="#F0E0E6"/><circle cx="55" cy="15.5" r="4.6" fill="#FFD1DC"/><path d="M42 7q2-3 0-6M50 7q2-3 0-6" stroke="#C9B8B0" stroke-width="1.3" fill="none" opacity=".7"/></svg>`,
+  bday:`<svg viewBox="0 0 92 34" aria-hidden="true"><rect x="30" y="14" width="32" height="18" rx="4" fill="#FFB6C8"/><path d="M30 19q4 4 8 0t8 0 8 0 8 0" stroke="#fff" stroke-width="3" fill="none"/><rect x="44.5" y="4" width="3" height="10" rx="1" fill="#7CC4F5"/><path d="M46 3q-2.5-3 0-6q2.5 3 0 6z" fill="#FFB703"/></svg>`,
+  xmas:`<svg viewBox="0 0 92 34" aria-hidden="true"><rect x="34" y="12" width="24" height="20" rx="2" fill="#D7263D"/><rect x="44" y="12" width="4" height="20" fill="#F5B731"/><rect x="32" y="9" width="28" height="6" rx="2" fill="#E63946"/><path d="M46 9c-4-6-10-5-8-1c1 2 5 1 8 1zM46 9c4-6 10-5 8-1c-1 2-5 1-8 1z" fill="#F5B731"/></svg>`
+};
+function itemDeco(pc){const svg=pc.deco==='lamp'?LAMPS:ITEM[pc.cos];return svg?`<div class="deco">${svg}</div>`:''}
+const BALL=k=>k==='dog'?`<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="#7CC4F5"/><path d="M2.5 9q7.5-6 15 0" stroke="#fff" stroke-width="2" fill="none"/></svg>`
+  :`<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.5" fill="#F28DA6"/><path d="M4 6q6 5 12 0M3.5 12q7-5 13 1M7 17q4-7 9-12" stroke="#fff" stroke-width="1.3" fill="none"/></svg>`;
+
+
+/* ---------- 软萌团子 pet: a round mochi cat or dog that waddles, runs, sits, waves, grooms, lies down and naps ---------- */
+/* fur colours: 4 for each pet; patterned ones get patches clipped to the body */
+const FUR={
+  cat:[
+    {k:'orange',n:'橘色',b:'#FBD0A2',o:'#EBA468',ear:'#F9C38C',eo:'#EBA468',in:'#F7A9A0',st:'#F0A260',l:'#FFF1E0',t:'#F6B47A',to:'#EBA468',far:'#F2B47C',p:'#FFF1E0'},
+    {k:'grey',n:'灰色',b:'#D5DAE4',o:'#A7AFC2',ear:'#C3CAD8',eo:'#A7AFC2',in:'#F4B4BD',st:'#9FA8BC',l:'#F8F9FC',t:'#B7BFCF',to:'#A0A9BC',far:'#BEC5D3',p:'#F8F9FC'},
+    {k:'calico',n:'三花',pat:'calico',b:'#FFFBF6',o:'#DCC9B8',ear:'#F8B87C',ear2:'#7A6B67',eo:'#C9A386',in:'#F7A9A0',l:'#FFFFFF',t:'#F8B87C',to:'#D99A62',far:'#EEE6DD',p:'#FFFFFF',A:'#F8B87C',D:'#7A6B67'},
+    {k:'tux',n:'奶牛',pat:'tux',b:'#FFFBF6',o:'#CEC5BE',ear:'#6C6670',eo:'#55505A',in:'#F2A9B2',l:'#FFFFFF',t:'#6C6670',to:'#4E4952',far:'#E8E3DE',p:'#FFFFFF',D:'#6C6670'}
+  ],
+  dog:[
+    {k:'cream',n:'奶白',b:'#FFF6EA',o:'#D9BF9C',ear:'#C98A4E',eo:'#A86F3C',pt:'#EBCB9F',l:'#FFFFFF',t:'#F3E3CC',to:'#D9BF9C',far:'#E9D7BD',p:'#F7EBDA'},
+    {k:'shiba',n:'柴犬',pat:'shiba',up:1,b:'#F7C28C',o:'#E19B5E',ear:'#F4B072',eo:'#D98D4E',in:'#FFF3E4',l:'#FFF8EF',t:'#F4B072',to:'#D98D4E',far:'#EBAA6C',p:'#FFF8EF',W:'#FFF8EF'},
+    {k:'milktea',n:'奶茶',pat:'muzzle',b:'#E2C1A0',o:'#BE9670',ear:'#A0714D',eo:'#7F5738',l:'#FAEFE3',t:'#CFA985',to:'#B08762',far:'#CFAE8C',p:'#FAEFE3',W:'#FBF2E8'},
+    {k:'bw',n:'黑白',pat:'tux',b:'#FFFBF6',o:'#CEC5BE',ear:'#5F5A64',eo:'#4A4650',l:'#FFFFFF',t:'#5F5A64',to:'#46424C',far:'#E8E3DE',p:'#FFFFFF',D:'#5F5A64'}
+  ]
+};
+const furOf=(kind,fur)=>{const L=FUR[kind==='dog'?'dog':'cat'];return L.find(x=>x.k===fur)||L[0]};
+const petThumb=(kind,fur)=>petSVG(kind,1,'','sit',fur).replace('viewBox="0 0 140 104"','viewBox="24 14 98 88"');
+let PU=0;
+function petSVG(kind,st,cos,pose,fur){
+  pose=pose||'sit';
+  const u='q'+(++PU),cat=kind!=='dog',k=st<=1?0:st<=4?.55:1,R=v=>Math.round(v*10)/10;
+  const still=typeof calm==='function'&&calm(),rnd=((PU*37)%50)/10,OW=1.5;
+  const C=furOf(kind,fur),up=cat||C.up;
+  const hasHat=['cny','xmas','party','bday','straw','sport'].includes(cos),neck=['xmas','scarf','winter'].includes(cos);
+  const scarfC=cos==='xmas'?'#2E8B57':cos==='winter'?'#E85D75':'#F28DA6';
+  let EY=[];
+  /* ----- shape helpers ----- */
+  const mk=(cx,t,b,a,mr)=>({cx,t,b,a,m:b-(b-t)*mr});
+  const bp=B=>{const{cx,t,b,a,m}=B;return `M${R(cx)} ${R(t)}C${R(cx+a*.68)} ${R(t)} ${R(cx+a)} ${R(t+(m-t)*.46)} ${R(cx+a)} ${R(m)}C${R(cx+a)} ${R(m+(b-m)*.72)} ${R(cx+a*.64)} ${R(b)} ${R(cx)} ${R(b)}C${R(cx-a*.64)} ${R(b)} ${R(cx-a)} ${R(m+(b-m)*.72)} ${R(cx-a)} ${R(m)}C${R(cx-a)} ${R(t+(m-t)*.46)} ${R(cx-a*.68)} ${R(t)} ${R(cx)} ${R(t)}Z`};
+  const topY=(B,x)=>B.m-(B.m-B.t)*Math.sqrt(Math.max(0,1-((x-B.cx)/B.a)**2));
+  const body=B=>`<path d="${bp(B)}" fill="${C.b}" stroke="${C.o}" stroke-width="${OW}"/>`;
+  const clip=(B,inner)=>inner?`<clipPath id="${u}k"><path d="${bp(B)}"/></clipPath><g clip-path="url(#${u}k)">${inner}</g>`:'';
+  const gloss=B=>{const x=B.cx-B.a*.5,y=B.t+(B.m-B.t)*.42;return `<ellipse cx="${R(x)}" cy="${R(y)}" rx="${R(B.a*.16)}" ry="${R((B.m-B.t)*.1)}" transform="rotate(-32 ${R(x)} ${R(y)})" fill="#fff" opacity=".42"/>`};
+  const shadow=(x,rx,anim='')=>`<ellipse cx="${R(x)}" cy="99.6" rx="${R(rx)}" ry="3.2" fill="rgba(90,50,20,.14)">${anim}</ellipse>`;
+  const paw=(x,y,rx,ry,fill)=>`<ellipse cx="${R(x)}" cy="${R(y)}" rx="${R(rx)}" ry="${R(ry)}" fill="${fill||C.p}" stroke="${C.o}" stroke-width="${OW}"/>`;
+  const tube=(d,w,c,inner='',oc=C.o)=>`<path d="${d}" stroke="${oc}" stroke-width="${R(w+OW*2)}" fill="none" stroke-linecap="round">${inner}</path><path d="${d}" stroke="${c}" stroke-width="${R(w)}" fill="none" stroke-linecap="round">${inner}</path>`;
+  const morph=(ds,dur)=>ds.length>1&&!still?`<animate attributeName="d" values="${ds.concat([ds[0]]).join(';')}" dur="${dur}s" repeatCount="indefinite" calcMode="spline" keySplines="${ds.map(()=>'.45 0 .55 1').join(';')}"/>`:'';
+  const spin=(x,y,a,b,dur)=>still||a===b?'':`<animateTransform attributeName="transform" type="rotate" values="${a} ${R(x)} ${R(y)};${b} ${R(x)} ${R(y)};${a} ${R(x)} ${R(y)}" dur="${dur}s" repeatCount="indefinite"/>`;
+  const catTail=(bx,by,shapes,dur,tl)=>{const ds=shapes.map(c=>`M${R(bx)} ${R(by)}C${R(bx+c[0]*tl)} ${R(by+c[1]*tl)} ${R(bx+c[2]*tl)} ${R(by+c[3]*tl)} ${R(bx+c[4]*tl)} ${R(by+c[5]*tl)}`);return tube(ds[0],8.6,C.t,morph(ds,dur),C.to)};
+  const dogTail=(bx,by,f,deg,dur)=>`<g>${spin(bx,by,-deg,deg,dur)}${tube(`M${R(bx)} ${R(by)}c${12*f} -2 ${14*f} -14 ${6*f} -18c${-5*f} -2 ${-8*f} 3 ${-4*f} 6`,7.4,C.t,'',C.to)}</g>`;
+  /* ears: (hx,t) is the top of the head, sp squeezes them together when the head turns */
+  const ears=(hx,t,sp,kk)=>up?[-1,1].map(d=>{kk*=k<.5?.86:1;return `<g${d>0?' class="ear"':''}><path d="M${R(hx+d*27*sp)} ${R(t+23)}Q${R(hx+d*33*sp)} ${R(t-18*kk)} ${R(hx+d*3*sp)} ${R(t+5)}Z" fill="${d<0?C.ear:C.ear2||C.ear}" stroke="${C.eo}" stroke-width="${OW}" stroke-linejoin="round"/><path d="M${R(hx+d*22*sp)} ${R(t+16)}Q${R(hx+d*25*sp)} ${R(t-7*kk)} ${R(hx+d*8*sp)} ${R(t+6)}Z" fill="${C.in}"/></g>`}).join(''):'';
+  const sideEars=B=>{if(!up)return '';const kk=k<.5?.84:1,x=B.cx,a=B.a,t=B.t,e=(d,ti,cl)=>`<g${cl?' class="ear"':''}><path d="${d}" fill="${cl?C.ear2||C.ear:C.ear}" stroke="${C.eo}" stroke-width="${OW}" stroke-linejoin="round"/><path d="${ti}" fill="${C.in}"/></g>`;
+    return e(`M${R(x+.12*a)} ${R(t+12)}Q${R(x+.16*a)} ${R(t-22*kk)} ${R(x+.64*a)} ${R(t+4)}Z`,`M${R(x+.22*a)} ${R(t+9)}Q${R(x+.24*a)} ${R(t-11*kk)} ${R(x+.54*a)} ${R(t+5)}Z`)
+          +e(`M${R(x+.56*a)} ${R(t+8)}Q${R(x+.96*a)} ${R(t-21*kk)} ${R(x+.92*a)} ${R(t+22)}Z`,`M${R(x+.62*a)} ${R(t+9)}Q${R(x+.88*a)} ${R(t-10*kk)} ${R(x+.86*a)} ${R(t+18)}Z`,1)};
+  const flops=(hx,t,sp,droop)=>up?'':[-1,1].map(d=>{const x=hx+d*27*sp,y=t+21;return `<g${d>0?' class="flop"':''}><ellipse cx="${R(x)}" cy="${R(y)}" rx="7.6" ry="13.5" transform="rotate(${d*22+droop} ${R(x)} ${R(y)})" fill="${C.ear}" stroke="${C.eo}" stroke-width="${OW}"/></g>`}).join('');
+  const stripes=(x,t,dx=6)=>C.st?`<path d="M${R(x-dx)} ${R(t+6)}v7M${R(x)} ${R(t+4)}v8.4M${R(x+dx)} ${R(t+6)}v7" stroke="${C.st}" stroke-width="2.7" stroke-linecap="round"/>`:'';
+  const pattern=(B,ex,fy,side)=>{const a=B.a,E=(x,y,rx,ry,c)=>`<ellipse cx="${R(x)}" cy="${R(y)}" rx="${R(rx)}" ry="${R(ry)}" fill="${c}"/>`;
+    if(C.pat==='calico')return side?E(B.cx-a*.4,B.t+(B.m-B.t)*.28,a*.42,(B.m-B.t)*.56,C.A)+E(ex+3,fy-25,a*.24,17,C.D)+E(B.cx-a*.86,B.b-9,a*.2,9,C.D)
+      :E(ex-a*.44,fy-28,a*.44,21,C.A)+E(ex+a*.52,fy-26,a*.3,19,C.D)+E(B.cx+a*.84,B.b-15,a*.26,11,C.D);
+    if(C.pat==='tux')return (side?E(ex,fy-33,a*.52,26,C.D)+E(B.cx-a*.32,B.t+(B.m-B.t)*.2,a*.56,(B.m-B.t)*.58,C.D)
+      :E(ex,fy-34,a*.8,27,C.D)+E(B.cx-a*.96,B.b-15,a*.3,16,C.D)+E(B.cx+a*.96,B.b-15,a*.3,16,C.D))+E(ex,fy-12,4.4,9,C.b);
+    if(C.pat==='shiba')return side?E(ex+3,fy+20,a*.44,16,C.W):E(ex,fy+21,a*.64,19,C.W);
+    return ''};
+  /* face centred between the eyes; tn turns it (+ looks right); ex: open/closed/happy; mo: w/open/yawn/lick/small */
+  const face=(fx,fy,tn,ex,mo)=>{
+    const sh=tn*6.5,sp=13-Math.abs(tn)*3.6,ek=k<.5?1.1:1,xs=[fx+sh-sp,fx+sh+sp],zf=d=>tn*d<0?1-.16*Math.abs(tn):1;
+    const nx=fx+sh*1.18,ny=fy+4.2;let o='';
+    if(C.pt)o+=`<ellipse cx="${R(xs[1]+.6)}" cy="${R(fy-.4)}" rx="${R(8.4*zf(1))}" ry="7.6" fill="${C.pt}" clip-path="url(#${u}k)"/>`;
+    if(C.pat==='muzzle')o+=`<ellipse cx="${R(nx)}" cy="${R(ny+4)}" rx="8.2" ry="6.6" fill="${C.W}" clip-path="url(#${u}k)"/>`;
+    if(C.pat==='shiba')o+=xs.map((x,i)=>`<ellipse cx="${R(x+(i?.6:-.6))}" cy="${R(fy-8.6)}" rx="${R(2.6*zf(i?1:-1))}" ry="1.8" fill="${C.W}"/>`).join('');
+    const eye=(x,d)=>{const z=zf(d);
+      if(ex==='closed')return `<path d="M${R(x-4.4*ek*z)} ${R(fy)}q${R(4.4*ek*z)} ${R(3.4*ek)} ${R(8.8*ek*z)} 0" stroke="#3A2A24" stroke-width="1.9" fill="none" stroke-linecap="round"/>`;
+      if(ex==='happy')return `<path d="M${R(x-4.2*ek*z)} ${R(fy+1.6)}q${R(4.2*ek*z)} ${R(-4.8*ek)} ${R(8.4*ek*z)} 0" stroke="#3A2A24" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+      return `<ellipse cx="${R(x)}" cy="${R(fy)}" rx="${R(3.9*ek*z)}" ry="${R(4.7*ek)}" fill="#3A2A24"/><circle cx="${R(x+1.3*ek*z)}" cy="${R(fy-1.7*ek)}" r="${R(1.5*ek)}" fill="#fff"/>`};
+    EY=xs.map((x,i)=>[x,fy,4.4*ek*zf(i?1:-1)]);
+    const two=eye(xs[0],-1)+eye(xs[1],1);
+    o+=ex==='open'?`<g class="eyes" style="animation-delay:-${rnd}s">${two}</g>`:two;
+    o+=[-1,1].map(d=>{const far=d*tn<0;return `<ellipse cx="${R(xs[d<0?0:1]+d*8.4*(far?1-.45*Math.abs(tn):1-.32*Math.abs(tn)))}" cy="${R(fy+8.4)}" rx="${R(6.2*zf(d))}" ry="3.6" fill="#FF9FB0" opacity=".62" clip-path="url(#${u}k)"/>`}).join('');
+    o+=cat?`<path d="M${R(nx-2.1)} ${R(ny)}h4.2l-2.1 2.4z" fill="#F07C8C" stroke="#F07C8C" stroke-width=".8" stroke-linejoin="round"/>`
+          :`<ellipse cx="${R(nx)}" cy="${R(ny+.8)}" rx="4.3" ry="3.1" fill="#3A2A24"/><ellipse cx="${R(nx-1.3)}" cy="${R(ny-.1)}" rx="1.3" ry=".8" fill="#fff" opacity=".7"/>`;
+    const my=ny+(cat?3.2:5.2),ln='stroke="#3A2A24" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"';
+    if(mo==='open')o+=`<path d="M${R(nx-4.2)} ${R(my-.4)}Q${R(nx)} ${R(my+7.4)} ${R(nx+4.2)} ${R(my-.4)}Z" fill="#B54A4A"/><ellipse cx="${R(nx)}" cy="${R(my+3.3)}" rx="2.5" ry="1.7" fill="#FF8FA3"/>`;
+    else if(mo==='yawn')o+=`<ellipse cx="${R(nx)}" cy="${R(my+2.6)}" rx="3.3" ry="4.1" fill="#B54A4A"/><ellipse cx="${R(nx)}" cy="${R(my+4.6)}" rx="2.2" ry="1.5" fill="#FF8FA3"/>`;
+    else if(cat)o+=`<path d="M${R(nx-5)} ${R(my)}q2.5 3 5 0q2.5 3 5 0" ${ln}/>`+(mo==='lick'?`<ellipse cx="${R(nx+.4)}" cy="${R(my+2.7)}" rx="1.9" ry="2.3" fill="#FF8FA3"/>`:'');
+    else o+=`<path d="M${R(nx)} ${R(my-2)}v1.8M${R(nx-4.4)} ${R(my)}q4.4 3.8 8.8 0" ${ln}/>`+(mo==='small'?'':`<path d="M${R(nx-2)} ${R(my+1.9)}q2 4.4 4 0z" fill="#FF8FA3"/>`);
+    return o;
+  };
+  /* ----- costumes ----- */
+  const hat=(x,y,w)=>{const h=w*.5;let o='';
+    if(cos==='cny')o=`<path d="M${R(x-h)} ${R(y+6)}C${R(x-h)} ${R(y-h*.9)} ${R(x+h)} ${R(y-h*.9)} ${R(x+h)} ${R(y+6)}Z" fill="#D7263D"/><rect x="${R(x-h-1)}" y="${R(y+2.6)}" width="${R(2*h+2)}" height="5" rx="2.5" fill="#F5B731"/><circle cx="${R(x)}" cy="${R(y-h*.6)}" r="3.6" fill="#D7263D" stroke="#F5B731" stroke-width="1.2"/>`;
+    else if(cos==='xmas')o=`<path d="M${R(x-h)} ${R(y+4)}Q${R(x-h*.2)} ${R(y-h*1.5)} ${R(x+h*1.3)} ${R(y-h*.65)}Q${R(x+h*.6)} ${R(y-h*.3)} ${R(x+h)} ${R(y+4)}Z" fill="#D7263D"/><rect x="${R(x-h-2)}" y="${R(y+1)}" width="${R(2*h+4)}" height="6.6" rx="3.3" fill="#fff"/><circle cx="${R(x+h*1.3)}" cy="${R(y-h*.65)}" r="3.8" fill="#fff"/>`;
+    else if(cos==='party'||cos==='bday'){o=`<path d="M${R(x-h*.6)} ${R(y+5)}L${R(x+2)} ${R(y-h*1.22)}L${R(x+h*.6)} ${R(y+5)}Z" fill="#7CC4F5" stroke="#5AA9E0" stroke-width="1" stroke-linejoin="round"/><path d="M${R(x-h*.4)} ${R(y)}L${R(x+h*.44)} ${R(y-1.2)}M${R(x-h*.18)} ${R(y-h*.5)}L${R(x+h*.26)} ${R(y-h*.56)}" stroke="#fff" stroke-width="2.2"/><circle cx="${R(x+2)}" cy="${R(y-h*1.22)}" r="3.2" fill="#FFD166"/>`;
+      if(cos==='party')o+=[[-h*1.2,-h*.4,'#FF6F91',20],[h*1.15,-h*.25,'#7CC4F5',-25],[-h*.85,-h*1,'#FFD166',40],[h*.9,-h*.95,'#7ED6A5',-10]].map(([dx,dy,c,a])=>`<rect x="${R(x+dx)}" y="${R(y+dy)}" width="4.5" height="2.8" rx="1" fill="${c}" transform="rotate(${a} ${R(x+dx)} ${R(y+dy)})"/>`).join('')}
+    else if(cos==='straw')o=`<ellipse cx="${R(x)}" cy="${R(y+4.5)}" rx="${R(h*1.6)}" ry="${R(h*.3)}" fill="#E9C46A" stroke="#D4A94F" stroke-width="1"/><path d="M${R(x-h*.78)} ${R(y+4.5)}C${R(x-h*.78)} ${R(y-h*.9)} ${R(x+h*.78)} ${R(y-h*.9)} ${R(x+h*.78)} ${R(y+4.5)}Z" fill="#EFCF7B"/><path d="M${R(x-h*.8)} ${R(y+1)}Q${R(x)} ${R(y-1.4)} ${R(x+h*.8)} ${R(y+1)}" stroke="#E76F51" stroke-width="3.6" fill="none"/>`;
+    else if(st>=6&&!hasHat)o=`<path d="M${R(x-h*.56)} ${R(y+1.5)}v4.6q${R(h*.56)} 3.6 ${R(h*1.12)} 0v-4.6z" fill="#2B2B33"/><path d="M${R(x-h*1.06)} ${R(y-.5)}L${R(x)} ${R(y-.5-h*.38)}L${R(x+h*1.06)} ${R(y-.5)}L${R(x)} ${R(y-.5+h*.38)}Z" fill="#2B2B33"/><path d="M${R(x)} ${R(y-.5)}L${R(x+h*.8)} ${R(y+.8)}v6.4" stroke="#F5B731" stroke-width="1.5" fill="none"/><circle cx="${R(x+h*.8)}" cy="${R(y+7.6)}" r="1.8" fill="#F5B731"/>`;
+    if(cos==='sun'&&EY.length===2)o+=EY.map(([ex,ey,er])=>`<rect x="${R(ex-er*1.55)}" y="${R(ey-er*1.15)}" width="${R(er*3.1)}" height="${R(er*2.2)}" rx="${R(er*.9)}" fill="#2B2B33"/>`).join('')+`<path d="M${R(EY[0][0]+EY[0][2]*1.5)} ${R(EY[0][1]-EY[0][2]*.5)}H${R(EY[1][0]-EY[1][2]*1.5)}" stroke="#2B2B33" stroke-width="1.8"/><path d="M${R(EY[0][0]-EY[0][2])} ${R(EY[0][1]-EY[0][2]*.55)}h${R(EY[0][2]*.9)}M${R(EY[1][0]-EY[1][2])} ${R(EY[1][1]-EY[1][2]*.55)}h${R(EY[1][2]*.9)}" stroke="#fff" stroke-width="1" opacity=".5"/>`;
+    return o};
+  const headband=(B,x)=>{if(cos!=='sport')return '';const d=`M${R(x-B.a*1.3)} ${R(B.t+20)}Q${R(x)} ${R(B.t+3)} ${R(x+B.a*1.3)} ${R(B.t+20)}`;return `<path d="${d}" stroke="#E63946" stroke-width="5.6" fill="none"/><path d="${d}" stroke="#fff" stroke-width="1.2" fill="none" opacity=".85"/>`};
+  const bell=(x,y)=>neck?`<rect x="${R(x-3.4)}" y="${R(y-1)}" width="6.8" height="13" rx="3" fill="${scarfC}" transform="rotate(14 ${R(x)} ${R(y)})"/>`
+    :st>=2?`<circle cx="${R(x)}" cy="${R(y+1.6)}" r="3.4" fill="#F5B731" stroke="#D9952B" stroke-width="1"/><path d="M${R(x-1.7)} ${R(y+2.4)}h3.4" stroke="#B8781F" stroke-width="1"/>`:'';
+  const strap=(d,w)=>neck?`<path d="${d}" stroke="${scarfC}" stroke-width="${w+3.2}" fill="none" stroke-linecap="round"/><path d="${d}" stroke="#fff" stroke-width="1.3" fill="none" stroke-dasharray="2.5 4" stroke-linecap="round" opacity=".75"/>`
+    :st>=2?`<path d="${d}" stroke="#E63946" stroke-width="${w}" fill="none" stroke-linecap="round"/>`:'';
+  const band=(x1,x2,y,dy)=>strap(`M${R(x1)} ${R(y)}Q${R((x1+x2)/2)} ${R(y+dy*2)} ${R(x2)} ${R(y)}`,4.2);
+  const collar=(x,y,w)=>strap(`M${R(x-w)} ${R(y-3)}Q${R(x)} ${R(y+8)} ${R(x+w)} ${R(y-3)}`,4)+bell(x,y+2.5);
+  const bib=(x,y,w,h)=>cos==='cny'?`<path d="M${R(x)} ${R(y-h)}Q${R(x+w*.62)} ${R(y-h*.62)} ${R(x+w)} ${R(y)}Q${R(x+w*.62)} ${R(y+h*.62)} ${R(x)} ${R(y+h)}Q${R(x-w*.62)} ${R(y+h*.62)} ${R(x-w)} ${R(y)}Q${R(x-w*.62)} ${R(y-h*.62)} ${R(x)} ${R(y-h)}Z" fill="#D7263D" stroke="#F5B731" stroke-width="1.5"/><circle cx="${R(x)}" cy="${R(y)}" r="${R(Math.min(w,h)*.34)}" fill="#F5B731"/><rect x="${R(x-1.3)}" y="${R(y-1.3)}" width="2.6" height="2.6" fill="#D7263D"/>`:'';
+  const tl=.82+.18*k;
+  let s='';
+  if(pose==='sit'||pose==='look'||pose==='wave'||pose==='groom'){
+    /* ----- sitting: one round mochi, two little feet, tail curled at the side ----- */
+    const B=mk(66,31-3*k,97,35+k,.36),tn=pose==='look'?.78:pose==='groom'?.18:0,fx=B.cx,fy=B.t+(B.b-B.t)*.46,hx=fx+tn*6;
+    s+=shadow(B.cx+5,B.a+7);
+    let g=cat?catTail(B.cx+B.a-5,B.b-2,[[18,-4,20,-22,9,-28],[17,-6,15,-26,4,-30],[19,-2,24,-18,16,-24]],2.8,tl):dogTail(B.cx+B.a-7,B.b-9,1,12,.42);
+    g+=ears(hx,B.t,1-Math.abs(tn)*.14,1)+body(B)+stripes(fx+tn*5,B.t);
+    const ny=fy+16;
+    g+=clip(B,`<ellipse cx="${R(B.cx)}" cy="${R(B.b-10)}" rx="${R(B.a*.52)}" ry="11" fill="${C.l}"/>${pattern(B,fx+tn*6.5,fy,0)}${band(B.cx-B.a-2,B.cx+B.a+2,ny,4)}${headband(B,hx)}`)+gloss(B);
+    g+=bib(B.cx,B.b-14,11,10)+bell(B.cx,ny+4)+flops(hx,B.t,1-Math.abs(tn)*.14,0);
+    g+=face(fx,fy,tn,pose==='groom'?'happy':'open',pose==='wave'?'open':pose==='groom'?'lick':'w');
+    g+=paw(B.cx-10,B.b-1.5,7.6,4.6)+paw(B.cx+10,B.b-1.5,7.6,4.6);
+    if(pose==='wave')g+=`<g>${spin(B.cx-B.a+9,fy+17,14,-16,.62)}${tube(`M${R(B.cx-B.a+9)} ${R(fy+17)}L${R(B.cx-B.a-1)} ${R(fy+3)}`,8.6,C.b)}${paw(B.cx-B.a-1.6,fy+1.6,6,6.6)}<ellipse cx="${R(B.cx-B.a-1.6)}" cy="${R(fy+2.4)}" rx="2.4" ry="2" fill="#FFB3C1"/></g>`;
+    if(pose==='groom')g+=`<g>${still?'':`<animateTransform attributeName="transform" type="translate" values="0 0;0 -2.4;0 0" dur=".5s" repeatCount="indefinite"/>`}${paw(fx+tn*6.5+4,fy+16.5,6.2,5.2)}<ellipse cx="${R(fx+tn*6.5+4)}" cy="${R(fy+15.6)}" rx="2.2" ry="1.7" fill="#FFB3C1"/></g>`;
+    g+=hat(hx,topY(B,hx)+.5,B.a);
+    const tilt=pose==='look'?4:pose==='groom'?-4:0;
+    s+=`<g${tilt?` transform="rotate(${tilt} ${B.cx} ${B.b})"`:''}><g class="breath2">${g}</g></g>`;
+  }else if(pose==='walk'||pose==='run'){
+    /* ----- walking: the mochi waddles on four little feet; running: it bounces ----- */
+    const run=pose==='run',B=mk(70,44-4*k,94,40+3*k,.42),cyc=run?.36:(k<.5?.62:.72);
+    const fx=B.cx+B.a*.4,fy=B.t+(B.b-B.t)*.47,hx=B.cx+B.a*.52,Sx=run?7:5.5,lift=run?5.5:3.2;
+    const foot=(x,far,ph)=>`<g transform="translate(${R(x+(far?4.5:0))} ${far?93.2:94.6})"><ellipse rx="6.8" ry="5.6" fill="${far?C.far:C.p}" stroke="${C.o}" stroke-width="${OW}"><animateTransform attributeName="transform" type="translate" values="${Sx} 0;${-Sx} 0;0 ${-lift};${Sx} 0" keyTimes="0;.6;.8;1" dur="${cyc}s" begin="${R(-ph*cyc)}s" repeatCount="indefinite"/></ellipse></g>`;
+    const xb=B.cx-B.a*.5,xf=B.cx+B.a*.46,P=run?[0,.1,.5,.6]:[0,.25,.5,.75];
+    let g=cat?catTail(B.cx-B.a+7,B.b-15,run?[[-10,-5,-17,-13,-22,-23],[-11,-2,-19,-9,-25,-18]]:[[-14,-2,-18,-20,-9,-28],[-15,-5,-16,-24,-5,-30],[-13,1,-20,-16,-13,-25]],run?.3:1.6,tl)
+             :dogTail(B.cx-B.a+6,B.b-20,-1,run?18:14,run?.24:.36);
+    g+=sideEars(B)+body(B)+stripes(B.cx-B.a*.3,topY(B,B.cx-B.a*.3)-1,5.5);
+    g+=clip(B,`<ellipse cx="${R(B.cx+5)}" cy="${R(B.b-7)}" rx="${R(B.a*.5)}" ry="8" fill="${C.l}"/>${pattern(B,fx+.85*6.5,fy,1)}${headband(B,hx)}`)+gloss(B)+bib(B.cx+2,B.b-11,13,7);
+    g+=collar(fx+sh1(.85),fy+14,15)+flops(hx,topY(B,hx),.72,run?-16:0);
+    g+=face(fx,fy,.85,'open',run?'open':'w')+hat(hx,topY(B,hx)+.5,B.a*.9);
+    const fFar=foot(xb,1,P[2])+foot(xf,1,P[3]),fNear=foot(xb,0,P[0])+foot(xf,0,P[1]);
+    if(run){
+      const puff=(x,y,d)=>still?'':`<circle cx="${R(x)}" cy="${R(y)}" r="0" fill="#E9DCCB"><animate attributeName="r" values="0;3.8;4.6" dur="${cyc*2}s" begin="${d}s" repeatCount="indefinite"/><animate attributeName="opacity" values=".9;.5;0" dur="${cyc*2}s" begin="${d}s" repeatCount="indefinite"/></circle>`;
+      s+=shadow(B.cx+4,B.a+8,`<animate attributeName="rx" values="${B.a+8};${B.a};${B.a+8}" dur="${cyc}s" repeatCount="indefinite"/>`)+puff(xb-14,96,0)+puff(xb-22,93,-cyc);
+      s+=`<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -5;0 0" keyTimes="0;.5;1" calcMode="spline" keySplines=".3 .6 .6 1;.4 0 .7 .4" dur="${cyc}s" repeatCount="indefinite"/>${fFar}<g transform="rotate(5 ${B.cx} ${B.b})">${g}</g>${fNear}</g>`;
+    }else{
+      s+=shadow(B.cx+4,B.a+8)+fFar+`<g><animateTransform attributeName="transform" type="translate" values="0 0;0 -1.1;0 0" dur="${R(cyc/2)}s" repeatCount="indefinite"/><g><animateTransform attributeName="transform" type="rotate" values="-2.2 ${B.cx} ${B.b};2.2 ${B.cx} ${B.b};-2.2 ${B.cx} ${B.b}" dur="${cyc}s" repeatCount="indefinite"/>${g}</g></g>`+fNear;
+    }
+  }else if(pose==='lie'||pose==='sleep'){
+    /* ----- lying like a little loaf; asleep with closed eyes, in the basket on day 0, on a cushion later ----- */
+    const sl=pose==='sleep',bk=sl&&st===0,B=bk?mk(68,52,98,40,.4):mk(68,(sl?60:56)-3*k,97,45+2*k,.4);
+    const fx=B.cx+(sl?8:12),fy=B.t+(B.b-B.t)*(bk?.42:sl?.55:.5),tn=sl?.15:.3,hx=fx+tn*6;
+    if(sl&&st>=3)s+=`<ellipse cx="${R(B.cx)}" cy="98.6" rx="${R(B.a+10)}" ry="7" fill="#F7B8C8"/><ellipse cx="${R(B.cx)}" cy="96.6" rx="${R(B.a+6)}" ry="4.4" fill="#FBD0DB"/>`;
+    else if(!bk)s+=shadow(B.cx,B.a+8);
+    let g=cat?catTail(B.cx-B.a+8,B.b-10,sl?[[-18,2,-16,12,6,11.5],[-18,3,-15,12.5,8,11]]:[[-18,2,-16,12,6,11.5],[-19,0,-20,10,-2,11],[-17,4,-12,12.5,10,11]],sl?3.6:2.2,tl)
+             :dogTail(B.cx-B.a+5,B.b-12,-1,sl?0:10,.5);
+    g+=ears(hx,topY(B,hx),.9,sl?.78:1)+body(B)+stripes(fx+tn*5,topY(B,fx+tn*5));
+    g+=clip(B,`<ellipse cx="${R(B.cx-4)}" cy="${R(B.b-6)}" rx="${R(B.a*.55)}" ry="7" fill="${C.l}"/>${pattern(B,fx+tn*6.5,fy,1)}${headband(B,hx)}`)+gloss(B)+bib(B.cx-8,B.b-9,12,6);
+    g+=collar(fx+tn*7,fy+13,15)+flops(hx,topY(B,hx),.9,sl?6:0);
+    g+=face(fx,fy,tn,sl?'closed':'open',sl&&!cat?'small':'w');
+    g+=paw(fx+4,B.b-1,7,4.4)+paw(fx+20,B.b-1.5,7,4.4)+hat(hx,topY(B,hx)+.5,B.a*.82);
+    s+=`<g class="${sl?'breath':'breath2'}">${g}</g>`;
+    if(bk)s+=`<path d="M${R(B.cx-B.a-6)} 87H${R(B.cx+B.a+6)}L${R(B.cx+B.a)} 100.6Q${R(B.cx)} 103 ${R(B.cx-B.a)} 100.6Z" fill="#D9A066"/>`+[-3,-2,-1,0,1,2,3].map(i=>`<path d="M${R(B.cx+i*11)} 90V101" stroke="#BF8448" stroke-width="1.2" opacity=".55"/>`).join('')+`<path d="M${R(B.cx-B.a-4)} 94.5H${R(B.cx+B.a+4)}" stroke="#B9783F" stroke-width="1.4"/><rect x="${R(B.cx-B.a-8)}" y="83.5" width="${R(2*B.a+16)}" height="6" rx="3" fill="#C98A4E"/>`;
+    if(sl){const zx=fx+30,zy=B.t-2,z=(dx,dy,fs,d)=>`<text x="${R(zx+dx)}" y="${R(zy+dy)}" font-size="${fs}" font-weight="700" fill="#8A9BD6" font-family="sans-serif">z${still?'':`<animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.2;.7;1" dur="3s" begin="${d}s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 4;3 -6" dur="3s" begin="${d}s" repeatCount="indefinite"/>`}</text>`;
+      s+=z(0,0,10,0)+z(8,-9,8,-1)+z(15,-17,6.5,-2)}
+  }else{
+    /* ----- big morning stretch: bottom up, front paws reaching forward, a sleepy yawn ----- */
+    const B=mk(62,48-3*k,91,41+2*k,.42),ang=7,px=B.cx+B.a*.7,py=B.b+5,cs=Math.cos(ang*Math.PI/180),sn=Math.sin(ang*Math.PI/180);
+    const rot=(x,y)=>[px+(x-px)*cs-(y-py)*sn,py+(x-px)*sn+(y-py)*cs];
+    const fx=B.cx+B.a*.4,fy=B.t+(B.b-B.t)*.5,hx=B.cx+B.a*.52,[lx,ly]=rot(B.cx-B.a*.5,B.b-6);
+    const leg=(x,far)=>`<path d="M${R(x-6)} ${R(ly-6)}V95.4Q${R(x-6)} 100 ${R(x)} 100Q${R(x+6.4)} 100 ${R(x+6.4)} 95.4V${R(ly-6)}Z" fill="${far?C.far:C.b}" stroke="${C.o}" stroke-width="${OW}"/><ellipse cx="${R(x+.6)}" cy="97" rx="5" ry="2.6" fill="${far?C.far:C.p}"/>`;
+    s+=shadow(70,48)+leg(lx+5,1)+tube(`M${R(px-2)} ${R(B.b-4)}L${R(px+8)} 95`,8.6,C.far)+paw(px+12,95.8,9,4,C.far);
+    let g=cat?catTail(B.cx-B.a+6,B.t+12,[[-10,-6,-8,-24,4,-30],[-12,-4,-12,-22,-2,-30]],1.6,tl):dogTail(B.cx-B.a+6,B.t+10,-1,14,.4);
+    g+=sideEars(B)+body(B)+stripes(B.cx-B.a*.3,topY(B,B.cx-B.a*.3)-1,5.5);
+    g+=clip(B,`<ellipse cx="${R(B.cx+5)}" cy="${R(B.b-7)}" rx="${R(B.a*.5)}" ry="8" fill="${C.l}"/>${pattern(B,fx+.8*6.5,fy,1)}${headband(B,hx)}`)+gloss(B)+bib(B.cx+2,B.b-11,13,7);
+    g+=collar(fx+sh1(.8),fy+14,15)+flops(hx,topY(B,hx),.72,-10);
+    g+=face(fx,fy,.8,'happy','yawn')+hat(hx,topY(B,hx)+.5,B.a*.9);
+    s+=`<g transform="rotate(${ang} ${R(px)} ${R(py)})">${g}</g>`+leg(lx-3,0)+tube(`M${R(px-6)} ${R(B.b-2)}L${R(px+10)} 96.4`,9,C.b)+paw(px+15,96.6,9.6,4.4);
+  }
+  function sh1(tn){return tn*6.5*1.18}
+  return `<svg viewBox="0 0 140 104" role="img" aria-label="${cat?'小猫':'小狗'}">${s}</svg>`;
+}
+
+/* ---------- pet behaviour: waddles, runs, sits, looks around, waves, grooms, lies down, stretches, chases its ball ---------- */
+let PET={x:null,face:1,t:0,bx:null,woke:false};
+function petPose(pose,cls){const el=$('#petw'),pin=$('#petin');if(!el||!pin)return;pin.innerHTML=petSVG(S.pet,+el.dataset.stage,el.dataset.cos||'',pose,S.fur);pin.className='pet-in'+(PET.face<0?' mirror':'')+(cls?' '+cls:'')}
+function petMove(el,x,dur,ease){el.style.transition=dur?`transform ${dur.toFixed(2)}s ${ease||'linear'}`:'none';el.style.transform=`translateX(${Math.round(x)}px)`}
+function petStart(){
+  clearTimeout(PET.t);const el=$('#petw');if(!el)return;
+  const W=el.parentElement.clientWidth,w=el.offsetWidth,minX=-w*.06,maxX=Math.max(minX,W-w*.94),home=Math.max(minX,Math.min(maxX,W/2-w-6));
+  const awake=el.dataset.mode==='awake',gentle=calm();
+  if(PET.x==null||!awake)PET.x=home;
+  PET.x=Math.max(minX,Math.min(maxX,PET.x));petMove(el,PET.x,0);el.style.opacity=1;
+  if(awake&&PET.face<0)$('#petin').classList.add('mirror');
+  const ball=$('#ball');
+  if(ball){if(PET.bx==null)PET.bx=Math.min(W-28,W/2+44);ball.style.transition='none';ball.style.transform=`translateX(${Math.round(PET.bx)}px)`}
+  if(!awake)return;
+  const rest=(p,ms)=>{petPose(p,'');PET.t=setTimeout(step,ms)};
+  const go=(tx,run,after)=>{tx=Math.max(minX,Math.min(maxX,tx));const d=Math.abs(tx-PET.x);if(d<20){after();return}
+    if(gentle)run=false;PET.face=tx>PET.x?1:-1;petPose(run?'run':'walk','');
+    const dur=d/(run?85+Math.random()*20:26+Math.random()*10);
+    petMove(el,tx,dur,run?'cubic-bezier(.3,.6,.35,1)':'cubic-bezier(.4,.1,.6,.9)');PET.x=tx;PET.t=setTimeout(after,dur*1000+80)};
+  function step(){
+    if(!document.body.contains(el))return;
+    const r=Math.random(),st=+el.dataset.stage;
+    if(ball&&!gentle&&r<.2)go(PET.bx-w*.55,true,()=>{const nb=8+Math.random()*(W-40);PET.bx=nb;ball.style.transition='transform 1.4s cubic-bezier(.2,.7,.3,1)';ball.style.transform=`translateX(${Math.round(nb)}px)`;rest('sit',1000)});
+    else if(r<.58)go(minX+Math.random()*(maxX-minX),Math.random()<.25,()=>rest(Math.random()<.5?'sit':'look',1300+Math.random()*1500));
+    else if(r<.70)rest(st>=4&&Math.random()<.5?'wave':'sit',2600+Math.random()*2400);
+    else if(r<.79)rest('look',1800+Math.random()*1400);
+    else if(r<.89)rest('lie',3200+Math.random()*3000);
+    else if(r<.96)rest('groom',2200+Math.random()*1400);
+    else rest('stretch',1700);
+  }
+  if(PET.woke){PET.woke=false;PET.t=setTimeout(()=>rest('stretch',1800),1200)}else rest('sit',1200);
+}
+
+/* ---------- weekly message: a built-in new-customer series + the leader's Google Sheet ---------- */
+const NEWS_URL=''; // the Google Sheet's "publish to web" CSV link
+const SERIES=[
+  {w:1,from:2,type:'知识',title:'欢迎加入！怎样才不会忘记吃？',body:'营养跟着三餐一起吃，最不容易忘记。\n把营养放在餐桌上看得到的地方，看到就会想起来。'},
+  {w:2,from:8,type:'知识',title:'忘记吃了怎么办？',body:'不用一次补两份，下一餐照常吃就好。\n可以设一个手机闹钟，或请家人提醒你。'},
+  {w:3,from:15,type:'知识',title:'为什么要天天吃？',body:'身体每天都在消耗营养，也每天都需要补充。\n天天吃一点，比偶尔吃很多更好。'},
+  {w:4,from:22,type:'知识',title:'第一个月，给自己鼓掌！',body:'去「感觉」页记录一下精神、睡眠和肠胃。\n下个月再记录一次，就能看到自己的变化。'}
+];
+const stageOf=n=>n>=56?3:n>=26?2:1;
+const STAGE_NAME=['','养成期','稳定期','习惯期'];
+/* a one-time note when a customer moves up, so fewer gifts feel like a level-up, not a loss */
+const STAGEPOST={
+  2:{id:'st2',type:'资讯',tag:'进入新阶段',title:'恭喜进入稳定期！',body:'你已经打卡 26 天，好习惯开始稳定了。\n接下来惊喜卡会出现营养小知识和小测验，答对有积分。\n记得每个星期去「感觉」页记录一下，看看自己的变化。'},
+  3:{id:'st3',type:'资讯',tag:'进入新阶段',title:'恭喜进入习惯期！',body:'打卡 56 天，照顾自己已经变成你生活的一部分。\n接下来每个星期会有更多实用的健康知识。\n第 75 天还有毕业礼物等着你！'}
+};
+const STAGE_WHO=['','新手','稳定','老客人'];
+const demoNews=()=>{const t=today();return [
+  {id:'d1',date:add(t,-14),who:'全部',type:'知识',title:'蔬菜吃够了吗？',body:'每一餐，让蔬菜占盘子的一半。\n颜色越多越好，红、黄、绿都来一点。'},
+  {id:'d2',date:add(t,-7),who:'全部',type:'资讯',title:'星期六线上分享会',body:'这个星期六晚上 8 点，大家一起聊「睡得好的小习惯」。\n想参加的，点下面告诉伙伴。',btn:'我想参加'},
+  {id:'d3',date:t,who:'全部',type:'优惠',title:'本月好消息',body:'这个月公司有优惠活动，名额有限。\n想知道详情，点下面问你的伙伴。'}]};
+/* the Google Sheet arrives as CSV; quoted cells may hold commas and line breaks */
+function csvRows(t){const R=[];let row=[],f='',q=false;
+  for(let i=0;i<t.length;i++){const c=t[i];
+    if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true;else if(c===','){row.push(f);f=''}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&t[i+1]==='\n')i++;row.push(f);R.push(row);row=[];f=''}
+    else f+=c}
+  if(f||row.length){row.push(f);R.push(row)}return R}
+/* a Google Drive share link becomes an image address the page can show */
+const imgURL=u=>{u=(u||'').trim();const m=u.match(/drive\.google\.com\/(?:file\/d\/|open\?id=|uc\?(?:export=\w+&)?id=)([\w-]{10,})/);return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1000':/^https:\/\//.test(u)?u:''};
+const newsDate=d=>{d=(d||'').trim().replace(/\./g,'/');let m=d.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);if(m)return m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0');
+  m=d.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);return m?m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0'):''};
+function parseNews(text){const R=csvRows(text).filter(r=>r.some(c=>c.trim()));if(R.length<2)return [];
+  const H=R[0].map(h=>h.trim()),col=n=>H.findIndex(h=>h.includes(n)),ci={date:col('日期'),who:col('给谁'),type:col('类型'),title:col('标题'),body:col('内容'),img:col('图片'),btn:col('按钮文字'),link:col('按钮链接')};
+  return R.slice(1).map(r=>{const g=k=>ci[k]>=0?(r[ci[k]]||'').trim():'',d=newsDate(g('date')),title=g('title');if(!d||!title)return null;
+    return {id:'n'+hash(d+title),date:d,who:g('who')||'全部',type:g('type')||'资讯',title,body:g('body'),img:imgURL(g('img')),btn:g('btn'),link:g('link')}}).filter(Boolean)}
+let NEWS=[];
+function loadNews(){try{NEWS=JSON.parse(localStorage.getItem(KEY+'_news')||'[]')}catch(e){NEWS=[]}}
+async function fetchNews(){const url=window.NEWS_URL_OVERRIDE||NEWS_URL;if(!url)return;
+  try{const r=await fetch(url,{cache:'no-store'});if(!r.ok)return;const rows=parseNews(await r.text());
+    const changed=JSON.stringify(rows)!==JSON.stringify(NEWS);NEWS=rows;try{localStorage.setItem(KEY+'_news',JSON.stringify(rows))}catch(e){}
+    if(changed&&tab==='today'&&$('#overlay').hidden)render()}catch(e){}}
+/* what this customer may see: series posts already reached, and sheet posts for her stage */
+function allNews(){const t=today(),d=dayNum(),who=STAGE_WHO[stageOf(count())],src=NEWS.length?NEWS:(DEMO?demoNews():[]);
+  return {b:src.filter(x=>x.date<=t&&(x.who==='全部'||x.who.includes(who))),
+          s:SERIES.filter(x=>d>=x.from).map(x=>({...x,id:'s'+x.w,date:add(S.start,x.from-1),series:true}))}}
+/* weeks 1-4 pop the series post; after that the newest sheet post (only if under two weeks old) */
+function newsNow(){const {b,s}=allNews(),d=dayNum(),t=today(),ser=s.find(x=>d>=x.from&&d<x.from+7),
+    latest=b.length?b.reduce((a,x)=>x.date>=a.date?x:a):null,seen=x=>x&&S.seen.includes(x.id);
+  const sp=STAGEPOST[stageOf(count())];
+  const pop=sp&&!seen(sp)?sp:d<=28?(ser&&!seen(ser)?ser:null):(latest&&!seen(latest)&&diff(latest.date,t)<14?latest:null);
+  return {pop,card:ser||latest}}
+function newsList(){const {b,s}=allNews();return s.concat(b).sort((x,y)=>x.date<y.date?1:-1).slice(0,12)}
+const NTAG={'优惠':'gold','知识':'g','资讯':'b'};
+function newsBox(x){
+  const ok=/^(https:\/\/|tel:)/.test(x.link||'');let act='';
+  if(ok)act=`<a class="btn solid" href="${esc(x.link)}" target="_blank" rel="noopener">${esc(x.btn||'了解更多')}</a>`;
+  else if(x.type==='优惠'||x.btn)act=`<a class="btn solid" href="${waLink(`${S.partner} 你好，我是${S.name}，我想了解「${x.title}」`)}" target="_blank" rel="noopener">${esc(x.btn||'WhatsApp 问 '+S.partner)}</a>`;
+  return `<div class="box news" role="dialog" aria-modal="true" aria-label="${esc(x.title)}"><span class="ntag ${NTAG[x.type]||'b'}">${x.tag?esc(x.tag):x.series?'新手小贴士':esc(x.type)}</span>
+    <h2 class="ntitle">${esc(x.title)}</h2>${x.img?`<img class="nimg" src="${esc(x.img)}" alt="">`:''}<p class="nbody">${esc(x.body)}</p>${act}
+    <button class="checkin" style="min-height:3.6rem;font-size:1.15rem;margin-top:4px" data-act="nclose"><span>知道了</span></button></div>`}
+function showNews(x){if(!x)return;if(!S.seen.includes(x.id)){S.seen.push(x.id);if(S.seen.length>80)S.seen=S.seen.slice(-80);save()}
+  const o=$('#overlay');o.innerHTML=newsBox(x);o.hidden=false;o.querySelector('button').focus();const c=$('.ncard .ndot');if(c)c.remove()}
+function maybeNews(){if(tab!=='today'||!$('#overlay').hidden||!S.onboarded||!S.checks[today()])return;showNews(newsNow().pop)}
+
+/* ---------- icons ---------- */
+const ic=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const I={
+  sun:ic('<circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>'),
+  chat:ic('<path d="M4 5.5h16v10H9.5L4 19.5z"/>'),
+  mail:ic('<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M4 7.5l8 6 8-6"/>'),
+  phone:ic('<rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M11 18.5h2"/>'),
+  cal:ic('<rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/>'),
+  flower:ic('<circle cx="12" cy="7.2" r="3"/><circle cx="7.2" cy="12" r="3"/><circle cx="16.8" cy="12" r="3"/><circle cx="12" cy="16.8" r="3"/><circle cx="12" cy="12" r="1.2"/>'),
+  heart:ic('<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/>'),
+  chart:ic('<path d="M4 19.5h16M6 15l4-4 3 3 5-6"/>'),
+  font:ic('<path d="M4 19l5-14 5 14M6 14h6M15 19l3-8 3 8M16.2 16.5h3.6"/>')
+};
+const GIFT=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="9" width="17" height="11.5" rx="2"/><path d="M2.5 9h19M12 9v11.5M12 9c-1.5-3.5-6-4-6-1.2C6 9 9 9 12 9zM12 9c1.5-3.5 6-4 6-1.2C18 9 15 9 12 9z"/></svg>`;
+
+/* ---------- the sky scene ---------- */
+const cloudS=(x,y,s,o,c,b)=>`<g class="cl${b?' b':''}"><g transform="translate(${x} ${y}) scale(${s})" opacity="${o}" style="fill:${c}"><ellipse rx="34" ry="16"/><ellipse cx="-22" cy="4" rx="22" ry="12"/><ellipse cx="24" cy="5" rx="24" ry="12"/><ellipse cx="4" cy="-10" rx="20" ry="14"/></g></g>`;
+function skySVG(p){
+  let s='';
+  if(p==='night'){
+    [[40,40,1.6],[86,22,1.1],[130,60,1.4],[176,30,1],[214,78,1.6],[250,24,1.2],[350,40,1.4],[368,110,1],[24,120,1.2],[110,128,1],[200,140,1.3],[330,160,1],[60,190,1.1],[260,190,1.4],[160,96,.9],[290,124,1.1]]
+      .forEach(([x,y,r],i)=>{s+=`<circle class="star" cx="${x}" cy="${y}" r="${r}" fill="#FFF8E0" style="animation-delay:${-(i%7)*.45}s"/>`});
+    s+=`<defs><mask id="moonm"><rect width="390" height="340" fill="#fff"/><circle cx="314" cy="86" r="28" fill="#000"/></mask></defs><circle cx="300" cy="96" r="46" fill="#F6EFC8" opacity=".14"/><circle cx="300" cy="96" r="30" fill="#F6EFC8" mask="url(#moonm)"/>`;
+  }else{
+    const sun={am:[300,132,42,'#FFD267','#FFE9B0'],day:[312,96,34,'#FFF1A6','#FFFBE3'],dusk:[312,150,40,'#FF9F6B','#FFD0A8']}[p];
+    s+=`<circle cx="${sun[0]}" cy="${sun[1]}" r="${sun[2]*1.75}" fill="${sun[4]}" opacity=".65"/><circle cx="${sun[0]}" cy="${sun[1]}" r="${sun[2]}" fill="${sun[3]}"/>`;
+    const cc=p==='dusk'?'#FFE3EC':'#FFFFFF',o=p==='dusk'?.75:.92;
+    s+=cloudS(92,176,1,o,cc)+cloudS(250,236,.72,o*.85,cc,1)+cloudS(48,286,.5,o*.7,cc);
+  }
+  return `<svg class="sky" viewBox="0 0 390 340" preserveAspectRatio="xMidYMin slice" aria-hidden="true">${s}</svg>`;
+}
+const HILLS=`<svg class="hills" viewBox="0 0 390 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 50C80 16 170 22 250 38C312 50 356 38 390 30V200H0Z" style="fill:var(--h1)"/><path d="M0 88C76 60 166 64 236 76C298 88 350 82 390 70V200H0Z" style="fill:var(--h2)"/>`+
+  [[24,120,'#F59AB0'],[58,150,'#FFD267'],[340,118,'#FAAA88'],[366,150,'#F59AB0'],[310,172,'#FFFFFF'],[84,184,'#FFFFFF']].map(([x,y,c])=>`<circle cx="${x}" cy="${y}" r="3.4" fill="${c}" opacity=".9"/>`).join('')+`</svg>`;
+function scene(inner,mini){
+  const p=period();
+  const ff=p==='night'&&!mini?[[20,46],[76,38],[28,64],[70,58],[52,30]].map(([l,t],i)=>`<span class="ff" style="left:${l}%;top:${t}%;animation-delay:${-i*1.3}s"></span>`).join(''):'';
+  return `<section class="scene sc-${p}${mini?' sc-mini':''}">${skySVG(p)}${HILLS}<div class="dim"></div>${ff}${inner}</section>`;
+}
+function miniScene(title,sub){return scene(`<div class="sc-top"><div><h1 class="hello" style="font-size:1.7rem">${title}</h1>${sub?`<p class="date">${sub}</p>`:''}</div></div>`,true)}
+
+/* ---------- today ---------- */
+function gardenScene(){
+  const n=count(),m=nextMile(),prev=[...MILES].reverse().find(x=>n>=x.n),base=prev?prev.n:0;
+  const pct=m?Math.round((n-base)/(m.n-base)*100):100,doneT=!!S.checks[today()]&&n>0,pc=costume();
+  const cap=doneT?`<p class="change glass${justChecked?' new':''}"><span class="spark" aria-hidden="true">✦</span><span>${grow(n).label}</span></p>`
+    :`<p class="change mute glass">${n?'今天浇水后，花会有新的变化':'浇第一次水，种子就会发芽'}</p>`;
+  const drop=justChecked&&!calm()?`<svg class="drop" viewBox="0 0 24 32" aria-hidden="true"><path d="M12 1S2 13.5 2 20.5a10 10 0 0 0 20 0C22 13.5 12 1 12 1z"/></svg>`:'';
+  return scene(`<div class="sc-top"><div style="min-width:0"><h1 class="hello" style="font-size:1.75rem">${esc(S.name)}，<span style="display:inline-block">${greetWord()}！</span></h1><p class="date">${dateLine()}</p><span class="chip glass">${stageName(n)} · 累计 <b>${n}</b> 天</span>${pc.label?`<span class="chip glass fest">✦ ${pc.label}</span>`:''}</div>
+      <div class="pts" id="pts" aria-label="积分 ${S.points}">${COIN}<span>${S.points}</span></div></div>
+    <div class="plant" id="plant" style="height:${f1((260-vbY0(grow(n)))/260*12.5)}rem">${plantSVG(n,{cls:justChecked?'grow':'',hl:doneT})}${drop}${itemDeco(pc)}${petMarkup(n,pc,doneT)}</div>
+    ${cap}
+    ${m?`<div class="sc-prog glass"><div class="row-b"><span>再 <b>${m.n-n}</b> 天${m.stage}</span><span>礼物：${m.gift}</span></div><div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${Math.max(pct,3)}%"></i></div></div>`
+      :`<div class="sc-prog glass" style="text-align:center"><b>90 天毕业了！</b>好习惯已经养成。</div>`}`);
+}
+function furPick(kind,cur){return `<div class="furpick">${FUR[kind].map(f=>`<button class="fp" data-fur="${f.k}" aria-pressed="${cur===f.k}">${petThumb(kind,f.k)}<span>${f.n}</span></button>`).join('')}</div>`}
+function petMarkup(n,pc,awake){
+  const st=petStage(n);
+  return `<div class="pet" id="petw" data-mode="${awake?'awake':'sleep'}" data-stage="${st}" data-cos="${pc.cos}" style="--ps:${petScale(st)}"><div class="pet-j${justChecked&&!calm()?' jump':''}"><div class="pet-in" id="petin">${petSVG(S.pet,st,pc.cos,awake?'sit':'sleep',S.fur)}</div></div></div>`+(awake&&st>=5?`<div class="ball" id="ball">${BALL(S.pet)}</div>`:'');
+}
+function doneBlock(){
+  const r=fill(REPLIES[hash(today())%REPLIES.length]);
+  return `<div class="done" id="done"><div class="done-top"><div class="stamp${justChecked?' new':''}">已打卡</div>
+    <div style="min-width:0"><h2 class="done-t">今天打卡完成</h2><p class="small muted">花浇好了，${esc(S.petName)}也吃饱了 · <span class="gold">积分 +10</span></p></div></div>
+    <div class="reply"><div class="avatar">${esc(S.partner[0])}</div><p class="small" style="min-width:0"><b>${esc(S.partner)}：</b>${esc(r)}</p></div></div>`;
+}
+function morningCard(done){
+  const g=imgWord(),head=`<h3 class="ch"><span class="ci">${I.sun}</span>今天的${g}图</h3>`;
+  if(!done)return `<section class="card blush">${head}<div class="frame teaser"><div class="blurimg" id="mblur"></div><div class="lock"><div class="ring">${LOCK}</div><p class="pill">打卡后就能领取</p></div></div></section>`;
+  const tip=TIPS[hash(today())%TIPS.length];
+  return `<section class="card blush" id="mcard"><div class="row-b">${head}<span class="tag ok">已领取</span></div>
+    <div class="frame"><p class="loading" id="mload">正在准备${g}图…</p><img id="mimg" alt="今天的${g}图：${esc(tip)}" hidden${justChecked?' class="reveal"':''}></div>
+    <p class="small muted">长按图片，可以保存或转发给家人朋友。</p></section>`;
+}
+function flipBlock(){
+  const f=S.flips[today()];
+  if(!f)return `<button class="flip" data-act="flip"><span class="gift">${GIFT}</span><span>翻开今天的惊喜卡</span></button>`;
+  if(f.type==='gift')return `<div class="prize"><div class="p-big">中奖了！小礼物一份</div><p>告诉 ${esc(S.partner)}，下次见面领取。</p><a class="btn solid" style="margin-top:10px" href="${waLink(`${S.partner} 你好，我是${S.name}，今天翻惊喜卡中了一份小礼物！`)}" target="_blank" rel="noopener">用 WhatsApp 告诉 ${esc(S.partner)}</a></div>`;
+  if(f.type==='pts')return `<div class="prize"><div class="p-big">积分 +5</div><p class="small muted">明天再来翻一张</p></div>`;
+  if(f.type==='fact')return `<div class="prize fact"><span class="ntag g">营养小知识</span><p class="p-fact">${esc(FACTS[f.i%FACTS.length])}</p><p class="small muted">明天再来翻一张</p></div>`;
+  if(f.type==='quiz'){const Q=QUIZ[f.i%QUIZ.length];
+    if(f.ans==null)return `<div class="prize quiz"><span class="ntag gold">小测验 · 答对 +5 积分</span><p class="p-fact">${esc(Q.q)}</p><div class="qopts">${Q.o.map((o,j)=>`<button class="opt" data-quiz="${j}">${esc(o)}</button>`).join('')}</div></div>`;
+    const ok=f.ans===Q.a;return `<div class="prize quiz"><span class="ntag gold">小测验</span><p class="p-fact">${ok?'答对了！积分 +5':'答案是「'+esc(Q.o[Q.a])+'」，积分 +2'}</p><p>${esc(Q.w)}</p><p class="small muted">明天再来翻一张</p></div>`}
+  return `<div class="prize"><div class="p-big">${esc(f.text)}</div><p class="small muted">明天再来翻一张</p></div>`;
+}
+function careDay(){const d=dayNum(),t=today();for(let k=d;k>=Math.max(1,d-2);k--){if(!CARE[k])continue;const a=S.answers[k];if(k===d||!a||a.d===t)return k}return 0}
+function careBlock(){
+  const d=careDay(),c=CARE[d];if(!c)return '';const a=S.answers[d],eb=`<span class="eyebrow ch"><span class="ci y">${I.chat}</span>${c.t}</span>`;
+  if(a){const need=(NEED[d]||[]).includes(a.a);
+    return `<div class="card care">${eb}<h3>${c.q}</h3><p>你的回答：<b>${esc(a.a)}</b></p>
+    <div class="reply"><div class="avatar">${esc(S.partner[0])}</div><div class="bubble"><b>${esc(S.partner)}</b>${esc(fill(c.r(a.a)))}</div></div>
+    ${need?`<a class="btn solid" href="${waLink(`${S.partner} 你好，我是${S.name}。第 ${d} 天的问题「${c.q}」，我的回答是：${a.a}`)}" target="_blank" rel="noopener">用 WhatsApp 告诉 ${esc(S.partner)}</a>`:''}</div>`}
+  return `<div class="card care">${eb}<h3>${c.q}</h3>
+    <div class="opts">${c.o.map(o=>`<button class="opt" data-care="${d}" data-a="${esc(o)}">${esc(o)}</button>`).join('')}</div></div>`;
+}
+function viewToday(){
+  const t=today(),done=!!S.checks[t],y=add(t,-1),canMakeup=y>=S.start&&!S.checks[y],stg=stageOf(count());
+  return gardenScene()+
+    (done?doneBlock()+careBlock():`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>我今天吃了营养<span class="sub">点一下，给花浇水</span></span></button>`)+
+    (canMakeup?`<button class="link-btn" data-act="makeup">昨天忘了打卡？点这里补上</button>`:'')+
+    (stg===3?newsCard():'')+morningCard(done)+(done?flipBlock():'')+(stg<3?newsCard():'')+changeCard()+(S.a2hs?'':homeCard())+demoTools()+footer();
+}
+function newsCard(){const {card}=newsNow();if(!card)return '';
+  return `<section class="card ncard"><div class="row-b"><h3 class="ch"><span class="ci y">${I.mail}</span>本周信息${S.seen.includes(card.id)?'':'<span class="ndot" aria-label="新"></span>'}</h3><span class="ntag ${NTAG[card.type]||'b'}">${card.series?'新手小贴士':esc(card.type)}</span></div>
+    <p class="ntitle2">${esc(card.title)}</p><button class="btn" data-act="news" data-nid="${card.id}">打开看看</button></section>`}
+/* stage 2+: the customer's own before-and-after, the strongest kind of value */
+function changeCard(){if(stageOf(count())<2)return '';const F=S.feel,t=today();
+  const first=F.filter(x=>diff(S.start,x.d)<30),recent=F.filter(x=>diff(S.start,x.d)>=30&&diff(x.d,t)<30);
+  const head=`<h3 class="ch"><span class="ci">${I.chart}</span>我的变化</h3>`;
+  if(!first.length||!recent.length)return `<section class="card">${head}<p class="small muted">每个星期在「感觉」页记录精神、睡眠和肠胃。第一个月和最近一个月都有记录后，这里就会出现比较。</p><button class="btn" data-tab="feel">去记录感觉</button></section>`;
+  const avg=(L,k)=>L.reduce((s,x)=>s+x[k],0)/L.length;
+  return `<section class="card">${head}<p class="small muted">浅色是第一个月，深色是最近一个月</p>${[['e','精神'],['s','睡眠'],['g','肠胃']].map(([k,l])=>{const a=avg(first,k),b=avg(recent,k),d=b-a;
+    return `<div class="chg"><span class="chg-l">${l}</span><span class="chg-bars"><span class="chg-bar"><i style="width:${Math.round(a*20)}%"></i></span><span class="chg-bar now"><i style="width:${Math.round(b*20)}%"></i></span></span><b class="chg-t${d>.2?' up':''}">${d>.2?'变好了':d<-.2?'问问伙伴':'差不多'}</b></div>`}).join('')}</section>`}
+function libraryCard(){const L=newsList();if(!L.length)return '';
+  return `<div class="card"><h3 class="ch"><span class="ci y">${I.mail}</span>知识库</h3><p class="small muted">之前的信息都在这里，随时可以重看</p>
+    <div class="nlist">${L.map(x=>`<button class="nitem" data-act="news" data-nid="${x.id}"><span class="ntag ${NTAG[x.type]||'b'}">${x.series?'小贴士':esc(x.type)}</span><span class="nt">${esc(x.title)}</span></button>`).join('')}</div></div>`}
+function homeCard(){
+  return `<section class="card"><div class="row-b"><h3 class="ch"><span class="ci g">${I.phone}</span>放到手机桌面</h3><button class="link-btn" style="padding:0" data-act="a2hs">我放好了</button></div>
+    <p class="small muted">以后像 App 一样一点就打开。<br>iPhone：点分享键（方框加箭头），选「添加到主屏幕」。<br>Android：点右上角三个点，选「添加到主屏幕」或「安装应用」。</p></section>`;
+}
+
+/* ---------- records ---------- */
+function fontPick(){
+  return `<div class="fsopts" role="group" aria-label="字体大小">${[['s','标准',18],['m','大',20],['l','特大',23]].map(([k,l,px])=>
+    `<button class="fsopt" data-fs="${k}" aria-pressed="${S.fs===k}"><span style="font-size:${Math.round(px*1.35)}px;line-height:1.1">早安</span><span style="font-size:15px">${l}</span></button>`).join('')}</div>`;
+}
+function viewLog(){
+  const t=today(),d0=pd(t),y=d0.getFullYear(),m=d0.getMonth(),first=(new Date(y,m,1).getDay()+6)%7,dim=new Date(y,m+1,0).getDate();
+  let cells='一二三四五六日'.split('').map(w=>`<div class="wd">${w}</div>`).join(''),mc=0;
+  for(let i=0;i<first;i++)cells+='<div></div>';
+  for(let i=1;i<=dim;i++){const s=ymd(new Date(y,m,i)),on=!!S.checks[s];if(on)mc++;
+    cells+=`<div class="d${on?' on':''}${s===t?' today':''}${s<S.start?' pre':''}" aria-label="${i}日${on?' 已打卡':''}">${i}</div>`}
+  const n=count(),nx=nextMile();
+  const path=MILES.map(ms=>{
+    if(n>=ms.n)return `<div class="stone got"><div class="mini">${plantSVG(ms.n)}</div><div><h4>${ms.name} · ${ms.stage}</h4><p class="small muted">累计 ${ms.n} 天 · ${ms.gift} · 已达成</p></div></div>`;
+    if(nx&&nx.id===ms.id)return `<div class="stone next"><div class="mini">${plantSVG(ms.n)}</div><div><h4>${ms.name} · ${ms.stage} <span class="tag">下一阶段</span></h4><p class="small muted">再打卡 ${ms.n-n} 天 · 可以领：${ms.gift}</p></div></div>`;
+    return `<div class="stone"><div class="mini secret" aria-label="还没揭晓">?</div><div><h4>${ms.name} · 到时候揭晓</h4><p class="small muted">累计 ${ms.n} 天 · 礼物：${ms.gift}</p></div></div>`}).join('');
+  const ans=Object.entries(S.answers).map(([d,a])=>`<div><p class="small muted">第 ${d} 天 · ${esc(CARE[d]?CARE[d].q:'')}</p><p><b>${esc(a.a)}</b></p></div>`).join('');
+  return miniScene('我的记录',`累计打卡 ${n} 天 · ${STAGE_NAME[stageOf(n)]} · 积分 ${S.points}`)+
+    `<div class="card"><div class="row-b"><h3 class="ch"><span class="ci g">${I.cal}</span>${m+1}月</h3><span class="muted small">这个月打卡 ${mc} 天</span></div><div class="cal">${cells}</div>
+      <p class="note">绿色圆圈是已经打卡的日子。漏了一两天没关系，奖励是按累计天数算的。</p></div>
+    <div class="card"><h3 class="ch"><span class="ci">${I.flower}</span>我的花和奖励</h3><div class="path">${path}</div></div>
+    <div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>我的宠物</h3><div class="petrow"><div class="petbox">${petSVG(S.pet,petStage(n),costume().cos,'sit',S.fur)}</div><div style="min-width:0"><p><b>${esc(S.petName)}</b>（${S.pet==='dog'?'小狗':'小猫'}）</p><p class="small muted">${PET_TXT[petStage(n)]}</p></div></div>
+      <label for="pn2" class="small muted">改名字</label><div class="row"><input type="text" id="pn2" maxlength="8" value="${esc(S.petName)}" style="flex:1;min-width:0"><button class="btn" data-act="rename">保存</button></div>
+      <p class="small muted" style="margin-top:14px">换毛色</p>${furPick(S.pet,furOf(S.pet,S.fur).k)}</div>
+    ${libraryCard()}
+    ${ans?`<div class="card"><h3 class="ch"><span class="ci y">${I.chat}</span>我和伙伴的问答</h3><div class="qa">${ans}</div></div>`:''}
+    <div class="card"><h3 class="ch"><span class="ci g">${I.font}</span>字体大小</h3><p class="small muted">选一个你看得最清楚的</p>${fontPick()}</div>`+footer();
+}
+
+/* ---------- feelings ---------- */
+function chart(){
+  const F=S.feel;if(!F.length)return '<p class="note">记录第一次以后，这里会画出你的变化。</p>';
+  const W=320,H=170,L=30,R=14,T=12,B=30,xs=i=>F.length===1?(L+W-R)/2:L+i*(W-L-R)/(F.length-1),ys=v=>T+(5-v)*(H-T-B)/4;
+  const faces=['😣','🙁','😐','🙂','😄'];let g='';
+  for(let v=1;v<=5;v++)g+=`<line x1="${L}" x2="${W-R}" y1="${ys(v)}" y2="${ys(v)}" style="stroke:var(--line)"/><text x="4" y="${ys(v)+6}" font-size="15">${faces[v-1]}</text>`;
+  const ser=[['e','var(--leaf)'],['s','var(--gold-bright)'],['g','var(--coral)']].map(([k,c])=>
+    `<polyline style="fill:none;stroke:${c};stroke-width:3;stroke-linejoin:round" points="${F.map((f,i)=>xs(i)+','+ys(f[k])).join(' ')}"/>`+
+    F.map((f,i)=>`<circle cx="${xs(i)}" cy="${ys(f[k])}" r="${i===F.length-1?5.5:4}" style="fill:${c}"/>`).join('')).join('');
+  const lab=F.map((f,i)=>`<text x="${xs(i)}" y="${H-8}" font-size="12" text-anchor="middle" style="fill:var(--muted)">第${f.day}天</text>`).join('');
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="感觉变化图">${g}${ser}${lab}</svg>
+    <div class="legend"><span style="--c:var(--leaf)">精神</span><span style="--c:var(--gold-bright)">睡眠</span><span style="--c:var(--coral)">肠胃</span></div>
+    ${F.length<2?'<p class="note">每个星期记录一次，就能看到自己的变化。</p>':''}`;
+}
+function viewFeel(){
+  const last=S.feel[S.feel.length-1],can=!last||diff(last.d,today())>=7;
+  const M=[['e','精神'],['s','睡眠'],['g','肠胃']],faces=['😣','🙁','😐','🙂','😄'];
+  const form=can?`<div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>这个星期感觉怎样？</h3>${M.map(([k,l])=>`<div class="metric"><span>${l}</span><div class="faces">${faces.map((f,i)=>`<button class="face" data-m="${k}" data-v="${i+1}" aria-pressed="${draft[k]===i+1}" aria-label="${l} ${i+1}分">${f}</button>`).join('')}</div></div>`).join('')}
+      <button class="btn solid" data-act="feel" ${draft.e&&draft.s&&draft.g?'':'disabled'}>保存这星期的感觉（+10 积分）</button></div>`
+    :`<div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>这星期已经记录了</h3><p class="muted">${7-diff(last.d,today())} 天后再来记录一次。</p></div>`;
+  const qs=S.questions.map(q=>`<div><p class="small muted">第 ${q.day} 天</p><p>${esc(q.text)}</p><p class="small" style="color:var(--leaf-dark)">已打开 WhatsApp 发给 ${esc(S.partner)}</p></div>`).join('');
+  return miniScene('我的感觉','这里只记录感觉，不是医疗诊断')+
+    `${form}<div class="card"><h3 class="ch"><span class="ci g">${I.chart}</span>我的变化</h3>${chart()}</div>
+    <div class="card"><h3 class="ch"><span class="ci y">${I.chat}</span>有什么想问 ${esc(S.partner)}？</h3><label for="q" class="small muted">写下你的问题，${esc(S.partner)} 会回复你。身体不舒服，请先看医生。</label>
+      <textarea id="q" placeholder="例如：营养要饭前吃还是饭后吃？"></textarea><a class="btn solid" id="askbtn" data-act="ask" href="${waLink(askText(''))}" target="_blank" rel="noopener">用 WhatsApp 发给 ${esc(S.partner)}</a>
+      ${qs?`<div class="qa">${qs}</div>`:''}</div>`+footer();
+}
+
+/* ---------- first visit ---------- */
+function viewOnboard(){
+  const ok=draftName.trim()&&draftAnchor&&draftOk;
+  return scene(`<div class="sc-top"><div><h1 class="hello">欢迎你！</h1><p class="date">一起养一盆健康花</p></div></div>
+      <div class="plant" style="height:7.5rem">${plantSVG(0)}</div>
+      <p class="change glass" style="color:inherit"><span style="display:inline-block">每天吃完营养，点一下打卡，</span><span style="display:inline-block">种子就会慢慢长大开花。</span></p>`)+
+    `<div class="card"><h3>1. 哪一种字看得最清楚？</h3>${fontPick()}</div>
+    <div class="card"><label for="nm"><h3>2. 我们怎么称呼你？</h3></label><input type="text" id="nm" placeholder="例如：陈姐" value="${esc(draftName)}"></div>
+    <div class="card"><h3>3. 你打算什么时候吃？</h3><div class="opts">${['早餐后','午餐后','晚餐后'].map(a=>`<button class="opt${draftAnchor===a?' sel':''}" data-anchor="${a}">${a}</button>`).join('')}</div></div>
+    <div class="card"><h3>4. 你想养小猫还是小狗？</h3><div class="petpick">${['cat','dog'].map(k=>`<button class="pp" data-pet="${k}" aria-pressed="${draftPet===k}">${petSVG(k,1,'','sit',k===draftPet?draftFur:'')}<span>${k==='cat'?'小猫':'小狗'}</span></button>`).join('')}</div>
+      <p class="small muted" style="margin-top:12px">选一个毛色</p>${furPick(draftPet,furOf(draftPet,draftFur).k)}
+      <label for="pn" class="small muted">它的名字（可以改）</label><input type="text" id="pn" maxlength="8" value="${esc(draftPetName)}"></div>
+    <div class="card"><h3>5. 你的生日（可以不填）</h3><p class="small muted">生日那天，宠物会戴上生日帽陪你庆祝。</p>
+      <div class="row"><select id="bm" aria-label="生日月份"><option value="">月</option>${Array.from({length:12},(_,i)=>`<option value="${i+1}"${+draftBM===i+1?' selected':''}>${i+1} 月</option>`).join('')}</select>
+      <select id="bd" aria-label="生日日期"><option value="">日</option>${Array.from({length:31},(_,i)=>`<option value="${i+1}"${+draftBD===i+1?' selected':''}>${i+1} 日</option>`).join('')}</select></div></div>
+    <div class="card"><label style="display:flex;gap:12px;align-items:flex-start"><input type="checkbox" id="ok" ${draftOk?'checked':''} style="width:1.6rem;height:1.6rem;flex:none;margin-top:4px">
+      <span>我同意把打卡记录、感觉记录和问题分享给我的伙伴 ${esc(S.partner)}，用来关心我的情况。我可以随时要求删除这些记录。</span></label></div>
+    <button class="checkin" data-act="start" ${ok?'':'disabled'}><span>种下我的健康花<span class="sub">开始 90 天旅程</span></span></button>`+demoTools();
+}
+function demoTools(){
+  if(!DEMO)return '';
+  return `<details class="demo"><summary>演示工具（给伙伴看，正式版没有）</summary>
+    <div class="row" style="padding-bottom:8px"><button class="btn" data-act="next">跳到明天</button><button class="btn" data-act="prev">回到前一天</button>
+    <button class="btn" data-act="jump">直接到下一个礼物日</button><button class="btn" data-act="fast">连续打卡 7 天</button>
+    <button class="btn" data-act="new">看新客人第一天</button><button class="btn" data-act="sample">恢复示例</button></div>
+    <div class="row" style="padding-bottom:8px"><button class="btn" data-act="newsdemo">看本周信息弹窗</button><button class="btn" data-act="cos">看节日装扮${demoCos>=0?`（${demoCos+1}/${DEMO_COS.length}）`:''}</button>${demoCos>=0?'<button class="btn" data-act="cosoff">看平常样子</button>':''}</div>
+    <div class="row" style="padding-bottom:8px">${[['am','看早上'],['day','看中午'],['dusk','看傍晚'],['night','看晚上'],['','跟随时间']].map(([k,l])=>`<button class="btn" data-period="${k}" aria-pressed="${demoP===k}">${l}</button>`).join('')}</div>
+    <p>${S.sample?'现在显示的是示例客人「陈姐」的资料。':''}想看花每天的变化：先点「跳到明天」，再点打卡。试用版的资料只存在这部手机里。</p></details>`;
+}
+function footer(){return `<footer class="fine">本工具只记录生活习惯，不提供医疗建议。<br>Independent Distributor 自制工具</footer>`}
+
+/* ---------- render, effects, events ---------- */
+const calm=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+function render(){
+  clearTimeout(PET.t);
+  document.documentElement.className='fs-'+S.fs;
+  const app=$('#app');
+  if(!S.onboarded){app.innerHTML=viewOnboard();$('#nav').hidden=true;return}
+  $('#nav').hidden=false;
+  app.innerHTML=tab==='today'?viewToday():tab==='log'?viewLog():viewFeel();
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===tab?'page':'false'));
+  if(tab==='today'){fillMorning();setTimeout(petStart,0)}
+}
+let lastW=innerWidth;addEventListener('resize',()=>{if(innerWidth===lastW)return;lastW=innerWidth;if(tab==='today')petStart()});
+function bumpPts(){const p=$('#pts');if(p){p.classList.remove('bump');void p.offsetWidth;p.classList.add('bump')}}
+function toDone(){const el=$('#done');if(el)el.scrollIntoView({behavior:calm()?'auto':'smooth',block:'start'})}
+function confetti(){
+  if(calm())return;
+  const c=$('#fx'),x=c.getContext('2d'),dpr=Math.min(devicePixelRatio||1,2),W=innerWidth,H=innerHeight;
+  c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);c.hidden=false;
+  const cs=getComputedStyle(document.documentElement),cols=['--coral','--gold-bright','--leaf','--petal','--petal2'].map(v=>cs.getPropertyValue(v).trim());
+  const P=Array.from({length:110},()=>({x:W/2+(Math.random()-.5)*W*.4,y:H*.42,vx:(Math.random()-.5)*13,vy:-Math.random()*15-6,r:Math.random()*7+5,c:cols[Math.random()*cols.length|0],a:Math.random()*6,va:(Math.random()-.5)*.35}));
+  let f=0;(function step(){x.clearRect(0,0,W,H);
+    P.forEach(p=>{p.vy+=.42;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.a+=p.va;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});
+    if(++f<120)requestAnimationFrame(step);else{x.clearRect(0,0,W,H);c.hidden=true}})();
+}
+function celebrate(m){
+  const o=$('#overlay'),line=m.stage==='开花'?'你的花开了！':`你的花${m.stage}了！`;
+  o.innerHTML=`<div class="box" role="dialog" aria-modal="true" aria-label="${m.name}"><div class="ov-pics">${plantSVG(m.n,{hl:true})}${petSVG(S.pet,petStage(m.n),'','sit',S.fur)}</div>
+    <div class="medal">${m.name}</div><p style="font-size:1.15rem;font-weight:700">${line}累计打卡 ${m.n} 天</p><p>${esc(S.petName)}${PET_MS[m.id]||''}</p>
+    <p>你的奖励：<b>${m.gift}</b></p><a class="btn solid" href="${waLink(`${S.partner} 你好，我是${S.name}，我完成了「${m.name}」，累计打卡 ${m.n} 天！奖励是：${m.gift}`)}" target="_blank" rel="noopener">告诉 ${esc(S.partner)} 领取奖励</a>
+    <button class="checkin" style="min-height:4rem;font-size:1.2rem;margin-top:6px" data-act="close"><span>好的</span></button></div>`;
+  o.hidden=false;o.querySelector('button').focus();confetti();
+}
+function checkMile(){
+  const n=count(),news=MILES.filter(x=>n>=x.n&&!S.gifts[x.id]);if(!news.length)return false;
+  news.forEach(x=>S.gifts[x.id]=today());save();celebrate(news[news.length-1]);return true;
+}
+function keepName(){const el=$('#nm');if(el)draftName=el.value}
+function afterWater(scroll){
+  render();justChecked=false;bumpPts();confetti();
+  setTimeout(()=>document.querySelectorAll('.drop').forEach(el=>el.remove()),1200);
+  setTimeout(()=>{if(!checkMile()){if(scroll)toDone();setTimeout(maybeNews,1900)}},1700);
+}
+
+document.addEventListener('click',e=>{
+  const ak=e.target.closest('a[data-act=ask]');
+  if(ak){const q=$('#q'),v=q?q.value.trim():'';if(!v){e.preventDefault();if(q)q.focus();return}
+    ak.href=waLink(askText(v));S.questions.unshift({day:dayNum(),text:v});save();setTimeout(render,400);return}
+  const b=e.target.closest('button');if(!b||b.disabled)return;const a=b.dataset.act,t=today();
+  if(b.dataset.tab){tab=b.dataset.tab;render();scrollTo(0,0);return}
+  if(b.dataset.fs){keepName();S.fs=b.dataset.fs;save();render();return}
+  if('period' in b.dataset){demoP=b.dataset.period;render();return}
+  if(b.dataset.fur){if(S.onboarded){S.fur=b.dataset.fur;save()}else{keepName();draftFur=b.dataset.fur}render();return}
+  if(b.dataset.pet){keepName();draftPet=b.dataset.pet;draftFur='';if(['','招财','旺财'].includes(draftPetName.trim()))draftPetName=PETN[draftPet];render();return}
+  if(b.dataset.care){const d=b.dataset.care;S.answers[d]={a:b.dataset.a,d:t};S.points+=5;save();
+    if(b.dataset.a==='去记录我的感觉')tab='feel';render();bumpPts();return}
+  if(b.dataset.m){draft[b.dataset.m]=+b.dataset.v;render();return}
+  if('quiz' in b.dataset){const f=S.flips[t];if(f&&f.type==='quiz'&&f.ans==null){f.ans=+b.dataset.quiz;const ok=f.ans===QUIZ[f.i].a;S.points+=ok?5:2;save();render();bumpPts();if(ok)confetti()}return}
+  if(b.dataset.anchor){keepName();draftAnchor=b.dataset.anchor;render();return}
+  switch(a){
+    case 'check':S.checks[t]=1;S.points+=10;justChecked=true;PET.woke=true;save();afterWater(true);break;
+    case 'makeup':S.checks[add(t,-1)]=1;S.points+=5;justChecked=true;save();afterWater(false);break;
+    case 'fast':{if(S.checks[t])S.offset=(S.offset||0)+1;
+      for(let i=0;i<7;i++){S.checks[today()]=1;S.points+=10;if(i<6)S.offset=(S.offset||0)+1}
+      justChecked=true;tab='today';save();scrollTo(0,0);afterWater(false);break}
+    case 'jump':{const m=nextMile();if(!m)break;
+      while(count()<m.n){if(S.checks[today()])S.offset=(S.offset||0)+1;S.checks[today()]=1;S.points+=10}
+      justChecked=true;tab='today';save();scrollTo(0,0);afterWater(false);break}
+    case 'flip':{const r=hash(t+S.name)%100,won=Object.keys(S.flips).some(d=>S.flips[d].type==='gift'&&diff(d,t)>=0&&diff(d,t)<30);
+      /* stage 1 gifts and blessings; stage 2 fewer gifts, facts and quizzes; stage 3 no random gifts */
+      const stg=stageOf(count()),G=[6,3,0][stg-1],P=[36,28,20][stg-1];let f;
+      if(r<G&&!won)f={type:'gift'};else if(r<P){f={type:'pts'};S.points+=5}
+      else if(stg===1)f={type:'bless',text:BLESS[hash(t)%BLESS.length]};
+      else if(r<(P+100)/2){f={type:'fact',i:(S.factN||0)%FACTS.length};S.factN=(S.factN||0)+1}
+      else{f={type:'quiz',i:(S.quizN||0)%QUIZ.length,ans:null};S.quizN=(S.quizN||0)+1}
+      S.flips[t]=f;save();render();if(f.type==='gift'||f.type==='pts'){bumpPts();confetti()}break}
+    case 'feel':S.feel.push({d:t,day:dayNum(),...draft});draft={e:0,s:0,g:0};S.points+=10;save();render();break;
+    case 'ask':{const v=$('#q').value.trim();if(!v)return;S.questions.unshift({day:dayNum(),text:v});save();render();break}
+    case 'a2hs':S.a2hs=true;save();render();break;
+    case 'rename':{const v=($('#pn2')||{}).value;if(v&&v.trim()){S.petName=v.trim().slice(0,8);save();render()}break}
+    case 'cos':demoCos=demoCos+1>=DEMO_COS.length?-1:demoCos+1;render();break;
+    case 'cosoff':demoCos=-1;render();break;
+    case 'close':$('#overlay').hidden=true;toDone();break;
+    case 'nclose':$('#overlay').hidden=true;break;
+    case 'news':{const id=b.dataset.nid,x=newsList().find(n=>n.id===id)||[newsNow().card].find(n=>n&&n.id===id);showNews(x);break}
+    case 'newsdemo':showNews(newsNow().card||demoNews()[2]);break;
+    case 'next':S.offset=(S.offset||0)+1;save();render();scrollTo(0,0);break;
+    case 'prev':if(diff(S.start,add(t,-1))>=0){S.offset=(S.offset||0)-1;save();render()}break;
+    case 'new':{const fs=S.fs;S=fresh();S.fs=fs;draftName='';draftAnchor='';draftOk=false;draftPet='cat';draftFur='';draftPetName='招财';draftBM='';draftBD='';tab='today';save();render();scrollTo(0,0);break}
+    case 'sample':S=seed();tab='today';save();render();scrollTo(0,0);break;
+    case 'start':keepName();if(!(draftName.trim()&&draftAnchor&&draftOk))return;
+      S.name=draftName.trim();S.anchor=draftAnchor;S.pet=draftPet;S.fur=furOf(draftPet,draftFur).k;S.petName=(draftPetName.trim()||PETN[draftPet]).slice(0,8);
+      S.bday=draftBM&&draftBD?String(draftBM).padStart(2,'0')+'-'+String(draftBD).padStart(2,'0'):'';S.onboarded=true;S.consent=t;S.start=t;tab='today';save();render();scrollTo(0,0);break;
+  }
+});
+document.addEventListener('change',e=>{if(e.target.id==='bm')draftBM=e.target.value;if(e.target.id==='bd')draftBD=e.target.value});
+document.addEventListener('input',e=>{if(e.target.id==='pn')draftPetName=e.target.value;if(e.target.id==='q'){const a=$('#askbtn');if(a)a.href=waLink(askText(e.target.value.trim()))}if(e.target.id==='nm'){draftName=e.target.value;const s=document.querySelector('[data-act=start]');if(s)s.disabled=!(draftName.trim()&&draftAnchor&&draftOk)}});
+document.addEventListener('change',e=>{if(e.target.id==='ok'){keepName();draftOk=e.target.checked;render()}});
+
+S=load()||(DEMO?seed():fresh());
+if(!S.pet){S.pet='cat';S.petName='招财';S.bday=S.bday||''}
+if(!S.fur)S.fur=furOf(S.pet,'').k;
+if(!S.seen)S.seen=[];
+if(PI.phone)S.pphone=PI.phone;
+if(PI.name)S.partner=PI.name;
+save();loadNews();render();fetchNews();
+if(!DEMO&&tab==='today'&&S.onboarded&&S.checks[today()])setTimeout(maybeNews,1500);
+</script>
+</body></html>
