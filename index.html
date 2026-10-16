@@ -995,17 +995,24 @@ const SB={url:SB_URL,key:SB_KEY,sess:null,k:'sb_auth',
 const CLOUD=!DEMO;
 const QS=new URLSearchParams(location.search);
 const PCODE=(QS.get('p')||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,12);
+const MOVE=(QS.get('move')||'').toLowerCase().replace(/[^0-9a-f]/g,'').slice(0,32);
+/* an iPhone home-screen icon opens as its own little app with its own storage */
+const STANDALONE=matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches||navigator.standalone===true;
 let cloudT=0,cloudBusy=false,cloudAgain=false;
-const syncFlag=v=>{try{if(v===undefined)return localStorage.getItem(KEY+'_sync');localStorage.setItem(KEY+'_sync',v)}catch(e){return null}};
-function cloudSave(now){if(!CLOUD||!S||!S.onboarded)return;syncFlag('dirty');clearTimeout(cloudT);cloudT=setTimeout(cloudPush,now?0:1500)}
+const flag=(k,v)=>{try{if(v===undefined)return localStorage.getItem(KEY+k);if(v===null)localStorage.removeItem(KEY+k);else localStorage.setItem(KEY+k,v)}catch(e){return null}};
+const syncFlag=v=>flag('_sync',v);
+const moved=()=>CLOUD&&flag('_moved')==='1';
+function cloudSave(now){if(!CLOUD||!S||!S.onboarded||moved())return;syncFlag('dirty');clearTimeout(cloudT);cloudT=setTimeout(cloudPush,now?0:1500)}
 async function cloudPush(){
   if(cloudBusy){cloudAgain=true;return}cloudBusy=true;
   const push=async()=>{await SB.anon();const body={user_id:SB.uid(),state:S};if(S.pcode)body.partner_code=S.pcode;
     await SB.req('/rest/v1/customers?on_conflict=user_id',{method:'POST',body,headers:{Prefer:'resolution=merge-duplicates,return=minimal'}})};
-  try{await push();syncFlag('ok')}
+  try{await push();syncFlag('ok');cloudMoveCode()}
   catch(e){
     /* a lost login (e.g. a long-cleared session) starts a fresh anonymous one so her data keeps flowing */
-    if(e.status===401||e.status===403){SB.store(null);try{await push();syncFlag('ok')}catch(e2){}}
+    if(e.status===401){SB.store(null);try{await push();syncFlag('ok')}catch(e2){}}
+    /* refused: her record now lives in the home-screen icon (or a new phone) */
+    else if(e.status===403){flag('_moved','1');if(tab==='today'&&$('#overlay').hidden)render()}
   }
   finally{cloudBusy=false;if(cloudAgain){cloudAgain=false;cloudSave(true)}}
 }
@@ -1026,18 +1033,41 @@ async function cloudRestore(){
   catch(e){toast('网络不太稳定，请稍后再打开恢复链接')}
   return false
 }
+/* in the browser, keep a takeover code in the address so the home-screen icon carries it */
+function setURL(mc){try{const q=new URLSearchParams(),pc=S.pcode||PCODE;if(pc)q.set('p',pc);if(mc)q.set('move',mc);const t=q.toString();history.replaceState(null,'',location.pathname+(t?'?'+t:'')+location.hash)}catch(e){}}
+async function cloudMoveCode(){
+  if(!CLOUD||STANDALONE||!S.onboarded||moved())return;
+  let m=null;try{m=JSON.parse(flag('_move')||'null')}catch(e){}
+  if(!(m&&m.code&&Date.now()-m.at<3*864e5)){try{await SB.anon();const c=await SB.rpc('make_move_code');if(c){m={code:c,at:Date.now()};flag('_move',JSON.stringify(m))}}catch(e){}}
+  setURL(m&&m.code);
+}
+/* the first time the home-screen icon opens, it takes over her record from the browser */
+async function cloudMoveIn(){
+  if(!STANDALONE||!MOVE||S.onboarded)return false;
+  try{await SB.anon();const st=await SB.rpc('claim_restore',{p_code:MOVE});
+    if(st&&typeof st==='object'&&st.onboarded){const fs=S.fs;S=Object.assign(fresh(),st);if(!st.fs)S.fs=fs;save();syncFlag('ok');tab='today';render();toast('你的小花已经搬到桌面了 🌱');return true}}catch(e){}
+  return false
+}
+/* the browser copy checks whether her record has moved away */
+async function cloudCheckMoved(){
+  if(STANDALONE||!S.onboarded||moved()||syncFlag()!=='ok'||!SB.sess)return;
+  try{const r=await SB.req('/rest/v1/customers?select=id');if(Array.isArray(r)&&!r.length){flag('_moved','1');if(tab==='today'&&$('#overlay').hidden)render()}}catch(e){}
+}
 async function cloudDelete(){
   if(!confirm('确定要删除你的全部打卡记录吗？删除后不能恢复。'))return;
   try{if(SB.uid())await SB.req('/rest/v1/customers?user_id=eq.'+SB.uid(),{method:'DELETE'})}catch(e){alert('网络不太稳定，请稍后再试');return}
-  try{localStorage.removeItem(KEY);localStorage.removeItem(KEY+'_sync');localStorage.removeItem(KEY+'_news')}catch(e){}
+  ['','_sync','_news','_move','_moved'].forEach(k=>flag(k,null));
   SB.signOut();location.replace(location.pathname+(S.pcode?'?p='+S.pcode:''))
 }
 async function cloudInit(){
   if(!CLOUD)return;SB.load(KEY+'_auth');
   addEventListener('online',()=>{if(syncFlag()!=='ok')cloudSave(true)});
   if(await cloudRestore())return;
+  if(await cloudMoveIn())return;
+  if(!STANDALONE&&MOVE&&!S.onboarded)setURL(null);
   cloudPartner();
-  if(S.onboarded&&syncFlag()!=='ok')cloudSave(true);
+  if(S.onboarded&&!moved()&&syncFlag()!=='ok')cloudSave(true);
+  else{cloudMoveCode();cloudCheckMoved()}
 }
 function toast(t){let el=$('#toast');if(!el){el=document.createElement('div');el.id='toast';el.setAttribute('role','status');document.body.appendChild(el)}
   el.textContent=t;el.className='show';clearTimeout(el._t);el._t=setTimeout(()=>{el.className=''},3200)}
@@ -1138,6 +1168,7 @@ function careBlock(){
 }
 function viewToday(){
   const t=today(),done=!!S.checks[t],y=add(t,-1),canMakeup=y>=S.start&&!S.checks[y],stg=stageOf(count());
+  if(moved())return gardenScene()+`<section class="card" style="background:var(--gold-soft);border:0"><h3 class="ch"><span class="ci y">${I.phone}</span>你的小花已经搬家了</h3><p>你的记录已经搬到手机桌面的图标（或新手机）。请从那里打开打卡，${/^[\x20-\x7E]+$/.test(S.partner)?esc(S.partner)+' ':esc(S.partner)}才看得到你的记录。</p></section>`+footer();
   return gardenScene()+
     (done?doneBlock()+careBlock():`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>我今天吃了营养<span class="sub">点一下，给花浇水</span></span></button>`)+
     (canMakeup?`<button class="link-btn" data-act="makeup">昨天忘了打卡？点这里补上</button>`:'')+
@@ -1159,7 +1190,7 @@ function libraryCard(){const L=newsList();if(!L.length)return '';
     <div class="nlist">${L.map(x=>`<button class="nitem" data-act="news" data-nid="${x.id}"><span class="ntag ${NTAG[x.type]||'b'}">${x.series?'小贴士':esc(x.type)}</span><span class="nt">${esc(x.title)}</span></button>`).join('')}</div></div>`}
 function homeCard(){
   return `<section class="card"><div class="row-b"><h3 class="ch"><span class="ci g">${I.phone}</span>放到手机桌面</h3><button class="link-btn" style="padding:0" data-act="a2hs">我放好了</button></div>
-    <p class="small muted">以后像 App 一样一点就打开。<br>iPhone：点分享键（方框加箭头），选「添加到主屏幕」。<br>Android：点右上角三个点，选「添加到主屏幕」或「安装应用」。</p></section>`;
+    <p class="small muted">以后像 App 一样一点就打开。<br>iPhone：点分享键（方框加箭头），选「添加到主屏幕」。加好后从桌面图标打开，你的小花会自动搬过去。<br>Android：点右上角三个点，选「添加到主屏幕」或「安装应用」。</p></section>`;
 }
 
 /* ---------- records ---------- */
