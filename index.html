@@ -1225,7 +1225,7 @@ function viewOnboard(){
   return scene(`<div class="sc-top"><div><h1 class="hello">欢迎你！</h1><p class="date">一起养一盆健康花</p></div></div>
       <div class="plant" style="height:7.5rem">${plantSVG(0)}</div>
       <p class="change glass" style="color:inherit"><span style="display:inline-block">每天吃完营养，点一下打卡，</span><span style="display:inline-block">种子就会慢慢长大开花。</span></p>`)+
-    `<div class="card"><h3>1. 哪一种字看得最清楚？</h3>${fontPick()}</div>
+    (CLOUD&&!S.pcode&&!PCODE&&!PI.phone?`<div class="card" style="background:var(--gold-soft);border:0"><h3>还不知道你的伙伴是谁</h3><p>请用伙伴发给你的链接打开，或请伙伴给你扫二维码。这样你的奖励和问题才会送到伙伴那里。</p></div>`:'')+`<div class="card"><h3>1. 哪一种字看得最清楚？</h3>${fontPick()}</div>
     <div class="card"><label for="nm"><h3>2. 我们怎么称呼你？</h3></label><input type="text" id="nm" placeholder="例如：陈姐" value="${esc(draftName)}"></div>
     <div class="card"><h3>3. 你打算什么时候吃？</h3><div class="opts">${['早餐后','午餐后','晚餐后'].map(a=>`<button class="opt${draftAnchor===a?' sel':''}" data-anchor="${a}">${a}</button>`).join('')}</div></div>
     <div class="card"><h3>4. 你想养小猫还是小狗？</h3><div class="petpick">${['cat','dog'].map(k=>`<button class="pp" data-pet="${k}" aria-pressed="${draftPet===k}">${petSVG(k,1,'','sit',k===draftPet?draftFur:'')}<span>${k==='cat'?'小猫':'小狗'}</span></button>`).join('')}</div>

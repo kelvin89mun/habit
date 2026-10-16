@@ -2,9 +2,8 @@
   "name": "营养好习惯",
   "short_name": "营养好习惯",
   "description": "每天打卡，和你的伙伴一起养一盆健康花。",
-  "start_url": "./",
   "scope": "./",
-  "display": "minimal-ui",
+  "display": "browser",
   "background_color": "#FFF4EC",
   "theme_color": "#FFE3D3",
   "icons": [
