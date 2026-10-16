@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>团队后台 · 营养好习惯</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FFE3D3">
+<link rel="icon" href="icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap">
+<script src="qrcode.js"></script>
+<style>
+:root{--bg:#FFF4EC;--surface:#FFFFFF;--ink:#3A2F2A;--muted:#7A6A62;--line:#F0DDD3;--coral:#E8684A;--coral-soft:#FFE5DC;--coral-text:#B8462A;
+  --leaf:#2E9A5A;--leaf-soft:#DFF3E6;--leaf-dark:#1F7A45;--gold:#9A6512;--gold-soft:#FFF1D6;--blue:#2F6FA3;--blue-soft:#E3F0FB;--shadow:0 4px 18px rgba(120,70,40,.08)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1D1714;--surface:#2A221E;--ink:#F5EAE3;--muted:#BFAEA4;--line:#43362F;--coral:#F0805F;--coral-soft:#4A2C22;--coral-text:#FFB49C;
+  --leaf:#4CC27C;--leaf-soft:#1F3A2A;--leaf-dark:#8FE0B0;--gold:#F2C46B;--gold-soft:#3E3219;--blue:#8CC3F0;--blue-soft:#1E3142;--shadow:none}}
+:root[data-theme="dark"]{--bg:#1D1714;--surface:#2A221E;--ink:#F5EAE3;--muted:#BFAEA4;--line:#43362F;--coral:#F0805F;--coral-soft:#4A2C22;--coral-text:#FFB49C;
+  --leaf:#4CC27C;--leaf-soft:#1F3A2A;--leaf-dark:#8FE0B0;--gold:#F2C46B;--gold-soft:#3E3219;--blue:#8CC3F0;--blue-soft:#1E3142;--shadow:none}
+*{box-sizing:border-box}
+html{font-size:17px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.6}
+[hidden]{display:none!important}
+#app{max-width:640px;margin:0 auto;padding:14px 16px 96px}
+h1{font-size:1.5rem;margin:6px 0 2px;line-height:1.3}
+h2{font-size:1.2rem;margin:0 0 8px}
+h3{font-size:1.06rem;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+p{margin:0 0 8px}
+.muted{color:var(--muted)}.small{font-size:.88rem}
+.card{background:var(--surface);border-radius:20px;padding:16px;margin:12px 0;box-shadow:var(--shadow);border:1px solid var(--line)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:3px 12px;font-size:.9rem;font-weight:700}
+.chip b{color:var(--coral-text)}
+label{display:block;font-weight:700;margin:10px 0 4px}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:10px 12px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--coral)}
+textarea{min-height:5rem;resize:vertical}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-weight:700;border-radius:14px;padding:9px 14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none;min-height:2.8rem}
+.btn.solid{background:var(--coral);border-color:var(--coral);color:#fff}
+.btn.green{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.btn.wa{background:#25A35A;border-color:#25A35A;color:#fff}
+.btn.sm{padding:5px 10px;min-height:2.3rem;font-size:.9rem;border-radius:12px}
+.btn.block{width:100%}
+.btn:disabled{opacity:.5}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tabs2{display:flex;gap:6px;margin:6px 0 10px}
+.tabs2 button{flex:1;font:inherit;font-weight:700;padding:9px;border-radius:12px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.tabs2 button[aria-pressed="true"]{border-color:var(--coral);background:var(--coral-soft);color:var(--coral-text)}
+.item{border-top:1px solid var(--line);padding:12px 0}
+.item:first-of-type{border-top:0}
+.item .nm{font-weight:700;font-size:1.05rem}
+.tag{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 9px;border-radius:99px;background:var(--coral-soft);color:var(--coral-text);margin:2px 4px 2px 0}
+.tag.g{background:var(--leaf-soft);color:var(--leaf-dark)}.tag.y{background:var(--gold-soft);color:var(--gold)}.tag.b{background:var(--blue-soft);color:var(--blue)}
+.cus{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;font:inherit;color:var(--ink);background:none;border:0;border-top:1px solid var(--line);padding:12px 2px;cursor:pointer}
+.cus:first-of-type{border-top:0}
+.cus .r{text-align:right;flex:none}
+.empty{text-align:center;color:var(--muted);padding:14px 4px}
+.err{color:var(--coral-text);font-weight:700;margin-top:8px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:5}
+nav.tabs .in{display:flex;gap:4px;max-width:640px;width:100%}
+nav.tabs button{flex:1;font:inherit;font-weight:700;font-size:.92rem;padding:8px 2px;border-radius:12px;border:0;background:none;color:var(--muted)}
+nav.tabs button[aria-current="page"]{background:var(--coral-soft);color:var(--coral-text)}
+nav.tabs .badge{display:inline-block;min-width:1.2rem;padding:0 5px;border-radius:99px;background:var(--coral);color:#fff;font-size:.72rem;margin-left:3px;line-height:1.3rem}
+#modal{position:fixed;inset:0;background:rgba(20,10,6,.55);z-index:10;display:flex;align-items:flex-end;justify-content:center}
+#modal .sheet{background:var(--bg);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:16px 16px 28px}
+.grid28{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:6px 0}
+.grid28 span{aspect-ratio:1;border-radius:7px;background:var(--line);font-size:.68rem;display:grid;place-items:center;color:var(--muted)}
+.grid28 span.on{background:var(--leaf);color:#fff}
+.grid28 span.today{outline:2px solid var(--coral)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:8px 6px;border-top:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:700;border-top:0}
+td.n,th.n{text-align:right}
+.qr{display:flex;justify-content:center;margin:10px 0}
+.qr img{width:min(240px,70vw);height:auto;border-radius:14px;background:#fff;padding:10px}
+.link{word-break:break-all;background:var(--bg);border:1px dashed var(--line);border-radius:12px;padding:8px 10px;font-weight:700}
+#toast{position:fixed;left:50%;top:14px;transform:translate(-50%,-160%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:700;z-index:20;transition:transform .3s;max-width:calc(100% - 32px);text-align:center}
+#toast.show{transform:translate(-50%,0)}
+.hello{background:linear-gradient(135deg,#FFE3D3,#FFF4EC);border:0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hello{background:linear-gradient(135deg,#4A2C22,#2A221E)}}
+.feel td{white-space:nowrap}
+.faces{letter-spacing:2px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav class="tabs" id="nav" hidden><div class="in" id="navin"></div></nav>
+<div id="modal" hidden></div>
+<div id="toast" role="status"></div>
+<script>
+const MILES=[
+  {id:'m1',n:1,name:'启程',stage:'发芽',gift:'电子贺卡 + 伙伴语音祝福'},
+  {id:'m7',n:7,name:'第一周',stage:'长高一大截',gift:'好习惯勋章 + 团队群表扬'},
+  {id:'m21',n:18,name:'21 天',stage:'长出新枝',gift:'分格营养盒'},
+  {id:'m30',n:25,name:'第一个月',stage:'结出花苞',gift:'精美保温杯'},
+  {id:'m66',n:55,name:'66 天 习惯养成',stage:'开花',gift:'营养品大礼'},
+  {id:'m90',n:75,name:'90 天 毕业',stage:'开满枝头',gift:'毕业证书 + 营养品'}
+];
+const CARE={
+  1:{t:'第 1 天 · 伙伴关心',q:'营养开始吃了吗？你打算每天什么时候吃？',o:['早餐后吃','午餐后吃','晚餐后吃','还没开始吃'],
+     r:a=>a==='还没开始吃'?'没关系，{p} 会联系你，帮你安排好。':'好的！以后每天'+a.replace('吃','')+'，打开这里点一下就好。'},
+  3:{t:'第 3 天 · 伙伴关心',q:'吃了三天，身体感觉怎样？',o:['精神好像好一点','还没有什么感觉','肠胃有一点不习惯','有问题想问伙伴'],
+     r:a=>({'精神好像好一点':'太好了，继续保持！','还没有什么感觉':'很正常，营养需要时间，坚持就对了。'})[a]||'点下面的按钮告诉 {p}，很快就会联系你。'},
+  7:{t:'第 7 天 · 伙伴关心',q:'一个星期了！你每天都记得吃吗？',o:['每天都记得','偶尔会忘记','常常忘记'],
+     r:a=>({'每天都记得':'好厉害！习惯已经在慢慢养成了。','偶尔会忘记':'小方法：把营养放在早餐桌上，看到就会记得。'})[a]||'{p} 会跟你一起想办法，比如设个闹钟。'},
+  14:{t:'第 14 天 · 伙伴关心',q:'两个星期了，和第一天比较，精神、睡眠、肠胃有没有不一样？',o:['去记录我的感觉','等一下再说'],
+     r:a=>a==='去记录我的感觉'?'好的，记录完 {p} 也会看到。':'好的，有空再记录。'},
+  21:{t:'第 21 天 · 伙伴关心',q:'身边有没有朋友，也想一起照顾身体？',o:['有，请伙伴联系她','暂时没有'],
+     r:a=>a==='暂时没有'?'没关系，你照顾好自己最重要。':'谢谢你！{p} 会先问过你，再联系她。'},
+  28:{t:'第 28 天 · 伙伴关心',q:'你的营养还剩多少？',o:['还有很多','剩一个星期左右','已经吃完了'],
+     r:a=>a==='还有很多'?'好的，继续每天吃。':'{p} 会联系你安排补货，不用中断。'},
+  45:{t:'第 45 天 · 伙伴关心',q:'一个半月了，你觉得哪方面改变最多？',o:['精神','睡眠','肠胃','还在观察'],
+     r:a=>a==='还在观察'?'每个人的身体不一样，继续记录，慢慢就会看到。':'谢谢你告诉我们！{p} 知道了一定很开心。'},
+  60:{t:'第 60 天 · 伙伴关心',q:'两个月了！想不想请伙伴帮你看看这两个月的变化？',o:['好，请伙伴联系我','暂时不用'],
+     r:a=>a==='暂时不用'?'好的，有需要随时找 {p}。':'好的，{p} 会联系你，一起看看你的记录。'},
+  90:{t:'第 90 天 · 伙伴关心',q:'90 天到了！接下来你想怎样继续照顾自己？',o:['继续每天打卡','想请伙伴给我建议'],
+     r:a=>a==='继续每天打卡'?'太好了，我们继续一起加油！':'好的，{p} 会联系你，给你一些建议。'}
+};
+const NEED={1:['还没开始吃'],3:['肠胃有一点不习惯','有问题想问伙伴'],7:['常常忘记'],21:['有，请伙伴联系她'],28:['剩一个星期左右','已经吃完了'],60:['好，请伙伴联系我'],90:['想请伙伴给我建议']};
+/* ---------- a small Supabase client: anonymous sign-in for customers, email sign-in for partners ---------- */
+const SB_URL='https://mlgrkrmfxfevzdouarmn.supabase.co',SB_KEY='sb_publishable_trymvh1krw3JgyhCZQwwiw_QA-pYJYr';
+const SB={url:SB_URL,key:SB_KEY,sess:null,k:'sb_auth',
+  load(k){this.k=k;try{this.sess=JSON.parse(localStorage.getItem(k)||'null')}catch(e){this.sess=null}return this.sess},
+  store(s){this.sess=s;try{s?localStorage.setItem(this.k,JSON.stringify(s)):localStorage.removeItem(this.k)}catch(e){}return s},
+  keep(j){if(!j||!j.access_token)return null;return this.store({access_token:j.access_token,refresh_token:j.refresh_token,expires_at:Math.floor(Date.now()/1000)+(j.expires_in||3600),user:j.user})},
+  async call(path,o={}){
+    const h={apikey:this.key,'Content-Type':'application/json',...(o.headers||{})};
+    if(o.auth!==false&&this.sess)h.Authorization='Bearer '+this.sess.access_token;
+    const r=await fetch(this.url+path,{method:o.method||'GET',headers:h,body:o.body!==undefined?JSON.stringify(o.body):undefined});
+    const t=await r.text();let j=null;try{j=t?JSON.parse(t):null}catch(e){j=t}
+    if(!r.ok){const e=new Error((j&&(j.msg||j.message||j.error_description||j.error))||('HTTP '+r.status));e.status=r.status;e.body=j;throw e}
+    return j},
+  async refresh(){const s=this.sess;if(!s||!s.refresh_token)return false;
+    try{this.keep(await this.call('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:s.refresh_token},auth:false}));return true}
+    catch(e){if(e.status>=400&&e.status<500)this.store(null);return false}},
+  async req(path,o={}){
+    if(o.auth!==false&&this.sess&&this.sess.expires_at-60<Date.now()/1000)await this.refresh();
+    try{return await this.call(path,o)}
+    catch(e){if(e.status===401&&o.auth!==false&&this.sess&&!o.again&&await this.refresh())return this.req(path,{...o,again:1});throw e}},
+  async anon(){if(this.sess)return this.sess;return this.keep(await this.call('/auth/v1/signup',{method:'POST',body:{},auth:false}))},
+  async signIn(email,password){return this.keep(await this.call('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password},auth:false}))},
+  async signUp(email,password){return this.keep(await this.call('/auth/v1/signup',{method:'POST',body:{email,password},auth:false}))},
+  signOut(){const s=this.sess;if(s)this.call('/auth/v1/logout',{method:'POST'}).catch(()=>{});this.store(null)},
+  rpc(fn,args,o){return this.req('/rest/v1/rpc/'+fn,{method:'POST',body:args||{},...(o||{})})},
+  uid(){return this.sess&&this.sess.user?this.sess.user.id:null}
+};
+
+/* ---------- team dashboard: partners follow up their own customers; leaders see the whole team ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pd=s=>{const[y,m,d]=String(s).split('-').map(Number);return new Date(y,m-1,d)};
+const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const today=()=>ymd(new Date());
+const add=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return ymd(d)};
+const diff=(a,b)=>Math.round((pd(b)-pd(a))/864e5);
+const hash=s=>{let h=5381;for(const c of String(s))h=(h*33+c.codePointAt(0))>>>0;return h.toString(36)};
+const STAGE=['','养成期','稳定期','习惯期'];
+const own=(o,k)=>o!=null&&Object.prototype.hasOwnProperty.call(o,k);
+const SITE=location.href.replace(/[?#].*$/,'').replace(/[^/]*$/,'');
+const normPhone=v=>{let d=String(v||'').replace(/\D/g,'');if(d.startsWith('0'))d='6'+d;return d.slice(0,15)};
+const wa=(phone,text)=>`https://wa.me/${normPhone(phone)}?text=${encodeURIComponent(text)}`;
+const ago=d=>{if(!d)return '还没打卡';const n=diff(d,today());return n<=0?'今天':n===1?'昨天':n+' 天前'};
+const FACE=['','😣','🙁','😐','🙂','😄'];
+let ME=null,CUS=[],NOTES={},GLOG={},PARTNERS=[],TAB='today',TEAMTAB='overview',QUERY='',LOADED=0,AUTH='login';
+
+function toast(t){const el=$('#toast');el.textContent=t;el.className='show';clearTimeout(el._t);el._t=setTimeout(()=>el.className='',2600)}
+function errText(e){const m=String(e&&e.message||e||'');
+  if(/Invalid login/i.test(m))return 'email 或密码不对';
+  if(/already registered|already been registered/i.test(m))return '这个 email 已经注册过了，请直接登录';
+  if(/Password should be|at least 6/i.test(m))return '密码至少要 6 个字';
+  if(/valid email|invalid format|unable to validate email/i.test(m))return 'email 格式不对';
+  if(/Failed to fetch|NetworkError|Load failed/i.test(m))return '网络不太稳定，请再试一次';
+  return '出了一点问题：'+m}
+
+/* ---------- what each customer needs, worked out from her saved record ---------- */
+function info(c){
+  const S=c.state&&typeof c.state==='object'?c.state:{},t=today(),ck=S.checks&&typeof S.checks==='object'?S.checks:{};
+  const days=Object.keys(ck).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort(),n=days.length,last=days[n-1]||null,since=last?diff(last,t):null;
+  const start=/^\d{4}-\d{2}-\d{2}$/.test(S.start||'')?S.start:null,done=GLOG[c.id]||new Set(),note=NOTES[c.id]||{};
+  const gifts=[],needs=[];
+  for(const m of MILES){const v=S.gifts&&S.gifts[m.id];if(v&&!done.has(m.id))gifts.push({key:m.id,label:m.name,gift:m.gift,date:typeof v==='string'?v:''})}
+  if(S.flips&&typeof S.flips==='object')for(const d of Object.keys(S.flips)){const f=S.flips[d];if(f&&f.type==='gift'&&!done.has('flip:'+d))gifts.push({key:'flip:'+d,label:'惊喜卡',gift:'小礼物一份',date:d})}
+  if(S.onboarded&&(last?since>=2:(start&&diff(start,t)>=2)))needs.push({key:null,kind:'miss',text:last?`${since} 天没打卡`:'还没开始打卡'});
+  if(S.answers&&typeof S.answers==='object')for(const d of Object.keys(S.answers)){const r=S.answers[d]||{};
+    if(r.a&&own(NEED,d)&&NEED[d].includes(r.a)&&!done.has('care:'+d)&&(!r.d||diff(r.d,t)<=30))needs.push({key:'care:'+d,kind:'care',text:`第 ${d} 天：${r.a}`,q:own(CARE,d)?CARE[d].q:''})}
+  if(Array.isArray(S.questions))for(const q of S.questions){if(!q||!q.text)continue;const k='q:'+hash((q.day||'')+'|'+q.text),qd=start&&q.day?add(start,q.day-1):null;
+    if(!done.has(k)&&(!qd||diff(qd,t)<=30))needs.push({key:k,kind:'ask',text:'问题：'+q.text})}
+  return {c,S,n,last,since,start,dn:start?diff(start,t)+1:0,stage:n>=56?3:n>=26?2:1,next:MILES.find(m=>n<m.n),gifts,needs,
+    today:!!ck[t],act7:days.filter(d=>{const x=diff(d,t);return x>=0&&x<7}).length,phone:note.phone||'',note:note.note||'',
+    name:String(S.name||c.name||'（没有名字）').slice(0,40),partner:c.partner_code}
+}
+function safeInfo(c){try{return info(c)}catch(e){return {c,S:{},n:0,last:null,since:null,start:null,dn:0,stage:1,next:MILES[0],gifts:[],needs:[],today:false,act7:0,phone:'',note:'',name:'（资料有问题）',partner:c.partner_code}}}
+const mine=()=>CUS.filter(c=>c.partner_code&&ME&&c.partner_code===ME.code).map(safeInfo);
+const pname=code=>{const p=PARTNERS.find(x=>x.code===code);return p?p.name:code||'没有伙伴'};
+
+/* ---------- data ---------- */
+async function loadAll(){
+  const [cus,notes,glog]=await Promise.all([
+    SB.req('/rest/v1/customers?select=id,partner_code,name,state,checks,last_check,start_date,points,created_at,updated_at&order=updated_at.desc'),
+    SB.req('/rest/v1/customer_notes?select=customer_id,phone,note'),
+    SB.req('/rest/v1/gift_log?select=customer_id,gift_key,delivered_at')]);
+  CUS=cus||[];NOTES={};(notes||[]).forEach(n=>NOTES[n.customer_id]=n);GLOG={};(glog||[]).forEach(g=>(GLOG[g.customer_id]=GLOG[g.customer_id]||new Set()).add(g.gift_key));
+  PARTNERS=ME.is_leader?(await SB.req('/rest/v1/partners?select=user_id,name,phone,code,status,is_leader,created_at&order=created_at'))||[]:[ME];
+  LOADED=Date.now();
+}
+async function boot(){
+  SB.load('habit_team_auth');
+  if(!SB.sess){ME=null;return render()}
+  try{const r=await SB.req('/rest/v1/partners?select=*&user_id=eq.'+SB.uid());ME=r&&r[0]||null}
+  catch(e){if(e.status===401||e.status===403){SB.store(null);ME=null;return render()}$('#app').innerHTML=`<div class="card"><p class="err">${esc(errText(e))}</p><button class="btn" data-act="reload">再试一次</button></div>`;return}
+  if(ME&&ME.status==='active'){try{await loadAll()}catch(e){toast(errText(e))}}
+  render();
+}
+async function mark(cid,keys){keys=keys.filter(Boolean);if(!keys.length)return;
+  await SB.req('/rest/v1/gift_log?on_conflict=customer_id,gift_key',{method:'POST',body:keys.map(k=>({customer_id:cid,gift_key:k})),headers:{Prefer:'resolution=ignore-duplicates,return=minimal'}});
+  keys.forEach(k=>(GLOG[cid]=GLOG[cid]||new Set()).add(k))}
+
+/* ---------- screens ---------- */
+function render(){
+  const app=$('#app'),nav=$('#nav');
+  if(!SB.sess){nav.hidden=true;app.innerHTML=viewAuth();return}
+  if(!ME){nav.hidden=true;app.innerHTML=viewProfile(true);return}
+  if(ME.status==='pending'){nav.hidden=true;app.innerHTML=viewPending();checkLeader();return}
+  if(ME.status!=='active'){nav.hidden=true;app.innerHTML=`<div class="card"><h2>你的帐号已经停用</h2><p class="muted">有问题请联系你的领导。</p><button class="btn" data-act="logout">退出登录</button></div>`;return}
+  const M=mine(),need=M.filter(x=>x.needs.length).length+M.reduce((s,x)=>s+(x.gifts.length?1:0),0);
+  const T=[['today','今天',need],['cus','客人',0],...(ME.is_leader?[['team','团队',PARTNERS.filter(p=>p.status==='pending').length]]:[]),['link','我的链接',0]];
+  $('#navin').innerHTML=T.map(([k,l,b])=>`<button data-tab="${k}" aria-current="${TAB===k?'page':'false'}">${l}${b?`<span class="badge">${b}</span>`:''}</button>`).join('');
+  nav.hidden=false;
+  app.innerHTML=(TAB==='cus'?viewCustomers(M):TAB==='team'&&ME.is_leader?viewTeam():TAB==='link'?viewLink():viewToday(M));
+  if(TAB==='link')drawQR();
+}
+function viewAuth(){
+  const reg=AUTH==='reg';
+  return `<h1>团队后台</h1><p class="muted">营养好习惯 · 伙伴和领导专用</p>
+  <div class="card"><div class="tabs2"><button data-auth="login" aria-pressed="${!reg}">登录</button><button data-auth="reg" aria-pressed="${reg}">第一次用，注册</button></div>
+  <form id="authf" autocomplete="on">
+    ${reg?`<label for="f_name">你的名字（客人会看到）</label><input id="f_name" maxlength="40" required placeholder="例如：Kelvin">
+    <label for="f_phone">你的 WhatsApp 号码</label><input id="f_phone" inputmode="tel" required placeholder="例如：0123456789">`:''}
+    <label for="f_email">Email</label><input id="f_email" type="email" autocomplete="username" required>
+    <label for="f_pw">密码${reg?'（至少 6 个字）':''}</label><input id="f_pw" type="password" autocomplete="${reg?'new-password':'current-password'}" minlength="6" required>
+    <p class="err" id="f_err" hidden></p>
+    <button class="btn solid block" style="margin-top:14px" type="submit">${reg?'注册':'登录'}</button></form>
+  ${reg?'<p class="small muted" style="margin-top:10px">注册后，要等领导批准才能开始使用。</p>':'<p class="small muted" style="margin-top:10px">忘记密码？请联系你的领导帮你重设。</p>'}</div>`}
+function viewProfile(first){
+  const p=ME||{name:'',phone:''};
+  return `${first?'<h1>完成资料</h1><p class="muted">再填两样就好</p>':''}<div class="card">${first?'':'<h3>我的资料</h3>'}
+    <label for="p_name">你的名字（客人会看到）</label><input id="p_name" maxlength="40" value="${esc(p.name)}">
+    <label for="p_phone">你的 WhatsApp 号码</label><input id="p_phone" inputmode="tel" value="${esc(p.phone)}" placeholder="例如：0123456789">
+    <p class="small muted">0 开头的号码会自动改成 60 开头，客人点 WhatsApp 才找得到你。</p>
+    <button class="btn solid" data-act="saveprofile">${first?'完成':'保存'}</button>${first?' <button class="btn" data-act="logout">退出登录</button>':''}</div>`}
+function viewPending(){
+  return `<h1>等待批准</h1><div class="card"><p>你好，<b>${esc(ME.name)}</b>！你的注册已经收到。</p><p class="muted">请通知你的领导上后台批准，批准后重新打开这一页就可以用了。</p>
+    <div id="firstleader"></div><div class="row" style="margin-top:10px"><button class="btn" data-act="reload">我已经被批准了，重新整理</button><button class="btn" data-act="logout">退出登录</button></div></div>`}
+async function checkLeader(){try{const has=await SB.rpc('has_leader');if(!has&&$('#firstleader'))$('#firstleader').innerHTML=`<div class="card" style="background:var(--gold-soft);border:0;margin:10px 0"><p><b>团队还没有领导。</b>如果你是这个团队的领导，按下面的按钮。这个按钮只有第一位按的人有效。</p><button class="btn solid" data-act="leader">我是团队领导</button></div>`}catch(e){}}
+
+function hello(M){
+  const t=M.filter(x=>x.today).length;
+  return `<section class="card hello"><div class="top"><div><h1>你好，${esc(ME.name)}</h1><p class="muted small">${today()} · ${ME.is_leader?'领导':'伙伴'} · 代码 ${esc(ME.code)}</p></div><button class="btn sm" data-act="refresh">重新整理</button></div>
+    <div class="chips"><span class="chip">客人 <b>${M.length}</b></span><span class="chip">今天打卡 <b>${t}</b>/${M.length}</span><span class="chip">要跟进 <b>${M.filter(x=>x.needs.length).length}</b></span><span class="chip">要送礼物 <b>${M.reduce((s,x)=>s+x.gifts.length,0)}</b></span></div></section>`}
+function needItem(x){
+  const first=x.needs.find(n=>n.kind!=='miss');
+  const txt=first?`${x.name} 你好，我看到你说「${first.text.replace(/^第 \d+ 天：|^问题：/,'')}」，想关心一下你的情况～`:`${x.name} 你好！这两天还好吗？营养记得吃哦，吃完打开小花打个卡 🌱`;
+  return `<div class="item"><div class="top"><div><span class="nm">${esc(x.name)}</span> <span class="small muted">· 累计 ${x.n} 天</span></div><button class="btn sm" data-act="cus" data-id="${x.c.id}">详情</button></div>
+    <div>${x.needs.map(n=>`<span class="tag${n.kind==='miss'?'':n.kind==='ask'?' b':' y'}">${esc(n.text)}</span>`).join('')}</div>
+    <div class="row" style="margin-top:6px"><a class="btn wa sm" href="${wa(x.phone,txt)}" target="_blank" rel="noopener">WhatsApp 关心</a>${x.needs.some(n=>n.key)?`<button class="btn sm" data-act="handled" data-id="${x.c.id}">已跟进</button>`:''}</div></div>`}
+function giftItem(x,g,who){
+  const txt=`${x.name} 恭喜你完成「${g.label}」！你的礼物「${g.gift}」我会安排给你 🎁`;
+  return `<div class="item"><div class="top"><div><span class="nm">${esc(x.name)}</span>${who?` <span class="small muted">· ${esc(who)}</span>`:''}<div><span class="tag g">${esc(g.label)}</span><span class="small">${esc(g.gift)}</span></div>${g.date?`<p class="small muted">${esc(g.date)} 达成</p>`:''}</div></div>
+    <div class="row" style="margin-top:4px"><a class="btn wa sm" href="${wa(x.phone,txt)}" target="_blank" rel="noopener">WhatsApp 通知</a><button class="btn green sm" data-act="gift" data-id="${x.c.id}" data-key="${esc(g.key)}">已送出</button></div></div>`}
+function viewToday(M){
+  if(!M.length)return hello(M)+`<div class="card"><h3>开始吧</h3><p>你还没有客人。到「我的链接」复制你的专属链接，或给客人扫二维码，客人一注册就会出现在这里。</p><button class="btn solid" data-tab="link">去我的链接</button></div>`;
+  const nd=M.filter(x=>x.needs.length).sort((a,b)=>b.needs.length-a.needs.length),gl=M.flatMap(x=>x.gifts.map(g=>[x,g])),not=M.filter(x=>!x.today&&x.S.onboarded);
+  const remind=x=>`${x.name} 你好！今天的营养吃了吗？吃完记得打开小花打卡哦 🌱`;
+  return hello(M)+
+    `<section class="card"><h3>要跟进 <span class="tag">${nd.length}</span></h3>${nd.length?nd.map(needItem).join(''):'<p class="empty">都很好，没有要跟进的 👍</p>'}</section>`+
+    `<section class="card"><h3>要送的礼物 <span class="tag g">${gl.length}</span></h3>${gl.length?gl.map(([x,g])=>giftItem(x,g)).join(''):'<p class="empty">暂时没有</p>'}</section>`+
+    `<section class="card"><h3>今天还没打卡 <span class="tag y">${not.length}</span></h3>${not.length?not.map(x=>`<div class="item"><div class="top"><div><span class="nm">${esc(x.name)}</span><p class="small muted">最后打卡：${ago(x.last)}</p></div><a class="btn wa sm" href="${wa(x.phone,remind(x))}" target="_blank" rel="noopener">提醒</a></div></div>`).join(''):'<p class="empty">全部都打卡了 🎉</p>'}</section>`}
+function cusRow(x,who){return `<button class="cus" data-act="cus" data-id="${x.c.id}"><span><span class="nm">${esc(x.name)}</span>${who?` <span class="small muted">· ${esc(who)}</span>`:''}<br><span class="small muted">第 ${x.dn} 天 · 累计 ${x.n} 天 · ${STAGE[x.stage]}</span></span>
+  <span class="r small">${x.needs.length?'<span class="tag">要跟进</span><br>':''}${ago(x.last)}<br><span class="muted">${x.next?`再 ${x.next.n-x.n} 天：${esc(x.next.name)}`:'已毕业'}</span></span></button>`}
+function viewCustomers(M){
+  const q=QUERY.trim(),L=M.filter(x=>!q||x.name.includes(q)).sort((a,b)=>(b.needs.length>0)-(a.needs.length>0)||String(b.last||'').localeCompare(String(a.last||'')));
+  return `<h1>我的客人</h1><p class="muted small">共 ${M.length} 位 · 点名字看详情</p><input id="q" placeholder="找名字" value="${esc(QUERY)}" style="margin:6px 0 4px">
+    <div class="card">${L.length?L.map(x=>cusRow(x)).join(''):'<p class="empty">没有找到</p>'}</div>`}
+function viewLink(){
+  const link=SITE+'?p='+ME.code;
+  const inv=`你好！我们一起养一盆「健康花」吧 🌱\n每天吃完营养，打开这个网页点一下打卡，小花就会慢慢长大开花，还有小猫小狗陪你，达到天数有礼物送给你。\n不用下载，点这里就能开始：\n${link}`;
+  return `<h1>我的专属链接</h1><p class="muted small">客人用这个链接注册，就会自动成为你的客人</p>
+    <div class="card"><div class="link" id="mylink">${esc(link)}</div><div class="qr" id="qr"></div><p class="small muted" style="text-align:center">客人用手机相机扫这个二维码也可以。长按图片可以保存。</p>
+      <div class="row"><button class="btn solid" data-act="copy" data-text="${esc(link)}">复制链接</button><a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(inv)}" target="_blank" rel="noopener">用 WhatsApp 发给客人</a></div></div>
+    <div class="card"><h3>邀请文字（可以复制改一改）</h3><p style="white-space:pre-line">${esc(inv)}</p><button class="btn" data-act="copy" data-text="${esc(inv)}">复制邀请文字</button></div>
+    ${viewProfile(false)}
+    <div class="card"><button class="btn" data-act="logout">退出登录</button></div>`}
+function drawQR(){const el=$('#qr');if(!el||typeof qrcode!=='function')return;const q=qrcode(0,'M');q.addData(SITE+'?p='+ME.code);q.make();el.innerHTML=`<img alt="我的专属二维码" src="${q.createDataURL(8,4)}">`}
+
+function viewTeam(){
+  const A=CUS.map(safeInfo),t=today(),act=A.filter(x=>x.act7>=5).length,pend=PARTNERS.filter(p=>p.status==='pending'),actv=PARTNERS.filter(p=>p.status==='active'),dis=PARTNERS.filter(p=>p.status==='disabled');
+  const T=[['overview','总览'],['gifts','礼物'],['people','伙伴'+(pend.length?` ${pend.length}`:'')],['all','客人']];
+  let body='';
+  if(TEAMTAB==='overview'){
+    const rows=actv.map(p=>{const L=A.filter(x=>x.partner===p.code);return `<tr><td><b>${esc(p.name)}</b><br><span class="small muted">${esc(p.code)}${p.is_leader?' · 领导':''}</span></td><td class="n">${L.length}</td><td class="n">${L.length?Math.round(L.filter(x=>x.act7>=5).length/L.length*100)+'%':'–'}</td><td class="n">${L.filter(x=>x.needs.length).length}</td><td class="n">${L.reduce((s,x)=>s+x.gifts.length,0)}</td></tr>`}).join('');
+    const un=A.filter(x=>!x.partner);
+    body=`<section class="card"><div class="chips"><span class="chip">全部客人 <b>${A.length}</b></span><span class="chip">今天打卡 <b>${A.filter(x=>x.today).length}</b></span><span class="chip">本周活跃 <b>${A.length?Math.round(act/A.length*100):0}%</b></span><span class="chip">新客人（7 天）<b>${A.filter(x=>x.start&&diff(x.start,t)<7).length}</b></span></div><p class="small muted" style="margin-top:8px">本周活跃 = 最近 7 天打卡 5 天以上</p></section>
+      <section class="card"><h3>伙伴表现</h3><div style="overflow-x:auto"><table><tr><th>伙伴</th><th class="n">客人</th><th class="n">活跃</th><th class="n">跟进</th><th class="n">礼物</th></tr>${rows||'<tr><td colspan="5" class="empty">还没有伙伴</td></tr>'}</table></div></section>
+      ${un.length?`<section class="card"><h3>没有伙伴的客人 <span class="tag">${un.length}</span></h3><p class="small muted">这些客人不是用伙伴链接注册的，请分配给一位伙伴。</p>${un.map(x=>`<div class="item"><span class="nm">${esc(x.name)}</span> <span class="small muted">· 累计 ${x.n} 天</span><div class="row" style="margin-top:6px"><select data-assign="${x.c.id}" style="flex:1;min-width:10rem">${actv.map(p=>`<option value="${esc(p.code)}">${esc(p.name)}（${esc(p.code)}）</option>`).join('')}</select><button class="btn sm" data-act="assign" data-id="${x.c.id}">分配</button></div></div>`).join('')}</section>`:''}`;
+  }else if(TEAMTAB==='gifts'){
+    const gl=A.flatMap(x=>x.gifts.map(g=>[x,g]));
+    body=`<section class="card"><h3>全团队要送的礼物 <span class="tag g">${gl.length}</span></h3>${gl.length?gl.map(([x,g])=>giftItem(x,g,pname(x.partner))).join(''):'<p class="empty">暂时没有</p>'}</section>`;
+  }else if(TEAMTAB==='people'){
+    const pr=p=>`<div class="item"><div class="top"><div><span class="nm">${esc(p.name)}</span> <span class="small muted">· ${esc(p.code)}${p.is_leader?' · 领导':''}</span><p class="small muted">WhatsApp ${esc(p.phone||'未填')} · ${esc(String(p.created_at||'').slice(0,10))} 注册</p></div></div><div class="row">`;
+    body=`<section class="card"><h3>等待批准 <span class="tag">${pend.length}</span></h3>${pend.length?pend.map(p=>pr(p)+`<button class="btn green sm" data-act="pstatus" data-uid="${p.user_id}" data-v="active">批准</button><button class="btn sm" data-act="pstatus" data-uid="${p.user_id}" data-v="disabled">拒绝</button></div></div>`).join(''):'<p class="empty">没有</p>'}</section>
+      <section class="card"><h3>伙伴</h3>${actv.map(p=>pr(p)+(p.user_id===ME.user_id?'<span class="small muted">（你自己）</span>':`<button class="btn sm" data-act="pleader" data-uid="${p.user_id}" data-v="${p.is_leader?'0':'1'}">${p.is_leader?'取消领导':'设为领导'}</button><button class="btn sm" data-act="pstatus" data-uid="${p.user_id}" data-v="disabled">停用</button>`)+'</div></div>').join('')}</section>
+      ${dis.length?`<section class="card"><h3>已停用</h3>${dis.map(p=>pr(p)+`<button class="btn sm" data-act="pstatus" data-uid="${p.user_id}" data-v="active">恢复</button></div></div>`).join('')}</section>`:''}`;
+  }else{
+    const q=QUERY.trim(),L=A.filter(x=>!q||x.name.includes(q)).sort((a,b)=>String(b.last||'').localeCompare(String(a.last||'')));
+    body=`<input id="q" placeholder="找名字" value="${esc(QUERY)}" style="margin:6px 0 4px"><div class="card">${L.length?L.map(x=>cusRow(x,pname(x.partner))).join(''):'<p class="empty">没有找到</p>'}</div>`;
+  }
+  return `<h1>团队</h1><div class="tabs2" style="flex-wrap:wrap">${T.map(([k,l])=>`<button data-tt="${k}" aria-pressed="${TEAMTAB===k}">${l}</button>`).join('')}</div>`+body}
+
+/* ---------- one customer ---------- */
+function openCus(id){
+  const c=CUS.find(x=>x.id===id);if(!c)return;const x=safeInfo(c),S=x.S,t=today();
+  const grid=Array.from({length:28},(_,i)=>{const d=add(t,i-27);return `<span class="${S.checks&&S.checks[d]?'on':''}${d===t?' today':''}" title="${d}">${pd(d).getDate()}</span>`}).join('');
+  const feel=(Array.isArray(S.feel)?S.feel:[]).slice(-6).reverse();
+  const ans=S.answers&&typeof S.answers==='object'?Object.keys(S.answers).sort((a,b)=>a-b):[];
+  const qs=Array.isArray(S.questions)?S.questions:[];
+  const reached=MILES.filter(m=>S.gifts&&S.gifts[m.id]);
+  const done=GLOG[c.id]||new Set();
+  $('#modal').innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(x.name)}">
+    <div class="top"><div><h2>${esc(x.name)}</h2><p class="muted small">${ME.is_leader&&c.partner_code!==ME.code?esc(pname(c.partner_code))+' 的客人 · ':''}第 ${x.dn} 天 · 累计 ${x.n} 天 · ${STAGE[x.stage]} · 积分 ${esc(S.points||0)}</p></div><button class="btn sm" data-act="close">关闭</button></div>
+    ${x.needs.length?`<div class="card">${x.needs.map(n=>`<span class="tag${n.kind==='miss'?'':n.kind==='ask'?' b':' y'}">${esc(n.text)}</span>`).join('')}${x.needs.some(n=>n.key)?`<div style="margin-top:8px"><button class="btn sm" data-act="handled" data-id="${c.id}">已跟进</button></div>`:''}</div>`:''}
+    <div class="card"><h3>最近 4 个星期</h3><div class="grid28">${grid}</div><p class="small muted">最后打卡：${ago(x.last)} · 宠物：${esc(S.petName||'')}（${S.pet==='dog'?'小狗':'小猫'}）</p></div>
+    <div class="card"><h3>感觉记录</h3>${feel.length?`<table class="feel"><tr><th>日期</th><th>精神</th><th>睡眠</th><th>肠胃</th></tr>${feel.map(f=>`<tr><td>${esc(f.d||'')}</td><td class="faces">${FACE[f.e]||''} ${esc(f.e)}</td><td class="faces">${FACE[f.s]||''} ${esc(f.s)}</td><td class="faces">${FACE[f.g]||''} ${esc(f.g)}</td></tr>`).join('')}</table>`:'<p class="empty">还没有记录</p>'}</div>
+    <div class="card"><h3>关心问题的回答</h3>${ans.length?ans.map(d=>`<div class="item"><p class="small muted">第 ${esc(d)} 天 · ${esc(own(CARE,d)?CARE[d].q:'')}</p><p><b>${esc(S.answers[d]&&S.answers[d].a)}</b></p></div>`).join(''):'<p class="empty">还没有</p>'}</div>
+    ${qs.length?`<div class="card"><h3>她问过的问题</h3>${qs.map(q=>`<div class="item"><p class="small muted">第 ${esc(q.day)} 天</p><p>${esc(q.text)}</p></div>`).join('')}</div>`:''}
+    <div class="card"><h3>礼物</h3>${reached.length?reached.map(m=>`<div class="item"><div class="top"><div><span class="tag g">${esc(m.name)}</span><span class="small">${esc(m.gift)}</span></div>${done.has(m.id)?'<span class="small muted">已送出 ✅</span>':`<button class="btn green sm" data-act="gift" data-id="${c.id}" data-key="${m.id}">已送出</button>`}</div></div>`).join(''):'<p class="empty">还没达到礼物天数</p>'}
+      ${x.next?`<p class="small muted" style="margin-top:6px">下一份：再 ${x.next.n-x.n} 天，${esc(x.next.name)} · ${esc(x.next.gift)}</p>`:''}</div>
+    <div class="card"><h3>备注（只有伙伴和领导看得到）</h3>
+      <label for="n_phone">她的 WhatsApp 号码</label><input id="n_phone" inputmode="tel" value="${esc(x.phone)}" placeholder="例如：0123456789">
+      <label for="n_note">备注</label><textarea id="n_note" maxlength="500">${esc(x.note)}</textarea>
+      <div class="row" style="margin-top:8px"><button class="btn solid" data-act="savenote" data-id="${c.id}">保存备注</button><a class="btn wa" href="${wa(x.phone,`${x.name} 你好！`)}" target="_blank" rel="noopener">WhatsApp 联系</a></div></div>
+    <div class="card"><h3>她换了手机？</h3><p class="small muted">生成恢复链接，用 WhatsApp 发给她。她用新手机打开，就能接回原来的记录。链接 3 天内有效，只能用一次。</p><div id="rlink"></div><button class="btn" data-act="restore" data-id="${c.id}">生成恢复链接</button></div>
+  </div>`;
+  $('#modal').hidden=false;$('#modal').dataset.id=id;
+}
+
+/* ---------- actions ---------- */
+document.addEventListener('submit',async e=>{
+  if(e.target.id!=='authf')return;e.preventDefault();const reg=AUTH==='reg',err=$('#f_err'),btn=e.target.querySelector('button[type=submit]');
+  const email=$('#f_email').value.trim(),pw=$('#f_pw').value;err.hidden=true;btn.disabled=true;
+  try{
+    if(reg){const name=$('#f_name').value.trim(),phone=normPhone($('#f_phone').value);if(!name||!phone)throw new Error('请填名字和 WhatsApp 号码');
+      const s=await SB.signUp(email,pw);if(!s)throw new Error('注册成功，请直接登录');
+      await SB.req('/rest/v1/partners',{method:'POST',body:{user_id:SB.uid(),name,phone},headers:{Prefer:'return=minimal'}})}
+    else await SB.signIn(email,pw);
+    await boot();
+  }catch(x){err.textContent=x.message&&/请填|请直接登录/.test(x.message)?x.message:errText(x);err.hidden=false;btn.disabled=false}
+});
+document.addEventListener('input',e=>{if(e.target.id==='q'){QUERY=e.target.value;const pos=e.target.selectionStart;render();const q=$('#q');if(q){q.focus();try{q.setSelectionRange(pos,pos)}catch(_){}}}});
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.auth){AUTH=b.dataset.auth;render();return}
+  if(b.dataset.tab){TAB=b.dataset.tab;QUERY='';$('#modal').hidden=true;render();scrollTo(0,0);return}
+  if(b.dataset.tt){TEAMTAB=b.dataset.tt;QUERY='';render();return}
+  const a=b.dataset.act,id=b.dataset.id;if(!a)return;
+  try{
+    if(a==='reload'){location.reload();return}
+    if(a==='logout'){SB.signOut();ME=null;CUS=[];render();return}
+    if(a==='refresh'){b.disabled=true;await loadAll();render();toast('已经是最新的资料');return}
+    if(a==='close'){$('#modal').hidden=true;return}
+    if(a==='cus'){openCus(id);return}
+    if(a==='leader'){b.disabled=true;const ok=await SB.rpc('claim_first_leader');toast(ok?'你现在是团队领导了':'团队已经有领导了');await boot();return}
+    if(a==='saveprofile'){const name=$('#p_name').value.trim(),phone=normPhone($('#p_phone').value);if(!name){toast('请填名字');return}
+      if(ME){const r=await SB.req('/rest/v1/partners?user_id=eq.'+SB.uid(),{method:'PATCH',body:{name,phone},headers:{Prefer:'return=representation'}});ME=r&&r[0]||ME;toast('已保存')}
+      else{await SB.req('/rest/v1/partners',{method:'POST',body:{user_id:SB.uid(),name,phone},headers:{Prefer:'return=minimal'}});await boot();return}
+      render();return}
+    if(a==='copy'){const t=b.dataset.text;try{await navigator.clipboard.writeText(t);toast('已复制')}catch(_){prompt('请复制下面的内容',t)}return}
+    if(a==='gift'){b.disabled=true;await mark(id,[b.dataset.key]);toast('已记录：礼物送出了');if(!$('#modal').hidden)openCus(id);render();return}
+    if(a==='handled'){b.disabled=true;const c=CUS.find(x=>x.id===id);await mark(id,safeInfo(c).needs.map(n=>n.key));toast('已记录：跟进好了');if(!$('#modal').hidden)openCus(id);render();return}
+    if(a==='savenote'){const phone=normPhone($('#n_phone').value),note=$('#n_note').value.slice(0,500);
+      await SB.req('/rest/v1/customer_notes?on_conflict=customer_id',{method:'POST',body:{customer_id:id,phone,note,updated_at:new Date().toISOString()},headers:{Prefer:'resolution=merge-duplicates,return=minimal'}});
+      NOTES[id]={customer_id:id,phone,note};toast('备注已保存');openCus(id);render();return}
+    if(a==='restore'){b.disabled=true;const code=await SB.rpc('make_restore_code',{p_customer:id}),c=CUS.find(x=>x.id===id),x=safeInfo(c),link=SITE+'?restore='+code;
+      $('#rlink').innerHTML=`<div class="link" style="margin:6px 0">${esc(link)}</div><div class="row"><a class="btn wa" href="${wa(x.phone,`${x.name} 你好，这是你的小花恢复链接，用新手机打开就能接回原来的记录（3 天内有效）：\n${link}`)}" target="_blank" rel="noopener">用 WhatsApp 发给她</a><button class="btn" data-act="copy" data-text="${esc(link)}">复制</button></div>`;return}
+    if(a==='pstatus'){b.disabled=true;await SB.req('/rest/v1/partners?user_id=eq.'+b.dataset.uid,{method:'PATCH',body:{status:b.dataset.v},headers:{Prefer:'return=minimal'}});await loadAll();render();toast(b.dataset.v==='active'?'已批准':'已更新');return}
+    if(a==='pleader'){b.disabled=true;await SB.req('/rest/v1/partners?user_id=eq.'+b.dataset.uid,{method:'PATCH',body:{is_leader:b.dataset.v==='1'},headers:{Prefer:'return=minimal'}});await loadAll();render();toast('已更新');return}
+    if(a==='assign'){const sel=document.querySelector(`select[data-assign="${id}"]`);if(!sel||!sel.value)return;b.disabled=true;await SB.rpc('assign_customer',{p_customer:id,p_code:sel.value});await loadAll();render();toast('已分配');return}
+  }catch(x){toast(errText(x));b.disabled=false}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modal').hidden=true});
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')$('#modal').hidden=true});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&ME&&ME.status==='active'&&Date.now()-LOADED>60000&&$('#modal').hidden)loadAll().then(render).catch(()=>{})});
+boot();
+</script>
+</body>
+</html>

@@ -365,6 +365,8 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:2px solid 
 .chg-bar.now i{background:var(--coral)}
 .chg-t{font-size:.9rem;color:var(--muted,#7a6a62)}
 .chg-t.up{color:var(--leaf-dark)}
+#toast{position:fixed;left:50%;top:14px;transform:translate(-50%,-140%);background:var(--ink,#3a2f2a);color:#fff;padding:10px 18px;border-radius:99px;font-weight:700;z-index:20;transition:transform .3s;max-width:calc(100% - 32px);text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+#toast.show{transform:translate(-50%,0)}
 .ov-pics{display:flex;justify-content:center;align-items:flex-end;gap:6px}
 #overlay .box .ov-pics svg{height:7rem;width:auto}
 #overlay .box .ov-pics svg:last-child{height:5.4rem}
@@ -445,9 +447,9 @@ function seed(){
     answers:{1:{a:'早餐后吃',d:start},3:{a:'精神好像好一点',d:add(start,2)}},
     feel:[{d:start,day:1,e:2,s:2,g:3}],questions:[],gifts:{m1:start},flips:{},fs:'m'};
 }
-function fresh(){return {sample:false,seen:[],pet:'cat',fur:'',petName:'招财',bday:'',onboarded:false,name:'',partner:PI.name||'Kelvin',anchor:'',start:ymd(new Date()),checks:{},offset:0,points:0,answers:{},feel:[],questions:[],gifts:{},flips:{},fs:'m'}}
+function fresh(){return {sample:false,seen:[],pet:'cat',fur:'',petName:'招财',bday:'',onboarded:false,name:'',partner:PI.name||(DEMO?'Kelvin':'你的伙伴'),anchor:'',start:ymd(new Date()),checks:{},offset:0,points:0,answers:{},feel:[],questions:[],gifts:{},flips:{},fs:'m'}}
 function load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof cloudSave==='function')cloudSave()}
 /* answers that need the partner to act */
 const NEED={1:['还没开始吃'],3:['肠胃有一点不习惯','有问题想问伙伴'],7:['常常忘记'],21:['有，请伙伴联系她'],28:['剩一个星期左右','已经吃完了'],60:['好，请伙伴联系我'],90:['想请伙伴给我建议']};
 /* stage 2-3 surprise cards: everyday facts and small quizzes (no health claims) */
@@ -961,6 +963,85 @@ function showNews(x){if(!x)return;if(!S.seen.includes(x.id)){S.seen.push(x.id);i
   const o=$('#overlay');o.innerHTML=newsBox(x);o.hidden=false;o.querySelector('button').focus();const c=$('.ncard .ndot');if(c)c.remove()}
 function maybeNews(){if(tab!=='today'||!$('#overlay').hidden||!S.onboarded||!S.checks[today()])return;showNews(newsNow().pop)}
 
+/* ---------- a small Supabase client: anonymous sign-in for customers, email sign-in for partners ---------- */
+const SB_URL='https://mlgrkrmfxfevzdouarmn.supabase.co',SB_KEY='sb_publishable_trymvh1krw3JgyhCZQwwiw_QA-pYJYr';
+const SB={url:SB_URL,key:SB_KEY,sess:null,k:'sb_auth',
+  load(k){this.k=k;try{this.sess=JSON.parse(localStorage.getItem(k)||'null')}catch(e){this.sess=null}return this.sess},
+  store(s){this.sess=s;try{s?localStorage.setItem(this.k,JSON.stringify(s)):localStorage.removeItem(this.k)}catch(e){}return s},
+  keep(j){if(!j||!j.access_token)return null;return this.store({access_token:j.access_token,refresh_token:j.refresh_token,expires_at:Math.floor(Date.now()/1000)+(j.expires_in||3600),user:j.user})},
+  async call(path,o={}){
+    const h={apikey:this.key,'Content-Type':'application/json',...(o.headers||{})};
+    if(o.auth!==false&&this.sess)h.Authorization='Bearer '+this.sess.access_token;
+    const r=await fetch(this.url+path,{method:o.method||'GET',headers:h,body:o.body!==undefined?JSON.stringify(o.body):undefined});
+    const t=await r.text();let j=null;try{j=t?JSON.parse(t):null}catch(e){j=t}
+    if(!r.ok){const e=new Error((j&&(j.msg||j.message||j.error_description||j.error))||('HTTP '+r.status));e.status=r.status;e.body=j;throw e}
+    return j},
+  async refresh(){const s=this.sess;if(!s||!s.refresh_token)return false;
+    try{this.keep(await this.call('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:s.refresh_token},auth:false}));return true}
+    catch(e){if(e.status>=400&&e.status<500)this.store(null);return false}},
+  async req(path,o={}){
+    if(o.auth!==false&&this.sess&&this.sess.expires_at-60<Date.now()/1000)await this.refresh();
+    try{return await this.call(path,o)}
+    catch(e){if(e.status===401&&o.auth!==false&&this.sess&&!o.again&&await this.refresh())return this.req(path,{...o,again:1});throw e}},
+  async anon(){if(this.sess)return this.sess;return this.keep(await this.call('/auth/v1/signup',{method:'POST',body:{},auth:false}))},
+  async signIn(email,password){return this.keep(await this.call('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password},auth:false}))},
+  async signUp(email,password){return this.keep(await this.call('/auth/v1/signup',{method:'POST',body:{email,password},auth:false}))},
+  signOut(){const s=this.sess;if(s)this.call('/auth/v1/logout',{method:'POST'}).catch(()=>{});this.store(null)},
+  rpc(fn,args,o){return this.req('/rest/v1/rpc/'+fn,{method:'POST',body:args||{},...(o||{})})},
+  uid(){return this.sess&&this.sess.user?this.sess.user.id:null}
+};
+
+/* ---------- cloud: the real site saves each customer's record so her partner and the leaders can follow up ---------- */
+const CLOUD=!DEMO;
+const QS=new URLSearchParams(location.search);
+const PCODE=(QS.get('p')||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,12);
+let cloudT=0,cloudBusy=false,cloudAgain=false;
+const syncFlag=v=>{try{if(v===undefined)return localStorage.getItem(KEY+'_sync');localStorage.setItem(KEY+'_sync',v)}catch(e){return null}};
+function cloudSave(now){if(!CLOUD||!S||!S.onboarded)return;syncFlag('dirty');clearTimeout(cloudT);cloudT=setTimeout(cloudPush,now?0:1500)}
+async function cloudPush(){
+  if(cloudBusy){cloudAgain=true;return}cloudBusy=true;
+  const push=async()=>{await SB.anon();const body={user_id:SB.uid(),state:S};if(S.pcode)body.partner_code=S.pcode;
+    await SB.req('/rest/v1/customers?on_conflict=user_id',{method:'POST',body,headers:{Prefer:'resolution=merge-duplicates,return=minimal'}})};
+  try{await push();syncFlag('ok')}
+  catch(e){
+    /* a lost login (e.g. a long-cleared session) starts a fresh anonymous one so her data keeps flowing */
+    if(e.status===401||e.status===403){SB.store(null);try{await push();syncFlag('ok')}catch(e2){}}
+  }
+  finally{cloudBusy=false;if(cloudAgain){cloudAgain=false;cloudSave(true)}}
+}
+/* the partner's name and WhatsApp come from the code in her link */
+async function cloudPartner(){
+  const code=S.onboarded&&S.pcode?S.pcode:(PCODE||S.pcode);if(!code)return;
+  try{const r=await SB.rpc('partner_card',{p_code:code},{auth:false}),p=r&&r[0];if(!p)return;
+    const ch=S.pcode!==code||S.partner!==p.name||S.pphone!==p.phone;S.pcode=code;S.partner=p.name;S.pphone=p.phone;
+    if(ch){save();if($('#overlay').hidden)render()}}catch(e){}
+}
+/* a restore link from the partner moves her record onto this phone */
+async function cloudRestore(){
+  const code=(QS.get('restore')||'').toLowerCase().replace(/[^0-9a-f]/g,'');if(!code)return false;
+  try{history.replaceState(null,'',location.pathname+(PCODE?'?p='+PCODE:''))}catch(e){}
+  try{await SB.anon();const st=await SB.rpc('claim_restore',{p_code:code});
+    if(st&&typeof st==='object'&&st.onboarded){const fs=S.fs;S=Object.assign(fresh(),st);if(!st.fs)S.fs=fs;save();syncFlag('ok');tab='today';render();toast('你的记录已经接回来了 🌱');return true}
+    toast('这个恢复链接已经用过或过期了，请联系你的伙伴')}
+  catch(e){toast('网络不太稳定，请稍后再打开恢复链接')}
+  return false
+}
+async function cloudDelete(){
+  if(!confirm('确定要删除你的全部打卡记录吗？删除后不能恢复。'))return;
+  try{if(SB.uid())await SB.req('/rest/v1/customers?user_id=eq.'+SB.uid(),{method:'DELETE'})}catch(e){alert('网络不太稳定，请稍后再试');return}
+  try{localStorage.removeItem(KEY);localStorage.removeItem(KEY+'_sync');localStorage.removeItem(KEY+'_news')}catch(e){}
+  SB.signOut();location.replace(location.pathname+(S.pcode?'?p='+S.pcode:''))
+}
+async function cloudInit(){
+  if(!CLOUD)return;SB.load(KEY+'_auth');
+  addEventListener('online',()=>{if(syncFlag()!=='ok')cloudSave(true)});
+  if(await cloudRestore())return;
+  cloudPartner();
+  if(S.onboarded&&syncFlag()!=='ok')cloudSave(true);
+}
+function toast(t){let el=$('#toast');if(!el){el=document.createElement('div');el.id='toast';el.setAttribute('role','status');document.body.appendChild(el)}
+  el.textContent=t;el.className='show';clearTimeout(el._t);el._t=setTimeout(()=>{el.className=''},3200)}
+
 /* ---------- icons ---------- */
 const ic=d=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
 const I={
@@ -1107,7 +1188,7 @@ function viewLog(){
       <p class="small muted" style="margin-top:14px">换毛色</p>${furPick(S.pet,furOf(S.pet,S.fur).k)}</div>
     ${libraryCard()}
     ${ans?`<div class="card"><h3 class="ch"><span class="ci y">${I.chat}</span>我和伙伴的问答</h3><div class="qa">${ans}</div></div>`:''}
-    <div class="card"><h3 class="ch"><span class="ci g">${I.font}</span>字体大小</h3><p class="small muted">选一个你看得最清楚的</p>${fontPick()}</div>`+footer();
+    <div class="card"><h3 class="ch"><span class="ci g">${I.font}</span>字体大小</h3><p class="small muted">选一个你看得最清楚的</p>${fontPick()}</div>`+(CLOUD?'<p class="small" style="text-align:center;margin:6px 0 0"><button class="link-btn" data-act="delme">删除我的资料</button></p>':'')+footer();
 }
 
 /* ---------- feelings ---------- */
@@ -1154,7 +1235,7 @@ function viewOnboard(){
       <div class="row"><select id="bm" aria-label="生日月份"><option value="">月</option>${Array.from({length:12},(_,i)=>`<option value="${i+1}"${+draftBM===i+1?' selected':''}>${i+1} 月</option>`).join('')}</select>
       <select id="bd" aria-label="生日日期"><option value="">日</option>${Array.from({length:31},(_,i)=>`<option value="${i+1}"${+draftBD===i+1?' selected':''}>${i+1} 日</option>`).join('')}</select></div></div>
     <div class="card"><label style="display:flex;gap:12px;align-items:flex-start"><input type="checkbox" id="ok" ${draftOk?'checked':''} style="width:1.6rem;height:1.6rem;flex:none;margin-top:4px">
-      <span>我同意把打卡记录、感觉记录和问题分享给我的伙伴 ${esc(S.partner)}，用来关心我的情况。我可以随时要求删除这些记录。</span></label></div>
+      <span>我同意把我的打卡、感觉记录和问题安全地存在网上，只给我的伙伴 ${esc(S.partner)} 和团队领导用来关心我的情况。我可以随时在「记录」页删除这些资料。</span></label></div>
     <button class="checkin" data-act="start" ${ok?'':'disabled'}><span>种下我的健康花<span class="sub">开始 90 天旅程</span></span></button>`+demoTools();
 }
 function demoTools(){
@@ -1253,6 +1334,7 @@ document.addEventListener('click',e=>{
     case 'cosoff':demoCos=-1;render();break;
     case 'close':$('#overlay').hidden=true;toDone();break;
     case 'nclose':$('#overlay').hidden=true;break;
+    case 'delme':cloudDelete();break;
     case 'news':{const id=b.dataset.nid,x=newsList().find(n=>n.id===id)||[newsNow().card].find(n=>n&&n.id===id);showNews(x);break}
     case 'newsdemo':showNews(newsNow().card||demoNews()[2]);break;
     case 'next':S.offset=(S.offset||0)+1;save();render();scrollTo(0,0);break;
@@ -1261,7 +1343,7 @@ document.addEventListener('click',e=>{
     case 'sample':S=seed();tab='today';save();render();scrollTo(0,0);break;
     case 'start':keepName();if(!(draftName.trim()&&draftAnchor&&draftOk))return;
       S.name=draftName.trim();S.anchor=draftAnchor;S.pet=draftPet;S.fur=furOf(draftPet,draftFur).k;S.petName=(draftPetName.trim()||PETN[draftPet]).slice(0,8);
-      S.bday=draftBM&&draftBD?String(draftBM).padStart(2,'0')+'-'+String(draftBD).padStart(2,'0'):'';S.onboarded=true;S.consent=t;S.start=t;tab='today';save();render();scrollTo(0,0);break;
+      S.bday=draftBM&&draftBD?String(draftBM).padStart(2,'0')+'-'+String(draftBD).padStart(2,'0'):'';S.onboarded=true;S.consent=t;S.start=t;tab='today';save();render();scrollTo(0,0);if(CLOUD)cloudSave(true);break;
   }
 });
 document.addEventListener('change',e=>{if(e.target.id==='bm')draftBM=e.target.value;if(e.target.id==='bd')draftBD=e.target.value});
@@ -1274,7 +1356,7 @@ if(!S.fur)S.fur=furOf(S.pet,'').k;
 if(!S.seen)S.seen=[];
 if(PI.phone)S.pphone=PI.phone;
 if(PI.name)S.partner=PI.name;
-save();loadNews();render();fetchNews();
+save();loadNews();render();fetchNews();cloudInit();
 if(!DEMO&&tab==='today'&&S.onboarded&&S.checks[today()])setTimeout(maybeNews,1500);
 </script>
 </body></html>
