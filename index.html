@@ -365,12 +365,48 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:2px solid 
 .chg-bar.now i{background:var(--coral)}
 .chg-t{font-size:.9rem;color:var(--muted,#7a6a62)}
 .chg-t.up{color:var(--leaf-dark)}
-#toast{position:fixed;left:50%;top:14px;transform:translate(-50%,-140%);background:var(--ink,#3a2f2a);color:#fff;padding:10px 18px;border-radius:99px;font-weight:700;z-index:20;transition:transform .3s;max-width:calc(100% - 32px);text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+#toast{position:fixed;left:50%;top:14px;width:max-content;transform:translate(-50%,-140%);background:var(--ink,#3a2f2a);color:#fff;padding:10px 18px;border-radius:99px;font-weight:700;z-index:20;transition:transform .3s;max-width:calc(100% - 32px);text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.18)}
 #toast.show{transform:translate(-50%,0)}
 .ov-pics{display:flex;justify-content:center;align-items:flex-end;gap:6px}
 #overlay .box .ov-pics svg{height:7rem;width:auto}
 #overlay .box .ov-pics svg:last-child{height:5.4rem}
 @media (prefers-reduced-motion:reduce){.pet-j.jump,.breath,.breath2,.eyes,.ear,.flop{animation:none!important}}
+/* plans: picker, today's small tasks, weekly weight */
+.plans{display:flex;flex-direction:column;gap:10px}
+.plc{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:2px solid var(--line);background:var(--surface);border-radius:18px;padding:12px 14px;min-height:4.4rem;color:var(--ink)}
+.plc .ci{width:2.7rem;height:2.7rem}
+.plc .ci svg{width:1.45rem;height:1.45rem}
+.plc b{display:block;font-size:1.08rem;line-height:1.4}
+.plc .small{display:block;line-height:1.5}
+.plc[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft)}
+.plc[aria-pressed="true"] b{color:var(--leaf-dark)}
+.plchg summary{list-style:none;cursor:pointer}
+.plchg summary::-webkit-details-marker{display:none}
+.plchg[open] summary{margin-bottom:8px}
+.tlist{display:flex;flex-direction:column;gap:8px}
+.task{display:flex;align-items:center;gap:12px;width:100%;min-height:3.5rem;border-radius:16px;border:2px solid var(--line);background:var(--surface);padding:8px 14px;text-align:left;font-weight:700;color:var(--ink)}
+.task .tk{flex:none;width:1.9rem;height:1.9rem;border-radius:50%;border:2.5px solid var(--line);display:grid;place-items:center;color:transparent}
+.task .tk svg{width:1.05rem;height:1.05rem;display:block}
+.task .tt{flex:1;min-width:0;line-height:1.45}
+.task .tp{flex:none;font-size:.8rem;font-weight:900;color:var(--gold)}
+.task[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft);color:var(--leaf-dark)}
+.task[aria-pressed="true"] .tk{background:var(--leaf);border-color:var(--leaf);color:var(--on-leaf)}
+.task[aria-pressed="true"] .tp{color:var(--leaf-dark)}
+.task.pop .tk{animation:pop .45s ease-out}
+.tdone{font-weight:700;color:var(--leaf-dark);text-align:center}
+.kgrow{display:flex;align-items:center;gap:10px}
+.kgrow input{flex:1;min-width:0;font-size:1.2rem;font-weight:700;font-variant-numeric:tabular-nums}
+.kgrow span{font-weight:700}
+.kgerr{color:var(--coral-text);font-weight:700;font-size:.9rem}
+/* chart series colours (validated for colour-blind separation, stepped for dark mode) */
+:root{--c1:#2A78D6;--c2:#EB6834;--c3:#1BAF7A;--c4:#EDA100}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c1:#3987E5;--c2:#D95926;--c3:#199E70;--c4:#C98500}}
+:root[data-theme="dark"]{--c1:#3987E5;--c2:#D95926;--c3:#199E70;--c4:#C98500}
+details.rows summary{cursor:pointer;color:var(--leaf-dark);font-weight:700;font-size:.9rem;min-height:44px;display:flex;align-items:center}
+.rtab{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeric:tabular-nums}
+.rtab th,.rtab td{padding:6px 4px;border-top:1px solid var(--line);text-align:center}
+.rtab th{color:var(--muted);font-weight:700;border-top:0}
+.rtab td:first-child,.rtab th:first-child{text-align:left}
 </style>
 <script>
 /* demo: the claude.ai preview, or ?demo on the real site (kept apart from real data) */
@@ -416,11 +452,40 @@ const CARE={
   90:{t:'第 90 天 · 伙伴关心',q:'90 天到了！接下来你想怎样继续照顾自己？',o:['继续每天打卡','想请伙伴给我建议'],
      r:a=>a==='继续每天打卡'?'太好了，我们继续一起加油！':'好的，{p} 会联系你，给你一些建议。'}
 };
+/* each customer follows one plan: it changes her three small daily tasks, her weekly record and some tips, never the gifts */
+const PLANS={
+  base:{name:'基础营养',short:'基础',emoji:'🌿',desc:'每天吃营养，打好身体的底子',words:['基础'],tasks:[['water','喝够 8 杯水'],['veg','每餐都有蔬菜'],['move','走路或动一动 15 分钟']]},
+  weight:{name:'体重管理',short:'体重',emoji:'⚖️',desc:'吃得均衡、多动一动，每星期记录一次体重',words:['体重','减重'],tasks:[['water','喝够 8 杯水'],['move','走路或动一动 20 分钟'],['meal','晚餐七分饱']],rec:'kg'},
+  skin:{name:'美肌保养',short:'美肌',emoji:'✨',desc:'内外一起照顾：护肤、防晒、多喝水',words:['美肌','护肤','皮肤'],tasks:[['am','早上护肤、擦防晒'],['pm','晚上洗脸、护肤'],['water','喝够 8 杯水']],rec:'sk'}
+};
+/* plan tips, surprise-card facts and quizzes: everyday habits only, no health claims, no weight promises */
+const PLAN_TXT={
+  weight:{c45:['精神','体重','肠胃','还在观察'],
+    tips:['今天多走一点路，身体会谢谢你。','每一餐先吃蔬菜，再慢慢吃饭。','甜饮料换成白开水，从今天开始。','吃到七分饱，身体最轻松。','饭后散步十五分钟，消化好，心情也好。','早一点睡，第二天比较不嘴馋。'],
+    facts:['每餐先吃蔬菜，再吃肉和饭，比较容易七分饱。','一餐慢慢吃 20 分钟，身体才来得及感觉饱。','每星期同一天、同一个时间量体重，早上起床上完厕所量最准。','体重每天都会上下起伏，看一个月的变化比较准。','饭前先喝一杯水，比较不会吃太多。','甜饮料换成白开水，是最容易开始的一步。','用小一点的碗盘装饭，份量自然少一点。','零食放在看不到的地方，比较不会随手拿来吃。','走路时手臂摆一摆、步伐大一点，活动量就多一点。','睡得太少，第二天常常会比较想吃甜的。'],
+    quiz:[{q:'量体重什么时候最准？',o:['每星期同一天，早上起床后','吃饱饭以后'],a:0,w:'每次在同一个时间量，才看得出真正的变化。'},
+      {q:'吃饭先吃哪一样，比较容易七分饱？',o:['蔬菜','白饭'],a:0,w:'先吃蔬菜，再吃肉和饭，比较不会吃太多。'},
+      {q:'一餐吃多久比较好？',o:['慢慢吃 20 分钟','5 分钟吃完'],a:0,w:'吃慢一点，身体才来得及感觉饱。'},
+      {q:'今天的体重比昨天多了一点，怎么办？',o:['很正常，看一个月的变化','马上不吃晚餐'],a:0,w:'体重每天都会起伏，不用担心，继续好习惯就好。'}]},
+  skin:{c45:['精神','皮肤','睡眠','还在观察'],
+    tips:['出门前擦防晒，阴天也要。','洗脸用温水，动作轻轻的。','今晚记得洗脸、护肤再睡。','白天常常喝几口水。','早一点睡，明天气色更好。','冷气房比较干，记得擦保湿。'],
+    facts:['阴天也有紫外线，出门前记得擦防晒。','洗脸用温水就好，太热的水会让皮肤比较干。','洗完脸，趁皮肤还有一点湿，就擦上保养品。','晚上一定要洗脸，让皮肤干干净净过夜。','擦保养品时动作轻轻的，不要用力拉扯。','枕头套常常换洗，脸贴着的地方要干净。','睡得够，第二天气色比较好。','皮肤也需要水分，白天常常喝几口水。','冷气房里比较干，可以多擦一点保湿。','三餐吃得均衡，是照顾皮肤的基础。'],
+    quiz:[{q:'阴天出门，要不要擦防晒？',o:['要，阴天也有紫外线','不用'],a:0,w:'云挡不住全部的紫外线，阴天也要擦。'},
+      {q:'洗脸用哪一种水比较好？',o:['温水','很热的水'],a:0,w:'太热的水会洗掉皮肤的油脂，比较容易干。'},
+      {q:'什么时候擦保养品比较好？',o:['洗完脸，皮肤还有一点湿','等皮肤完全干了再擦'],a:0,w:'趁皮肤还有一点湿的时候擦，比较能锁住水分。'},
+      {q:'晚上回到家，护肤第一步是什么？',o:['洗脸','直接擦保养品'],a:0,w:'先把脸洗干净，再擦保养品。'}]}
+};
+const planOf=s=>s&&PLANS[s.plan]?s.plan:'base';
+const factList=f=>f&&f.p&&PLAN_TXT[f.p]?PLAN_TXT[f.p].facts:FACTS;
+const quizList=f=>f&&f.p&&PLAN_TXT[f.p]?PLAN_TXT[f.p].quiz:QUIZ;
+/* the morning picture's line: every other day it comes from her plan */
+function tipToday(){const t=today(),P=PLAN_TXT[planOf(S)];return P&&hash(t+'plan')%2?P.tips[hash(t)%P.tips.length]:TIPS[hash(t)%TIPS.length]}
+const PLANQ=(()=>{try{const v=(new URLSearchParams(location.search).get('plan')||'').toLowerCase();return PLANS[v]?v:''}catch(e){return ''}})();
 const COIN=`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" style="fill:var(--gold-bright)"/><circle cx="12" cy="12" r="7" style="fill:none;stroke:var(--gold);stroke-width:1.6"/><path d="M12 8.6v6.8M9.4 12h5.2" style="fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round"/></svg>`;
 const DROP=`<svg viewBox="0 0 24 32" aria-hidden="true"><path d="M12 1S2 13.5 2 20.5a10 10 0 0 0 20 0C22 13.5 12 1 12 1z" style="fill:currentColor"/></svg>`;
 const LOCK=`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10.5" rx="3" style="fill:currentColor"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" style="fill:none;stroke:currentColor;stroke-width:2.4"/></svg>`;
 
-let S, tab='today', justChecked=false, draft={e:0,s:0,g:0}, draftName='', draftAnchor='', draftOk=false, draftPet='cat', draftFur='', draftPetName='招财', draftBM='', draftBD='';
+let S, tab='today', justChecked=false, draft={e:0,s:0,g:0,sk:0,kg:''}, draftName='', draftAnchor='', draftOk=false, draftPet='cat', draftFur='', draftPetName='招财', draftBM='', draftBD='', draftPlan=PLANQ||'base';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -441,13 +506,13 @@ function imgWord(){const p=period();return p==='am'?'早安':p==='day'?'午安':
 function dateLine(){const d=pd(today());return (d.getMonth()+1)+'月'+d.getDate()+'日 星期'+'日一二三四五六'[d.getDay()]}
 
 function seed(){
-  const t=ymd(new Date()),start=add(t,-6),checks={};
-  for(let i=0;i<6;i++)checks[add(start,i)]=1;
-  return {sample:true,seen:[],pet:'cat',fur:'orange',petName:'招财',bday:'',onboarded:true,name:'陈姐',partner:PI.name||'Kelvin',anchor:'早餐后',start,checks,offset:0,points:85,
+  const t=ymd(new Date()),start=add(t,-6),checks={},tasks={},tk=['water','move','meal'];
+  for(let i=0;i<6;i++){checks[add(start,i)]=1;tasks[add(start,i)]=tk.slice(0,1+i%3)}
+  return {sample:true,seen:[],pet:'cat',fur:'orange',petName:'招财',bday:'',onboarded:true,name:'陈姐',partner:PI.name||'Kelvin',anchor:'早餐后',plan:'weight',planD:start,start,checks,tasks,offset:0,points:109,
     answers:{1:{a:'早餐后吃',d:start},3:{a:'精神好像好一点',d:add(start,2)}},
-    feel:[{d:start,day:1,e:2,s:2,g:3}],questions:[],gifts:{m1:start},flips:{},fs:'m'};
+    feel:[{d:start,day:1,e:2,s:2,g:3,kg:68.5}],questions:[],gifts:{m1:start},flips:{},fs:'m'};
 }
-function fresh(){return {sample:false,seen:[],pet:'cat',fur:'',petName:'招财',bday:'',onboarded:false,name:'',partner:PI.name||(DEMO?'Kelvin':'你的伙伴'),anchor:'',start:ymd(new Date()),checks:{},offset:0,points:0,answers:{},feel:[],questions:[],gifts:{},flips:{},fs:'m'}}
+function fresh(){return {sample:false,seen:[],pet:'cat',fur:'',petName:'招财',bday:'',onboarded:false,name:'',partner:PI.name||(DEMO?'Kelvin':'你的伙伴'),anchor:'',plan:'base',start:ymd(new Date()),checks:{},tasks:{},offset:0,points:0,answers:{},feel:[],questions:[],gifts:{},flips:{},fs:'m'}}
 function load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return null}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof cloudSave==='function')cloudSave()}
 /* answers that need the partner to act */
@@ -622,12 +687,12 @@ function sprig(x,X,Y,len,lean,th,n){
   [[0,-4,17],[-24,20,11],[22,26,9]].forEach(([dx,dy,r])=>cBloom(x,tx+dx,ty+dy,r,th));
 }
 function morningURL(){
-  const g=imgWord(),key=today()+g;
+  const g=imgWord(),key=today()+g+planOf(S);
   if(MCACHE.key===key)return Promise.resolve(MCACHE.url);
   if(mBusy&&mBusy.key===key)return mBusy.p;
   const p=(async()=>{
     const W=900,H=1125,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
-    const th=THEMES[hash(today())%THEMES.length],tip=TIPS[hash(today())%TIPS.length],bl=BLESS[hash(today()+'b')%BLESS.length];
+    const th=THEMES[hash(today())%THEMES.length],tip=tipToday(),bl=BLESS[hash(today()+'b')%BLESS.length];
     const d=pd(today()),num=String(d.getDate()),wk='星期'+'日一二三四五六'[d.getDay()],mo=MONTHS[d.getMonth()];
     try{await Promise.race([Promise.all([document.fonts.load('300px "DM Serif Display"',num),document.fonts.load('600 56px "Noto Serif SC"',g+tip+bl+wk+mo)]),new Promise(r=>setTimeout(r,3500))])}catch(e){}
     x.fillStyle=th.bg;x.fillRect(0,0,W,H);
@@ -940,9 +1005,14 @@ async function fetchNews(){const url=window.NEWS_URL_OVERRIDE||NEWS_URL;if(!url)
   try{const r=await fetch(url,{cache:'no-store'});if(!r.ok)return;const rows=parseNews(await r.text());
     const changed=JSON.stringify(rows)!==JSON.stringify(NEWS);NEWS=rows;try{localStorage.setItem(KEY+'_news',JSON.stringify(rows))}catch(e){}
     if(changed&&tab==='today'&&$('#overlay').hidden)render()}catch(e){}}
-/* what this customer may see: series posts already reached, and sheet posts for her stage */
-function allNews(){const t=today(),d=dayNum(),who=STAGE_WHO[stageOf(count())],src=NEWS.length?NEWS:(DEMO?demoNews():[]);
-  return {b:src.filter(x=>x.date<=t&&(x.who==='全部'||x.who.includes(who))),
+/* 「给谁看」 can name stages (新手 / 稳定 / 老客人) and plans (基础 / 体重 / 美肌), e.g. "体重 新手";
+   a post must match every kind it names, and words it doesn't recognise mean everyone */
+function forMe(w){w=String(w||'').replace(/全部|所有人|所有/g,'');
+  const st=STAGE_WHO.filter(s=>s&&w.includes(s)),pl=Object.keys(PLANS).filter(k=>PLANS[k].words.some(x=>w.includes(x)));
+  return (!st.length||st.includes(STAGE_WHO[stageOf(count())]))&&(!pl.length||pl.includes(planOf(S)))}
+/* what this customer may see: series posts already reached, and sheet posts meant for her */
+function allNews(){const t=today(),d=dayNum(),src=NEWS.length?NEWS:(DEMO?demoNews():[]);
+  return {b:src.filter(x=>x.date<=t&&forMe(x.who)),
           s:SERIES.filter(x=>d>=x.from).map(x=>({...x,id:'s'+x.w,date:add(S.start,x.from-1),series:true}))}}
 /* weeks 1-4 pop the series post; after that the newest sheet post (only if under two weeks old) */
 function newsNow(){const {b,s}=allNews(),d=dayNum(),t=today(),ser=s.find(x=>d>=x.from&&d<x.from+7),
@@ -1034,7 +1104,7 @@ async function cloudRestore(){
   return false
 }
 /* in the browser, keep a takeover code in the address so the home-screen icon carries it */
-function setURL(mc){try{const q=new URLSearchParams(),pc=S.pcode||PCODE;if(pc)q.set('p',pc);if(mc)q.set('move',mc);const t=q.toString();history.replaceState(null,'',location.pathname+(t?'?'+t:'')+location.hash)}catch(e){}}
+function setURL(mc){try{const q=new URLSearchParams(),pc=S.pcode||PCODE;if(pc)q.set('p',pc);if(!S.onboarded&&PLANQ)q.set('plan',PLANQ);if(mc)q.set('move',mc);const t=q.toString();history.replaceState(null,'',location.pathname+(t?'?'+t:'')+location.hash)}catch(e){}}
 async function cloudMoveCode(){
   if(!CLOUD||STANDALONE||!S.onboarded||moved())return;
   let m=null;try{m=JSON.parse(flag('_move')||'null')}catch(e){}
@@ -1086,6 +1156,15 @@ const I={
   font:ic('<path d="M4 19l5-14 5 14M6 14h6M15 19l3-8 3 8M16.2 16.5h3.6"/>')
 };
 const GIFT=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="9" width="17" height="11.5" rx="2"/><path d="M2.5 9h19M12 9v11.5M12 9c-1.5-3.5-6-4-6-1.2C6 9 9 9 12 9zM12 9c1.5-3.5 6-4 6-1.2C18 9 15 9 12 9z"/></svg>`;
+const PLAN_IC={
+  base:ic('<path d="M5.5 18.5C5.5 10 11 5 19.5 4.5c-.5 8.5-5.5 14-14 14z"/><path d="M5.5 18.5c3-3.6 6.2-6.4 9.5-8.4"/>'),
+  weight:ic('<rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><path d="M8 11a4.6 4.6 0 0 1 8 0"/><path d="M12 11l1.7-2.3"/>'),
+  skin:ic('<path d="M11 3.5l1.8 4.9 4.9 1.8-4.9 1.8L11 16.9l-1.8-4.9-4.9-1.8 4.9-1.8z"/><path d="M18 14.6l.8 2.1 2.1.8-2.1.8-.8 2.1-.8-2.1-2.1-.8 2.1-.8z"/>')
+};
+const PLAN_CI={base:'g',weight:'',skin:'y'};
+const TICK=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
+const kgFmt=v=>(Math.round(v*10)/10).toFixed(1).replace(/\.0$/,'');
+let justTask='';
 
 /* ---------- the sky scene ---------- */
 const cloudS=(x,y,s,o,c,b)=>`<g class="cl${b?' b':''}"><g transform="translate(${x} ${y}) scale(${s})" opacity="${o}" style="fill:${c}"><ellipse rx="34" ry="16"/><ellipse cx="-22" cy="4" rx="22" ry="12"/><ellipse cx="24" cy="5" rx="24" ry="12"/><ellipse cx="4" cy="-10" rx="20" ry="14"/></g></g>`;
@@ -1140,7 +1219,7 @@ function doneBlock(){
 function morningCard(done){
   const g=imgWord(),head=`<h3 class="ch"><span class="ci">${I.sun}</span>今天的${g}图</h3>`;
   if(!done)return `<section class="card blush">${head}<div class="frame teaser"><div class="blurimg" id="mblur"></div><div class="lock"><div class="ring">${LOCK}</div><p class="pill">打卡后就能领取</p></div></div></section>`;
-  const tip=TIPS[hash(today())%TIPS.length];
+  const tip=tipToday();
   return `<section class="card blush" id="mcard"><div class="row-b">${head}<span class="tag ok">已领取</span></div>
     <div class="frame"><p class="loading" id="mload">正在准备${g}图…</p><img id="mimg" alt="今天的${g}图：${esc(tip)}" hidden${justChecked?' class="reveal"':''}></div>
     <p class="small muted">长按图片，可以保存或转发给家人朋友。</p></section>`;
@@ -1150,8 +1229,8 @@ function flipBlock(){
   if(!f)return `<button class="flip" data-act="flip"><span class="gift">${GIFT}</span><span>翻开今天的惊喜卡</span></button>`;
   if(f.type==='gift')return `<div class="prize"><div class="p-big">中奖了！小礼物一份</div><p>告诉 ${esc(S.partner)}，下次见面领取。</p><a class="btn solid" style="margin-top:10px" href="${waLink(`${S.partner} 你好，我是${S.name}，今天翻惊喜卡中了一份小礼物！`)}" target="_blank" rel="noopener">用 WhatsApp 告诉 ${esc(S.partner)}</a></div>`;
   if(f.type==='pts')return `<div class="prize"><div class="p-big">积分 +5</div><p class="small muted">明天再来翻一张</p></div>`;
-  if(f.type==='fact')return `<div class="prize fact"><span class="ntag g">营养小知识</span><p class="p-fact">${esc(FACTS[f.i%FACTS.length])}</p><p class="small muted">明天再来翻一张</p></div>`;
-  if(f.type==='quiz'){const Q=QUIZ[f.i%QUIZ.length];
+  if(f.type==='fact'){const L=factList(f);return `<div class="prize fact"><span class="ntag g">${f.p&&PLANS[f.p]?PLANS[f.p].name:'营养'}小知识</span><p class="p-fact">${esc(L[f.i%L.length])}</p><p class="small muted">明天再来翻一张</p></div>`}
+  if(f.type==='quiz'){const L=quizList(f),Q=L[f.i%L.length];
     if(f.ans==null)return `<div class="prize quiz"><span class="ntag gold">小测验 · 答对 +5 积分</span><p class="p-fact">${esc(Q.q)}</p><div class="qopts">${Q.o.map((o,j)=>`<button class="opt" data-quiz="${j}">${esc(o)}</button>`).join('')}</div></div>`;
     const ok=f.ans===Q.a;return `<div class="prize quiz"><span class="ntag gold">小测验</span><p class="p-fact">${ok?'答对了！积分 +5':'答案是「'+esc(Q.o[Q.a])+'」，积分 +2'}</p><p>${esc(Q.w)}</p><p class="small muted">明天再来翻一张</p></div>`}
   return `<div class="prize"><div class="p-big">${esc(f.text)}</div><p class="small muted">明天再来翻一张</p></div>`;
@@ -1163,28 +1242,41 @@ function careBlock(){
     return `<div class="card care">${eb}<h3>${c.q}</h3><p>你的回答：<b>${esc(a.a)}</b></p>
     <div class="reply"><div class="avatar">${esc(S.partner[0])}</div><div class="bubble"><b>${esc(S.partner)}</b>${esc(fill(c.r(a.a)))}</div></div>
     ${need?`<a class="btn solid" href="${waLink(`${S.partner} 你好，我是${S.name}。第 ${d} 天的问题「${c.q}」，我的回答是：${a.a}`)}" target="_blank" rel="noopener">用 WhatsApp 告诉 ${esc(S.partner)}</a>`:''}</div>`}
+  const pt=PLAN_TXT[planOf(S)],opts=(d===45&&pt&&pt.c45)||c.o;
   return `<div class="card care">${eb}<h3>${c.q}</h3>
-    <div class="opts">${c.o.map(o=>`<button class="opt" data-care="${d}" data-a="${esc(o)}">${esc(o)}</button>`).join('')}</div></div>`;
+    <div class="opts">${opts.map(o=>`<button class="opt" data-care="${d}" data-a="${esc(o)}">${esc(o)}</button>`).join('')}</div></div>`;
 }
+/* the plan's three small habits for today; they earn points but never change the check-in count */
+function tasksCard(){
+  const k=planOf(S),P=PLANS[k],got=(S.tasks&&S.tasks[today()])||[],n=P.tasks.filter(([id])=>got.includes(id)).length,all=n===P.tasks.length;
+  return `<section class="card" id="tasks"><div class="row-b"><h3 class="ch"><span class="ci ${PLAN_CI[k]}">${PLAN_IC[k]}</span>今天的小任务</h3><span class="tag${all?' ok':''}">${n}/${P.tasks.length}</span></div>
+    <p class="small muted" style="margin-top:-4px">${P.name}计划 · 做到一样，点一下</p>
+    <div class="tlist">${P.tasks.map(([id,txt])=>`<button class="task${justTask===id?' pop':''}" data-task="${id}" aria-pressed="${got.includes(id)}"><span class="tk">${TICK}</span><span class="tt">${esc(txt)}</span><span class="tp">+2</span></button>`).join('')}</div>
+    ${all?'<p class="tdone">三样都做到了，今天好棒！</p>':''}</section>`;
+}
+function planPick(cur){return `<div class="plans" role="group" aria-label="选计划">${Object.keys(PLANS).map(k=>`<button class="plc" data-plan="${k}" aria-pressed="${cur===k}"><span class="ci ${PLAN_CI[k]}">${PLAN_IC[k]}</span><span style="min-width:0"><b>${PLANS[k].name}</b><span class="small muted">${PLANS[k].desc}</span></span></button>`).join('')}</div>`}
 function viewToday(){
   const t=today(),done=!!S.checks[t],y=add(t,-1),canMakeup=y>=S.start&&!S.checks[y],stg=stageOf(count());
   if(moved())return gardenScene()+`<section class="card" style="background:var(--gold-soft);border:0"><h3 class="ch"><span class="ci y">${I.phone}</span>你的小花已经搬家了</h3><p>你的记录已经搬到手机桌面的图标（或新手机）。请从那里打开打卡，${/^[\x20-\x7E]+$/.test(S.partner)?esc(S.partner)+' ':esc(S.partner)}才看得到你的记录。</p></section>`+footer();
   return gardenScene()+
     (done?doneBlock()+careBlock():`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>我今天吃了营养<span class="sub">点一下，给花浇水</span></span></button>`)+
-    (canMakeup?`<button class="link-btn" data-act="makeup">昨天忘了打卡？点这里补上</button>`:'')+
+    (canMakeup?`<button class="link-btn" data-act="makeup">昨天忘了打卡？点这里补上</button>`:'')+tasksCard()+
     (stg===3?newsCard():'')+morningCard(done)+(done?flipBlock():'')+(stg<3?newsCard():'')+changeCard()+(S.a2hs?'':homeCard())+demoTools()+footer();
 }
 function newsCard(){const {card}=newsNow();if(!card)return '';
   return `<section class="card ncard"><div class="row-b"><h3 class="ch"><span class="ci y">${I.mail}</span>本周信息${S.seen.includes(card.id)?'':'<span class="ndot" aria-label="新"></span>'}</h3><span class="ntag ${NTAG[card.type]||'b'}">${card.series?'新手小贴士':esc(card.type)}</span></div>
     <p class="ntitle2">${esc(card.title)}</p><button class="btn" data-act="news" data-nid="${card.id}">打开看看</button></section>`}
 /* stage 2+: the customer's own before-and-after, the strongest kind of value */
-function changeCard(){if(stageOf(count())<2)return '';const F=S.feel,t=today();
+function changeCard(){if(stageOf(count())<2)return '';const F=S.feel,t=today(),pk=planOf(S);
   const first=F.filter(x=>diff(S.start,x.d)<30),recent=F.filter(x=>diff(S.start,x.d)>=30&&diff(x.d,t)<30);
   const head=`<h3 class="ch"><span class="ci">${I.chart}</span>我的变化</h3>`;
-  if(!first.length||!recent.length)return `<section class="card">${head}<p class="small muted">每个星期在「感觉」页记录精神、睡眠和肠胃。第一个月和最近一个月都有记录后，这里就会出现比较。</p><button class="btn" data-tab="feel">去记录感觉</button></section>`;
-  const avg=(L,k)=>L.reduce((s,x)=>s+x[k],0)/L.length;
-  return `<section class="card">${head}<p class="small muted">浅色是第一个月，深色是最近一个月</p>${[['e','精神'],['s','睡眠'],['g','肠胃']].map(([k,l])=>{const a=avg(first,k),b=avg(recent,k),d=b-a;
-    return `<div class="chg"><span class="chg-l">${l}</span><span class="chg-bars"><span class="chg-bar"><i style="width:${Math.round(a*20)}%"></i></span><span class="chg-bar now"><i style="width:${Math.round(b*20)}%"></i></span></span><b class="chg-t${d>.2?' up':''}">${d>.2?'变好了':d<-.2?'问问伙伴':'差不多'}</b></div>`}).join('')}</section>`}
+  const avg=(L,k)=>{const v=L.filter(x=>x[k]).map(x=>x[k]);return v.length?v.reduce((s,x)=>s+x,0)/v.length:0};
+  const M=[['e','精神'],['s','睡眠'],['g','肠胃'],['sk','皮肤']].filter(([k])=>avg(first,k)&&avg(recent,k));
+  const K=F.filter(x=>typeof x.kg==='number'),kd=K.length>1?K[K.length-1].kg-K[0].kg:0;
+  if(!M.length&&K.length<2)return `<section class="card">${head}<p class="small muted">每个星期在「感觉」页记录精神、睡眠和肠胃${pk==='skin'?'，还有皮肤':pk==='weight'?'，还有体重':''}。第一个月和最近一个月都有记录后，这里就会出现比较。</p><button class="btn" data-tab="feel">去记录感觉</button></section>`;
+  return `<section class="card">${head}${M.length?'<p class="small muted">浅色是第一个月，深色是最近一个月</p>':''}${M.map(([k,l])=>{const a=avg(first,k),b=avg(recent,k),d=b-a;
+    return `<div class="chg"><span class="chg-l">${l}</span><span class="chg-bars"><span class="chg-bar"><i style="width:${Math.round(a*20)}%"></i></span><span class="chg-bar now"><i style="width:${Math.round(b*20)}%"></i></span></span><b class="chg-t${d>.2?' up':''}">${d>.2?'变好了':d<-.2?'问问伙伴':'差不多'}</b></div>`}).join('')}
+    ${K.length>1?`<div class="chg"><span class="chg-l">体重</span><span class="small">${kgFmt(K[0].kg)} → ${kgFmt(K[K.length-1].kg)} 公斤</span><b class="chg-t${kd<=-.3?' up':''}">${kd<=-.3?'轻了 '+kgFmt(-kd)+' 公斤':kd>=.3?'问问伙伴':'差不多'}</b></div>`:''}</section>`}
 function libraryCard(){const L=newsList();if(!L.length)return '';
   return `<div class="card"><h3 class="ch"><span class="ci y">${I.mail}</span>知识库</h3><p class="small muted">之前的信息都在这里，随时可以重看</p>
     <div class="nlist">${L.map(x=>`<button class="nitem" data-act="news" data-nid="${x.id}"><span class="ntag ${NTAG[x.type]||'b'}">${x.series?'小贴士':esc(x.type)}</span><span class="nt">${esc(x.title)}</span></button>`).join('')}</div></div>`}
@@ -1204,7 +1296,7 @@ function viewLog(){
   for(let i=0;i<first;i++)cells+='<div></div>';
   for(let i=1;i<=dim;i++){const s=ymd(new Date(y,m,i)),on=!!S.checks[s];if(on)mc++;
     cells+=`<div class="d${on?' on':''}${s===t?' today':''}${s<S.start?' pre':''}" aria-label="${i}日${on?' 已打卡':''}">${i}</div>`}
-  const n=count(),nx=nextMile();
+  const n=count(),nx=nextMile(),pk=planOf(S);
   const path=MILES.map(ms=>{
     if(n>=ms.n)return `<div class="stone got"><div class="mini">${plantSVG(ms.n)}</div><div><h4>${ms.name} · ${ms.stage}</h4><p class="small muted">累计 ${ms.n} 天 · ${ms.gift} · 已达成</p></div></div>`;
     if(nx&&nx.id===ms.id)return `<div class="stone next"><div class="mini">${plantSVG(ms.n)}</div><div><h4>${ms.name} · ${ms.stage} <span class="tag">下一阶段</span></h4><p class="small muted">再打卡 ${ms.n-n} 天 · 可以领：${ms.gift}</p></div></div>`;
@@ -1213,6 +1305,8 @@ function viewLog(){
   return miniScene('我的记录',`累计打卡 ${n} 天 · ${STAGE_NAME[stageOf(n)]} · 积分 ${S.points}`)+
     `<div class="card"><div class="row-b"><h3 class="ch"><span class="ci g">${I.cal}</span>${m+1}月</h3><span class="muted small">这个月打卡 ${mc} 天</span></div><div class="cal">${cells}</div>
       <p class="note">绿色圆圈是已经打卡的日子。漏了一两天没关系，奖励是按累计天数算的。</p></div>
+    <div class="card"><h3 class="ch"><span class="ci ${PLAN_CI[pk]}">${PLAN_IC[pk]}</span>我的计划：${PLANS[pk].name}</h3><p class="small muted" style="margin-top:-4px">${PLANS[pk].desc}</p>
+      <details class="plchg"><summary class="link-btn" style="padding:0">换一个计划</summary>${planPick(pk)}<p class="small muted" style="margin-top:8px">换计划不会影响打卡天数、积分和礼物。</p></details></div>
     <div class="card"><h3 class="ch"><span class="ci">${I.flower}</span>我的花和奖励</h3><div class="path">${path}</div></div>
     <div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>我的宠物</h3><div class="petrow"><div class="petbox">${petSVG(S.pet,petStage(n),costume().cos,'sit',S.fur)}</div><div style="min-width:0"><p><b>${esc(S.petName)}</b>（${S.pet==='dog'?'小狗':'小猫'}）</p><p class="small muted">${PET_TXT[petStage(n)]}</p></div></div>
       <label for="pn2" class="small muted">改名字</label><div class="row"><input type="text" id="pn2" maxlength="8" value="${esc(S.petName)}" style="flex:1;min-width:0"><button class="btn" data-act="rename">保存</button></div>
@@ -1223,28 +1317,52 @@ function viewLog(){
 }
 
 /* ---------- feelings ---------- */
+/* weekly feelings: one line per measure (skin joins for the skin plan); a table view sits underneath */
+const FSER=[['e','精神','var(--c1)'],['s','睡眠','var(--c2)'],['g','肠胃','var(--c3)'],['sk','皮肤','var(--c4)']];
+const FACES=['😣','🙁','😐','🙂','😄'];
 function chart(){
   const F=S.feel;if(!F.length)return '<p class="note">记录第一次以后，这里会画出你的变化。</p>';
   const W=320,H=170,L=30,R=14,T=12,B=30,xs=i=>F.length===1?(L+W-R)/2:L+i*(W-L-R)/(F.length-1),ys=v=>T+(5-v)*(H-T-B)/4;
-  const faces=['😣','🙁','😐','🙂','😄'];let g='';
-  for(let v=1;v<=5;v++)g+=`<line x1="${L}" x2="${W-R}" y1="${ys(v)}" y2="${ys(v)}" style="stroke:var(--line)"/><text x="4" y="${ys(v)+6}" font-size="15">${faces[v-1]}</text>`;
-  const ser=[['e','var(--leaf)'],['s','var(--gold-bright)'],['g','var(--coral)']].map(([k,c])=>
-    `<polyline style="fill:none;stroke:${c};stroke-width:3;stroke-linejoin:round" points="${F.map((f,i)=>xs(i)+','+ys(f[k])).join(' ')}"/>`+
-    F.map((f,i)=>`<circle cx="${xs(i)}" cy="${ys(f[k])}" r="${i===F.length-1?5.5:4}" style="fill:${c}"/>`).join('')).join('');
-  const lab=F.map((f,i)=>`<text x="${xs(i)}" y="${H-8}" font-size="12" text-anchor="middle" style="fill:var(--muted)">第${f.day}天</text>`).join('');
-  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="感觉变化图">${g}${ser}${lab}</svg>
-    <div class="legend"><span style="--c:var(--leaf)">精神</span><span style="--c:var(--gold-bright)">睡眠</span><span style="--c:var(--coral)">肠胃</span></div>
-    ${F.length<2?'<p class="note">每个星期记录一次，就能看到自己的变化。</p>':''}`;
+  const ser=FSER.filter(([k])=>F.some(f=>f[k]));let g='';
+  for(let v=1;v<=5;v++)g+=`<line x1="${L}" x2="${W-R}" y1="${ys(v)}" y2="${ys(v)}" style="stroke:var(--line)"/><text x="4" y="${ys(v)+6}" font-size="15">${FACES[v-1]}</text>`;
+  const lines=ser.map(([k,,c],j)=>{const dy=(j-(ser.length-1)/2)*3.6,P=F.map((f,i)=>f[k]?[xs(i),ys(f[k])+dy,i]:null).filter(Boolean);
+    return `<polyline style="fill:none;stroke:${c};stroke-width:3;stroke-linejoin:round;stroke-linecap:round" points="${P.map(p=>p[0]+','+p[1]).join(' ')}"/>`+
+      P.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="${p[2]===F.length-1?5.5:4.5}" style="fill:${c};stroke:var(--surface);stroke-width:2"/>`).join('')}).join('');
+  const lab=F.map((f,i)=>`<text x="${xs(i)}" y="${H-8}" font-size="12" text-anchor="${F.length>1&&i===F.length-1?'end':F.length>1&&i===0?'start':'middle'}" style="fill:var(--muted)">第${f.day}天</text>`).join('');
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="感觉变化图">${g}${lines}${lab}</svg>
+    <div class="legend">${ser.map(([,l,c])=>`<span style="--c:${c}">${l}</span>`).join('')}</div>
+    ${F.length<2?'<p class="note">每个星期记录一次，就能看到自己的变化。</p>':''}
+    <details class="rows"><summary>看全部记录</summary><table class="rtab"><tr><th>日期</th>${ser.map(([,l])=>`<th>${l}</th>`).join('')}</tr>
+      ${F.slice().reverse().map(f=>`<tr><td>${esc(f.d.slice(5).replace('-','/'))}</td>${ser.map(([k])=>`<td>${f[k]?FACES[f[k]-1]+' '+f[k]:'–'}</td>`).join('')}</tr>`).join('')}</table></details>`;
 }
+/* weekly weight, only if she chose to fill it in */
+function kgCard(){
+  const R=S.feel.filter(f=>typeof f.kg==='number');if(!R.length)return '';
+  const W=320,H=150,L=22,Rr=22,T=30,B=30,v=R.map(r=>r.kg),lo=Math.min(...v),hi=Math.max(...v),pad=Math.max(1,(hi-lo)*.3),y0=lo-pad,y1=hi+pad;
+  const xs=i=>R.length===1?W/2:L+i*(W-L-Rr)/(R.length-1),ys=x=>T+(y1-x)*(H-T-B)/(y1-y0),n=R.length-1,d=R[n].kg-R[0].kg;
+  const pts=R.map((r,i)=>[xs(i),ys(r.kg)]);
+  const lbl=(i,anchor)=>`<text x="${pts[i][0]}" y="${pts[i][1]-12}" font-size="14" font-weight="700" text-anchor="${anchor}" style="fill:var(--ink)">${kgFmt(R[i].kg)}</text>`;
+  const svg=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="体重变化图：第一次 ${kgFmt(R[0].kg)} 公斤，最近 ${kgFmt(R[n].kg)} 公斤">
+    <line x1="${L}" x2="${W-Rr}" y1="${H-B+6}" y2="${H-B+6}" style="stroke:var(--line)"/>
+    ${R.length>1?`<polyline style="fill:none;stroke:var(--c1);stroke-width:3;stroke-linejoin:round;stroke-linecap:round" points="${pts.map(p=>p.join(',')).join(' ')}"/>`:''}
+    ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="${i===n?5.5:4.5}" style="fill:var(--c1);stroke:var(--surface);stroke-width:2"/>`).join('')}
+    ${lbl(0,R.length===1?'middle':'start')}${n?lbl(n,'end'):''}
+    <text x="${pts[0][0]}" y="${H-6}" font-size="12" text-anchor="${n?'start':'middle'}" style="fill:var(--muted)">第${R[0].day}天</text>${n?`<text x="${pts[n][0]}" y="${H-6}" font-size="12" text-anchor="end" style="fill:var(--muted)">第${R[n].day}天</text>`:''}</svg>`;
+  const say=!n?'这是第一次记录。每个星期同一天早上量一次，就能看到变化。':d<=-.3?`比第一次轻了 ${kgFmt(-d)} 公斤，继续加油！`:d>=.3?'体重有起伏很正常，继续做小任务就好。有问题可以问伙伴。':'和第一次差不多，继续保持好习惯。';
+  return `<div class="card"><h3 class="ch"><span class="ci">${PLAN_IC.weight}</span>体重变化</h3>${svg}<p>${say}</p>
+    <details class="rows"><summary>看全部记录</summary><table class="rtab"><tr><th>日期</th><th>体重（公斤）</th></tr>${R.slice().reverse().map(r=>`<tr><td>${esc(r.d.slice(5).replace('-','/'))}</td><td>${kgFmt(r.kg)}</td></tr>`).join('')}</table></details></div>`;
+}
+function feelMetrics(){return [['e','精神'],['s','睡眠'],['g','肠胃']].concat(planOf(S)==='skin'?[['sk','皮肤']]:[])}
+const feelReady=()=>feelMetrics().every(([k])=>draft[k]);
 function viewFeel(){
-  const last=S.feel[S.feel.length-1],can=!last||diff(last.d,today())>=7;
-  const M=[['e','精神'],['s','睡眠'],['g','肠胃']],faces=['😣','🙁','😐','🙂','😄'];
-  const form=can?`<div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>这个星期感觉怎样？</h3>${M.map(([k,l])=>`<div class="metric"><span>${l}</span><div class="faces">${faces.map((f,i)=>`<button class="face" data-m="${k}" data-v="${i+1}" aria-pressed="${draft[k]===i+1}" aria-label="${l} ${i+1}分">${f}</button>`).join('')}</div></div>`).join('')}
-      <button class="btn solid" data-act="feel" ${draft.e&&draft.s&&draft.g?'':'disabled'}>保存这星期的感觉（+10 积分）</button></div>`
+  const last=S.feel[S.feel.length-1],can=!last||diff(last.d,today())>=7,M=feelMetrics();
+  const kgField=planOf(S)==='weight'?`<div class="metric"><label for="kg">体重（可以不填，伙伴看得到）</label><div class="kgrow"><input type="text" id="kg" inputmode="decimal" maxlength="5" autocomplete="off" placeholder="例如 62.5" value="${esc(draft.kg)}"><span>公斤</span></div><p class="kgerr" id="kgerr" hidden>请填 25 到 250 之间的数字，例如 62.5</p></div>`:'';
+  const form=can?`<div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>这个星期感觉怎样？</h3>${M.map(([k,l])=>`<div class="metric"><span>${l}</span><div class="faces">${FACES.map((f,i)=>`<button class="face" data-m="${k}" data-v="${i+1}" aria-pressed="${draft[k]===i+1}" aria-label="${l} ${i+1}分">${f}</button>`).join('')}</div></div>`).join('')}${kgField}
+      <button class="btn solid" data-act="feel" ${feelReady()?'':'disabled'}>保存这星期的感觉（+10 积分）</button></div>`
     :`<div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>这星期已经记录了</h3><p class="muted">${7-diff(last.d,today())} 天后再来记录一次。</p></div>`;
   const qs=S.questions.map(q=>`<div><p class="small muted">第 ${q.day} 天</p><p>${esc(q.text)}</p><p class="small" style="color:var(--leaf-dark)">已打开 WhatsApp 发给 ${esc(S.partner)}</p></div>`).join('');
   return miniScene('我的感觉','这里只记录感觉，不是医疗诊断')+
-    `${form}<div class="card"><h3 class="ch"><span class="ci g">${I.chart}</span>我的变化</h3>${chart()}</div>
+    `${form}<div class="card"><h3 class="ch"><span class="ci g">${I.chart}</span>我的变化</h3>${chart()}</div>${kgCard()}
     <div class="card"><h3 class="ch"><span class="ci y">${I.chat}</span>有什么想问 ${esc(S.partner)}？</h3><label for="q" class="small muted">写下你的问题，${esc(S.partner)} 会回复你。身体不舒服，请先看医生。</label>
       <textarea id="q" placeholder="例如：营养要饭前吃还是饭后吃？"></textarea><a class="btn solid" id="askbtn" data-act="ask" href="${waLink(askText(''))}" target="_blank" rel="noopener">用 WhatsApp 发给 ${esc(S.partner)}</a>
       ${qs?`<div class="qa">${qs}</div>`:''}</div>`+footer();
@@ -1258,15 +1376,16 @@ function viewOnboard(){
       <p class="change glass" style="color:inherit"><span style="display:inline-block">每天吃完营养，点一下打卡，</span><span style="display:inline-block">种子就会慢慢长大开花。</span></p>`)+
     (CLOUD&&!S.pcode&&!PCODE&&!PI.phone?`<div class="card" style="background:var(--gold-soft);border:0"><h3>还不知道你的伙伴是谁</h3><p>请用伙伴发给你的链接打开，或请伙伴给你扫二维码。这样你的奖励和问题才会送到伙伴那里。</p></div>`:'')+`<div class="card"><h3>1. 哪一种字看得最清楚？</h3>${fontPick()}</div>
     <div class="card"><label for="nm"><h3>2. 我们怎么称呼你？</h3></label><input type="text" id="nm" placeholder="例如：陈姐" value="${esc(draftName)}"></div>
-    <div class="card"><h3>3. 你打算什么时候吃？</h3><div class="opts">${['早餐后','午餐后','晚餐后'].map(a=>`<button class="opt${draftAnchor===a?' sel':''}" data-anchor="${a}">${a}</button>`).join('')}</div></div>
-    <div class="card"><h3>4. 你想养小猫还是小狗？</h3><div class="petpick">${['cat','dog'].map(k=>`<button class="pp" data-pet="${k}" aria-pressed="${draftPet===k}">${petSVG(k,1,'','sit',k===draftPet?draftFur:'')}<span>${k==='cat'?'小猫':'小狗'}</span></button>`).join('')}</div>
+    <div class="card"><h3>3. 你想先照顾哪一方面？</h3><p class="small muted" style="margin-top:-6px">每天会有 3 个小任务。以后可以在「记录」页换。</p>${planPick(draftPlan)}</div>
+    <div class="card"><h3>4. 你打算什么时候吃营养？</h3><div class="opts">${['早餐后','午餐后','晚餐后'].map(a=>`<button class="opt${draftAnchor===a?' sel':''}" data-anchor="${a}">${a}</button>`).join('')}</div></div>
+    <div class="card"><h3>5. 你想养小猫还是小狗？</h3><div class="petpick">${['cat','dog'].map(k=>`<button class="pp" data-pet="${k}" aria-pressed="${draftPet===k}">${petSVG(k,1,'','sit',k===draftPet?draftFur:'')}<span>${k==='cat'?'小猫':'小狗'}</span></button>`).join('')}</div>
       <p class="small muted" style="margin-top:12px">选一个毛色</p>${furPick(draftPet,furOf(draftPet,draftFur).k)}
       <label for="pn" class="small muted">它的名字（可以改）</label><input type="text" id="pn" maxlength="8" value="${esc(draftPetName)}"></div>
-    <div class="card"><h3>5. 你的生日（可以不填）</h3><p class="small muted">生日那天，宠物会戴上生日帽陪你庆祝。</p>
+    <div class="card"><h3>6. 你的生日（可以不填）</h3><p class="small muted">生日那天，宠物会戴上生日帽陪你庆祝。</p>
       <div class="row"><select id="bm" aria-label="生日月份"><option value="">月</option>${Array.from({length:12},(_,i)=>`<option value="${i+1}"${+draftBM===i+1?' selected':''}>${i+1} 月</option>`).join('')}</select>
       <select id="bd" aria-label="生日日期"><option value="">日</option>${Array.from({length:31},(_,i)=>`<option value="${i+1}"${+draftBD===i+1?' selected':''}>${i+1} 日</option>`).join('')}</select></div></div>
     <div class="card"><label style="display:flex;gap:12px;align-items:flex-start"><input type="checkbox" id="ok" ${draftOk?'checked':''} style="width:1.6rem;height:1.6rem;flex:none;margin-top:4px">
-      <span>我同意把我的打卡、感觉记录和问题安全地存在网上，只给我的伙伴 ${esc(S.partner)} 和团队领导用来关心我的情况。我可以随时在「记录」页删除这些资料。</span></label></div>
+      <span>我同意把我的打卡、感觉记录、体重（如果有填）和问题安全地存在网上，只给我的伙伴 ${esc(S.partner)} 和团队领导用来关心我的情况。我可以随时在「记录」页删除这些资料。</span></label></div>
     <button class="checkin" data-act="start" ${ok?'':'disabled'}><span>种下我的健康花<span class="sub">开始 90 天旅程</span></span></button>`+demoTools();
 }
 function demoTools(){
@@ -1275,6 +1394,7 @@ function demoTools(){
     <div class="row" style="padding-bottom:8px"><button class="btn" data-act="next">跳到明天</button><button class="btn" data-act="prev">回到前一天</button>
     <button class="btn" data-act="jump">直接到下一个礼物日</button><button class="btn" data-act="fast">连续打卡 7 天</button>
     <button class="btn" data-act="new">看新客人第一天</button><button class="btn" data-act="sample">恢复示例</button></div>
+    ${S.onboarded?`<div class="row" style="padding-bottom:8px">${Object.keys(PLANS).map(k=>`<button class="btn" data-plan="${k}" aria-pressed="${planOf(S)===k}">看${PLANS[k].name}</button>`).join('')}</div>`:''}
     <div class="row" style="padding-bottom:8px"><button class="btn" data-act="newsdemo">看本周信息弹窗</button><button class="btn" data-act="cos">看节日装扮${demoCos>=0?`（${demoCos+1}/${DEMO_COS.length}）`:''}</button>${demoCos>=0?'<button class="btn" data-act="cosoff">看平常样子</button>':''}</div>
     <div class="row" style="padding-bottom:8px">${[['am','看早上'],['day','看中午'],['dusk','看傍晚'],['night','看晚上'],['','跟随时间']].map(([k,l])=>`<button class="btn" data-period="${k}" aria-pressed="${demoP===k}">${l}</button>`).join('')}</div>
     <p>${S.sample?'现在显示的是示例客人「陈姐」的资料。':''}想看花每天的变化：先点「跳到明天」，再点打卡。试用版的资料只存在这部手机里。</p></details>`;
@@ -1338,7 +1458,15 @@ document.addEventListener('click',e=>{
   if(b.dataset.care){const d=b.dataset.care;S.answers[d]={a:b.dataset.a,d:t};S.points+=5;save();
     if(b.dataset.a==='去记录我的感觉')tab='feel';render();bumpPts();return}
   if(b.dataset.m){draft[b.dataset.m]=+b.dataset.v;render();return}
-  if('quiz' in b.dataset){const f=S.flips[t];if(f&&f.type==='quiz'&&f.ans==null){f.ans=+b.dataset.quiz;const ok=f.ans===QUIZ[f.i].a;S.points+=ok?5:2;save();render();bumpPts();if(ok)confetti()}return}
+  if('quiz' in b.dataset){const f=S.flips[t];if(f&&f.type==='quiz'&&f.ans==null){const L=quizList(f);f.ans=+b.dataset.quiz;const ok=f.ans===L[f.i%L.length].a;S.points+=ok?5:2;save();render();bumpPts();if(ok)confetti()}return}
+  if(b.dataset.plan){const k=b.dataset.plan;if(!PLANS[k])return;
+    if(!S.onboarded){keepName();draftPlan=k;render();return}
+    if(planOf(S)!==k){S.plan=k;S.planD=t;draft={e:0,s:0,g:0,sk:0,kg:''};save();toast('已换成「'+PLANS[k].name+'」计划')}
+    render();return}
+  if(b.dataset.task){const id=b.dataset.task,L=((S.tasks||(S.tasks={}))[t]||[]).slice(),i=L.indexOf(id);
+    if(i>=0){L.splice(i,1);S.points=Math.max(0,S.points-2)}else{L.push(id);S.points+=2;justTask=id}
+    if(L.length)S.tasks[t]=L;else delete S.tasks[t];
+    const all=PLANS[planOf(S)].tasks.every(([k])=>L.includes(k));save();render();justTask='';bumpPts();if(all&&i<0)confetti();return}
   if(b.dataset.anchor){keepName();draftAnchor=b.dataset.anchor;render();return}
   switch(a){
     case 'check':S.checks[t]=1;S.points+=10;justChecked=true;PET.woke=true;save();afterWater(true);break;
@@ -1354,10 +1482,19 @@ document.addEventListener('click',e=>{
       const stg=stageOf(count()),G=[6,3,0][stg-1],P=[36,28,20][stg-1];let f;
       if(r<G&&!won)f={type:'gift'};else if(r<P){f={type:'pts'};S.points+=5}
       else if(stg===1)f={type:'bless',text:BLESS[hash(t)%BLESS.length]};
-      else if(r<(P+100)/2){f={type:'fact',i:(S.factN||0)%FACTS.length};S.factN=(S.factN||0)+1}
-      else{f={type:'quiz',i:(S.quizN||0)%QUIZ.length,ans:null};S.quizN=(S.quizN||0)+1}
+      /* facts and quizzes alternate between everyday ones and ones for her plan */
+      else if(r<(P+100)/2){const pk=planOf(S),pt=PLAN_TXT[pk];
+        if(pt&&((S.factN||0)+(S.pfactN||0))%2){f={type:'fact',p:pk,i:(S.pfactN||0)%pt.facts.length};S.pfactN=(S.pfactN||0)+1}
+        else{f={type:'fact',i:(S.factN||0)%FACTS.length};S.factN=(S.factN||0)+1}}
+      else{const pk=planOf(S),pt=PLAN_TXT[pk];
+        if(pt&&((S.quizN||0)+(S.pquizN||0))%2){f={type:'quiz',p:pk,i:(S.pquizN||0)%pt.quiz.length,ans:null};S.pquizN=(S.pquizN||0)+1}
+        else{f={type:'quiz',i:(S.quizN||0)%QUIZ.length,ans:null};S.quizN=(S.quizN||0)+1}}
       S.flips[t]=f;save();render();if(f.type==='gift'||f.type==='pts'){bumpPts();confetti()}break}
-    case 'feel':S.feel.push({d:t,day:dayNum(),...draft});draft={e:0,s:0,g:0};S.points+=10;save();render();break;
+    case 'feel':{if(!feelReady())return;const pk=planOf(S),rec={d:t,day:dayNum(),e:draft.e,s:draft.s,g:draft.g};
+      if(pk==='skin')rec.sk=draft.sk;
+      if(pk==='weight'){const raw=String(draft.kg||'').trim().replace(/[,，。]/g,'.');
+        if(raw){const v=parseFloat(raw);if(!/^\d{2,3}(\.\d{1,2})?$/.test(raw)||!(v>=25&&v<=250)){const er=$('#kgerr');if(er)er.hidden=false;const k=$('#kg');if(k)k.focus();return}rec.kg=Math.round(v*10)/10}}
+      S.feel.push(rec);draft={e:0,s:0,g:0,sk:0,kg:''};S.points+=10;save();render();break}
     case 'ask':{const v=$('#q').value.trim();if(!v)return;S.questions.unshift({day:dayNum(),text:v});save();render();break}
     case 'a2hs':S.a2hs=true;save();render();break;
     case 'rename':{const v=($('#pn2')||{}).value;if(v&&v.trim()){S.petName=v.trim().slice(0,8);save();render()}break}
@@ -1370,21 +1507,23 @@ document.addEventListener('click',e=>{
     case 'newsdemo':showNews(newsNow().card||demoNews()[2]);break;
     case 'next':S.offset=(S.offset||0)+1;save();render();scrollTo(0,0);break;
     case 'prev':if(diff(S.start,add(t,-1))>=0){S.offset=(S.offset||0)-1;save();render()}break;
-    case 'new':{const fs=S.fs;S=fresh();S.fs=fs;draftName='';draftAnchor='';draftOk=false;draftPet='cat';draftFur='';draftPetName='招财';draftBM='';draftBD='';tab='today';save();render();scrollTo(0,0);break}
+    case 'new':{const fs=S.fs;S=fresh();S.fs=fs;draftName='';draftAnchor='';draftOk=false;draftPet='cat';draftFur='';draftPetName='招财';draftBM='';draftBD='';draftPlan=PLANQ||'base';tab='today';save();render();scrollTo(0,0);break}
     case 'sample':S=seed();tab='today';save();render();scrollTo(0,0);break;
     case 'start':keepName();if(!(draftName.trim()&&draftAnchor&&draftOk))return;
-      S.name=draftName.trim();S.anchor=draftAnchor;S.pet=draftPet;S.fur=furOf(draftPet,draftFur).k;S.petName=(draftPetName.trim()||PETN[draftPet]).slice(0,8);
+      S.name=draftName.trim();S.anchor=draftAnchor;S.plan=PLANS[draftPlan]?draftPlan:'base';S.planD=t;S.pet=draftPet;S.fur=furOf(draftPet,draftFur).k;S.petName=(draftPetName.trim()||PETN[draftPet]).slice(0,8);
       S.bday=draftBM&&draftBD?String(draftBM).padStart(2,'0')+'-'+String(draftBD).padStart(2,'0'):'';S.onboarded=true;S.consent=t;S.start=t;tab='today';save();render();scrollTo(0,0);if(CLOUD)cloudSave(true);break;
   }
 });
 document.addEventListener('change',e=>{if(e.target.id==='bm')draftBM=e.target.value;if(e.target.id==='bd')draftBD=e.target.value});
-document.addEventListener('input',e=>{if(e.target.id==='pn')draftPetName=e.target.value;if(e.target.id==='q'){const a=$('#askbtn');if(a)a.href=waLink(askText(e.target.value.trim()))}if(e.target.id==='nm'){draftName=e.target.value;const s=document.querySelector('[data-act=start]');if(s)s.disabled=!(draftName.trim()&&draftAnchor&&draftOk)}});
+document.addEventListener('input',e=>{if(e.target.id==='pn')draftPetName=e.target.value;if(e.target.id==='kg'){draft.kg=e.target.value;const er=$('#kgerr');if(er)er.hidden=true}if(e.target.id==='q'){const a=$('#askbtn');if(a)a.href=waLink(askText(e.target.value.trim()))}if(e.target.id==='nm'){draftName=e.target.value;const s=document.querySelector('[data-act=start]');if(s)s.disabled=!(draftName.trim()&&draftAnchor&&draftOk)}});
 document.addEventListener('change',e=>{if(e.target.id==='ok'){keepName();draftOk=e.target.checked;render()}});
 
 S=load()||(DEMO?seed():fresh());
 if(!S.pet){S.pet='cat';S.petName='招财';S.bday=S.bday||''}
 if(!S.fur)S.fur=furOf(S.pet,'').k;
 if(!S.seen)S.seen=[];
+if(!PLANS[S.plan])S.plan='base';
+if(!S.tasks||typeof S.tasks!=='object')S.tasks={};
 if(PI.phone)S.pphone=PI.phone;
 if(PI.name)S.partner=PI.name;
 save();loadNews();render();fetchNews();cloudInit();
