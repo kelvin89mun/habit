@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>营养好习惯</title>
 <meta name="description" content="每天打卡，和你的伙伴一起养一盆健康花。">
-<meta name="theme-color" content="#FFE3D3">
+<meta name="theme-color" content="#F2F4EF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121714" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-32.png" sizes="32x32">
 <link rel="icon" href="icon-192.png" sizes="192x192">
@@ -19,183 +20,184 @@
 <title>营养好习惯</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Noto+Sans+SC:wght@400;500;700;900&family=Noto+Serif+SC:wght@500;600&family=ZCOOL+KuaiLe&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@500;600;700&display=swap">
 <style>
-/* Layout: one phone column. A sunrise "health garden" with a growing plant leads; one big game-style button below it; rewards stack underneath (today's image, surprise card, partner question). 3-tab bottom bar. */
+/* 「日签」: the page reads like the morning card she shares — a big serif date, one plant, quiet sage paper,
+   one accent colour. The day-card at the top takes today's morning-card tint; everything else stays calm. */
 :root{
-  --bg:#FFF4EE; --surface:#FFFFFF; --ink:#2B211D; --muted:#6F625C; --line:#F0DCD1;
-  --coral:#E2492F; --coral-deep:#AE2F1A; --coral-soft:#FFE2D8; --coral-text:#B3311B; --on-coral:#FFFFFF;
-  --leaf:#2F9A57; --leaf-dark:#1E6B3B; --leaf-soft:#DCF2E3; --on-leaf:#FFFFFF;
-  --gold:#9A6100; --gold-bright:#F5B731; --gold-soft:#FFF0C6;
-  --pot:#C9653C; --soil:#6B4430; --petal:#F06A86; --petal2:#FF9E78; --water:#3F9BDE;
-  --sky1:#FFD3BE; --sky2:#FFF4CC; --sun:#FFD25E;
-  --shadow:rgba(140,60,25,.13);
+  --paper:#F2F4EF; --surface:#FFFFFF; --ink:#1F2B24; --muted:#5F6B63; --line:#DDE3DA;
+  --accent:#2F5D46; --accent-deep:#234836; --accent-soft:#E4ECE5; --on-accent:#FFFFFF;
+  --gold:#86682A; --gold-bright:#C9A659; --gold-soft:#F4EEDD;
+  --shadow:rgba(31,43,36,.08);
   --f-body:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
-  --f-fun:"ZCOOL KuaiLe","Noto Sans SC","PingFang SC",sans-serif;
+  --f-serif:"Noto Serif SC","Songti SC","STSong",serif;
+  --f-num:"DM Serif Display","Noto Serif SC",serif;
+  /* older names kept so every part of the page follows the same palette */
+  --bg:var(--paper); --coral:var(--accent); --coral-deep:var(--accent-deep); --coral-soft:var(--accent-soft); --coral-text:var(--accent); --on-coral:var(--on-accent);
+  --leaf:var(--accent); --leaf-dark:var(--accent); --leaf-soft:var(--accent-soft); --on-leaf:var(--on-accent);
+  --f-fun:var(--f-serif);
+  --pot:#C4876A; --soil:#6A4B39; --petal:#E07A8F; --petal2:#F2A98C; --water:#5E9CCB;
+  --sky1:#E9EEE6; --sky2:#F6F8F4;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#17110E; --surface:#231A16; --ink:#F7EDE8; --muted:#C3B1A9; --line:#3B2C26;
-  --coral:#FF7C62; --coral-deep:#B9452F; --coral-soft:#42231C; --coral-text:#FF9F8A; --on-coral:#23100B;
-  --leaf:#5CCF89; --leaf-dark:#4CC07C; --leaf-soft:#1C3527; --on-leaf:#0E2016;
-  --gold:#F4C45C; --gold-bright:#F4B733; --gold-soft:#3C2F18;
-  --pot:#B65A36; --soil:#4B3123; --petal:#FF8CA3; --petal2:#FFB08F; --water:#6BB8F0;
-  --sky1:#3B2420; --sky2:#2F2C1C; --sun:#D9A43C;
-  --shadow:rgba(0,0,0,.45); color-scheme:dark}}
+  --paper:#121714; --surface:#1A211D; --ink:#E9EFEA; --muted:#A3AFA7; --line:#2C3630;
+  --accent:#8CC2A3; --accent-deep:#5E9478; --accent-soft:#213129; --on-accent:#0E1A13;
+  --gold:#D9B76E; --gold-bright:#C9A04E; --gold-soft:#2E2918;
+  --shadow:rgba(0,0,0,.4); --soil:#4B3427; --sky1:#1C241F; --sky2:#161C18; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#17110E; --surface:#231A16; --ink:#F7EDE8; --muted:#C3B1A9; --line:#3B2C26;
-  --coral:#FF7C62; --coral-deep:#B9452F; --coral-soft:#42231C; --coral-text:#FF9F8A; --on-coral:#23100B;
-  --leaf:#5CCF89; --leaf-dark:#4CC07C; --leaf-soft:#1C3527; --on-leaf:#0E2016;
-  --gold:#F4C45C; --gold-bright:#F4B733; --gold-soft:#3C2F18;
-  --pot:#B65A36; --soil:#4B3123; --petal:#FF8CA3; --petal2:#FFB08F; --water:#6BB8F0;
-  --sky1:#3B2420; --sky2:#2F2C1C; --sun:#D9A43C;
-  --shadow:rgba(0,0,0,.45); color-scheme:dark}
+  --paper:#121714; --surface:#1A211D; --ink:#E9EFEA; --muted:#A3AFA7; --line:#2C3630;
+  --accent:#8CC2A3; --accent-deep:#5E9478; --accent-soft:#213129; --on-accent:#0E1A13;
+  --gold:#D9B76E; --gold-bright:#C9A04E; --gold-soft:#2E2918;
+  --shadow:rgba(0,0,0,.4); --soil:#4B3427; --sky1:#1C241F; --sky2:#161C18; color-scheme:dark}
 
 html{font-size:20px} html.fs-s{font-size:18px} html.fs-m{font-size:20px} html.fs-l{font-size:23px}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);line-height:1.7;-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);line-height:1.7;-webkit-text-size-adjust:100%}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 h1,h2,h3,h4,p{margin:0}
+h1,h2,h3,h4{font-family:var(--f-serif);font-weight:600}
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:3px solid var(--gold-bright);outline-offset:2px}
-.wrap{max-width:520px;margin:0 auto;padding-inline:16px;padding-block:12px calc(6rem + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:16px}
+.wrap{max-width:520px;margin:0 auto;padding-inline:16px;padding-block:14px calc(6rem + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
 .muted{color:var(--muted)} .small{font-size:.85rem}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row-b{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.tag{font-size:.8rem;font-weight:700;padding:2px 12px;border-radius:999px;background:var(--coral-soft);color:var(--coral-text);white-space:nowrap}
-.tag.ok{background:var(--leaf-soft);color:var(--leaf-dark)}
+.tag{font-size:.8rem;font-weight:700;padding:1px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.tag.ok{background:var(--accent);color:var(--on-accent)}
+.gold{color:var(--gold);font-weight:700}
 
-/* header */
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.hello{font-family:var(--f-fun);font-size:1.9rem;line-height:1.25;text-wrap:balance}
-.date{color:var(--muted);font-size:.9rem}
-.pts{flex:none;display:flex;align-items:center;gap:6px;background:var(--gold-soft);color:var(--gold);font-weight:900;border-radius:999px;padding:6px 14px 6px 8px;font-variant-numeric:tabular-nums}
-.pts svg{width:1.5rem;height:1.5rem}
-.pts.bump{animation:bump .6s}
-
-/* garden hero */
-.garden{position:relative;border-radius:28px;overflow:hidden;background:linear-gradient(180deg,var(--sky1),var(--sky2));padding:16px 16px 14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 22px var(--shadow)}
-.garden .sun{position:absolute;right:-70px;top:-70px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,var(--sun) 0 30%,transparent 70%);opacity:.45}
-.g-head{position:relative;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.stage{font-family:var(--f-fun);font-size:1.4rem;line-height:1.2;color:var(--leaf-dark)}
-.days{font-weight:900;font-size:2.3rem;line-height:1;color:var(--coral);font-variant-numeric:tabular-nums;white-space:nowrap}
-.days small{font-size:.85rem;font-weight:700;color:var(--muted);margin-left:4px}
-.days small:first-child{margin:0 6px 0 0}
-.plant{position:relative;height:12.5rem;display:flex;justify-content:center;align-items:flex-end}
-.plant svg{height:100%;width:auto;max-width:100%;overflow:visible}
+/* the day-card: today's date, greeting and the plant, tinted like today's morning card */
+.hero{--t-bg:#E4EADF;--t-deep:#CEDBC6;--t-ink:#2E4233;position:relative;border-radius:30px;padding:20px 20px 18px;background:var(--t-bg);color:var(--t-ink);display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.h-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.h-date{display:flex;align-items:center;gap:10px}
+.h-num{font-family:var(--f-num);font-size:3.4rem;line-height:.9;font-variant-numeric:lining-nums}
+.h-md{font-family:var(--f-serif);font-weight:600;font-size:.9rem;line-height:1.35;opacity:.85}
+.h-pts{flex:none;font-size:.85rem;padding-top:4px;opacity:.9;white-space:nowrap}
+.h-pts b{font-family:var(--f-num);font-weight:400;font-size:1.25rem;margin-left:.3em;color:inherit}
+.h-pts.bump b{display:inline-block;animation:bump .6s}
+.h-greet{position:relative;z-index:1;font-size:1.5rem;line-height:1.35;margin-top:8px;text-wrap:balance}
+.h-fest{font-size:.85rem;opacity:.8}
+.h-cap{align-self:center;text-align:center;font-family:var(--f-serif);font-weight:600;font-size:.95rem;line-height:1.5;text-wrap:balance}
+.h-cap.mute{font-family:var(--f-body);font-weight:400;opacity:.75}
+.h-cap.new{animation:pop .6s ease-out 1.1s both}
+.h-foot{display:flex;flex-direction:column;gap:6px;font-size:.85rem;margin-top:4px}
+.h-foot b{font-family:var(--f-num);font-weight:400;font-size:1.15rem}
+.h-foot .bar{background:rgba(255,255,255,.6)}
+.h-foot .bar i{background:currentColor;opacity:.7}
+.plant{position:relative;height:12.5rem;display:flex;justify-content:center;align-items:flex-end;margin-top:4px}
+.plant::after{content:"";position:absolute;left:4%;right:4%;bottom:0;height:1px;background:currentColor;opacity:.16}
+.plant svg{position:relative;height:100%;width:auto;max-width:100%;overflow:visible}
+.plant .disc{position:absolute;left:50%;bottom:13%;height:70%;max-height:10rem;aspect-ratio:1;border-radius:50%;transform:translateX(-50%);background:var(--t-deep);box-shadow:0 0 0 12px var(--t-bg),0 0 0 13px var(--t-deep)}
 .plant svg.grow{transform-origin:50% 100%;animation:grow 1s cubic-bezier(.3,1.7,.5,1) .55s both}
-.plant .drop{position:absolute;left:50%;top:0;width:30px;margin-left:-15px;animation:drop .75s ease-in forwards}
+.plant .drop{position:absolute;left:50%;top:0;width:26px;margin-left:-13px;animation:drop .75s ease-in forwards;z-index:3}
 .plant .drop path{fill:var(--water)}
-.sway{animation:sway 5s ease-in-out infinite}
-.next{position:relative;display:flex;flex-direction:column;gap:6px}
-.bar{height:8px;border-radius:999px;background:var(--surface);overflow:hidden}
-.bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--leaf),var(--gold-bright));transition:width .8s}
-.week{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
-.week span{display:block;font-size:.72rem;color:var(--muted);line-height:1.4}
-.wk{width:100%;max-width:2rem;aspect-ratio:1;margin:0 auto;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px dashed var(--line);font-size:.85rem;font-weight:900}
-.wk.on{background:var(--leaf);border:2px solid var(--leaf);color:var(--on-leaf)}
-.wk.today{border-color:var(--coral);border-style:solid}
+.sway{animation:sway 6s ease-in-out infinite}
+.bar{height:6px;border-radius:999px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px;background:var(--accent);transition:width .8s}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .hero{background:var(--surface);background:color-mix(in oklab,var(--t-bg) 13%,var(--surface));color:var(--ink)}
+  :root:not([data-theme="light"]) .plant .disc{background:color-mix(in oklab,var(--t-deep) 22%,var(--surface));box-shadow:0 0 0 12px color-mix(in oklab,var(--t-bg) 13%,var(--surface)),0 0 0 13px color-mix(in oklab,var(--t-deep) 26%,var(--surface))}
+  :root:not([data-theme="light"]) .h-foot .bar{background:rgba(255,255,255,.12)}}
+:root[data-theme="dark"] .hero{background:var(--surface);background:color-mix(in oklab,var(--t-bg) 13%,var(--surface));color:var(--ink)}
+:root[data-theme="dark"] .plant .disc{background:color-mix(in oklab,var(--t-deep) 22%,var(--surface));box-shadow:0 0 0 12px color-mix(in oklab,var(--t-bg) 13%,var(--surface)),0 0 0 13px color-mix(in oklab,var(--t-deep) 26%,var(--surface))}
+:root[data-theme="dark"] .h-foot .bar{background:rgba(255,255,255,.12)}
 
 /* plant parts */
-.p-pot{fill:var(--pot)} .p-rim{fill:var(--pot);filter:brightness(1.12)} .p-soil{fill:var(--soil)} .p-band{stroke:var(--surface);stroke-width:4;opacity:.35;fill:none}
-.p-stem{fill:none;stroke:var(--leaf-dark);stroke-width:5;stroke-linecap:round}
-.p-leaf{fill:var(--leaf)} .p-vein{fill:none;stroke:var(--leaf-dark);stroke-width:1.4;opacity:.55}
+.p-pot{fill:var(--pot)} .p-rim{fill:var(--pot);filter:brightness(1.08)} .p-soil{fill:var(--soil)} .p-band{stroke:var(--surface);stroke-width:4;opacity:.25;fill:none}
+.p-stem{fill:none;stroke:var(--accent);stroke-width:5;stroke-linecap:round}
+.p-leaf{fill:var(--accent)} .p-vein{fill:none;stroke:var(--accent);stroke-width:1.4;opacity:.55}
 .p-pet{fill:var(--petal)} .p-pet2{fill:var(--petal2)} .p-ctr{fill:var(--gold-bright)} .p-seed{fill:var(--soil)} .p-spark{fill:var(--gold-bright)}
 
-/* main button */
-.checkin{position:relative;width:100%;min-height:6rem;border:0;border-radius:999px;background:var(--coral);color:var(--on-coral);font-size:1.45rem;font-weight:900;line-height:1.3;box-shadow:0 7px 0 var(--coral-deep),0 14px 26px var(--shadow);display:flex;align-items:center;justify-content:center;gap:14px;padding:14px 20px;margin-bottom:6px;text-align:left}
-.checkin::after{content:"";position:absolute;inset:-7px;border-radius:inherit;border:3px solid var(--coral);opacity:0;animation:ring 2.2s ease-out infinite;pointer-events:none}
-.checkin:active{transform:translateY(6px);box-shadow:0 1px 0 var(--coral-deep),0 6px 14px var(--shadow)}
-.checkin .ic{flex:none;width:2.8rem;height:2.8rem;border-radius:50%;background:var(--on-coral);color:var(--coral);display:grid;place-items:center}
-.checkin .ic svg{width:1.3rem}
-.checkin .sub{display:block;font-size:.8rem;font-weight:500;opacity:.92}
-.checkin[disabled]{opacity:.45;cursor:not-allowed;animation:none}
-.checkin[disabled]::after{display:none}
-.done{position:relative;display:flex;flex-direction:column;gap:12px;background:var(--surface);border-radius:22px;padding:16px 18px;box-shadow:0 2px 12px var(--shadow)}
-.done-top{display:flex;align-items:center;gap:14px}
-.done-t{font-size:1.25rem;line-height:1.3}
-.done .reply{border-top:1px solid var(--line);padding-top:12px;align-items:center}
-.done .avatar{width:2.2rem;height:2.2rem;font-size:.9rem}
-.gold{color:var(--gold);font-weight:700}
-.stamp{flex:none;width:3.8rem;height:3.8rem;border-radius:50%;border:4px double var(--coral);color:var(--coral);display:grid;place-items:center;font-family:var(--f-fun);font-size:1rem;line-height:1.1;text-align:center;transform:rotate(-12deg)}
-.stamp.new{animation:stamp .55s cubic-bezier(.2,1.6,.4,1)}
-.float{position:absolute;left:50%;top:-6px;font-weight:900;font-size:1.5rem;color:var(--gold);text-shadow:0 2px 0 var(--surface);animation:floatUp 1.4s ease-out forwards;pointer-events:none;white-space:nowrap}
-.link-btn{align-self:flex-start;background:none;border:0;padding:8px 0;min-height:44px;color:var(--coral-text);font-weight:700;text-decoration:underline;text-underline-offset:4px;text-align:left}
+/* the one action */
+.checkin{position:relative;width:100%;min-height:4.2rem;border:0;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:1.25rem;font-weight:700;line-height:1.3;box-shadow:0 8px 20px rgba(35,72,54,.22);display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 22px;text-align:left;transition:transform .12s}
+.checkin:active{transform:scale(.98)}
+.checkin .ic{flex:none;width:2.2rem;height:2.2rem;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center}
+.checkin .ic svg{width:1rem}
+.checkin .sub{display:block;font-size:.8rem;font-weight:400;opacity:.85}
+.checkin[disabled]{opacity:.4;cursor:not-allowed;box-shadow:none}
+.link-btn{align-self:center;background:none;border:0;padding:6px 0;min-height:44px;color:var(--muted);font-size:.9rem;text-decoration:underline;text-underline-offset:4px;text-align:center}
+
+/* after the check-in: a quiet confirmation with the partner's words */
+.donec{gap:14px}
+.d-head{display:flex;align-items:center;gap:14px}
+.d-check{flex:none;width:2.6rem;height:2.6rem;border-radius:50%;background:var(--accent);color:var(--on-accent);display:grid;place-items:center}
+.d-check svg{width:1.3rem;height:1.3rem}
+.d-check.new{animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+.done-t{font-size:1.2rem;line-height:1.35}
+.d-pts{flex:none;align-self:flex-start;font-family:var(--f-num);font-size:1.35rem;line-height:1.2;color:var(--gold);text-align:center}
+.d-pts small{display:block;font-family:var(--f-body);font-size:.7rem;line-height:1.2}
+.donec .link-btn{margin:-6px 0 -8px}
+.float{position:absolute;left:50%;top:-6px;font-weight:700;font-size:1.3rem;color:var(--gold);animation:floatUp 1.4s ease-out forwards;pointer-events:none;white-space:nowrap}
 </style>
 <style>
-/* plant palette: flowers and pots are content colours, so only leaves, stem and shadow shift in dark mode */
-:root{--leaf-a:#2F8A55;--leaf-b:#7DCB8F;--stem:#3E7D50;--pk0:#C23A60;--pk1:#E2557A;--pk2:#F59AB0;--pk3:#FFE4EB;--cr0:#C9472A;--cr1:#E8693F;--cr2:#FAAA88;--cr3:#FFE7DC;--bl1:#3F8FD8;--bl2:#86C2F2;--bl3:#DDF0FF;
-  --pot-a:#E58C5E;--pot-b:#CC6A40;--pot-c:#A24D2B;--glz-a:#BFE3D5;--glz-b:#86C2AC;--glz-c:#5B9D87;--stamen:#B8800F;--plant-shadow:rgba(90,40,15,.16);--hi:rgba(255,255,255,.3);--pot-bloom:rgba(255,255,255,.88)}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--leaf-a:#3FA56A;--leaf-b:#93DDA5;--stem:#5AA672;--plant-shadow:rgba(0,0,0,.45)}}
-:root[data-theme="dark"]{--leaf-a:#3FA56A;--leaf-b:#93DDA5;--stem:#5AA672;--plant-shadow:rgba(0,0,0,.45)}
+/* plant palette: sage leaves, a matte clay pot, dusty-pink flowers; flowers and pots keep their colour in dark mode */
+:root{--leaf-a:#4C7A5B;--leaf-b:#8DB596;--stem:#5B8666;--pk0:#B9466A;--pk1:#D9677F;--pk2:#EE9EAF;--pk3:#FBE6EA;--cr0:#C0603F;--cr1:#DE8762;--cr2:#F1B394;--cr3:#FCEADF;--bl1:#5E8FC4;--bl2:#9BC0E3;--bl3:#E2EEF8;
+  --pot-a:#D9A387;--pot-b:#C4876A;--pot-c:#A86C52;--glz-a:#D3E2D8;--glz-b:#A9C6B5;--glz-c:#83A693;--stamen:#A47718;--plant-shadow:rgba(31,43,36,.13);--hi:rgba(255,255,255,.16);--pot-bloom:rgba(255,255,255,.85)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--leaf-a:#5E9A72;--leaf-b:#9FCCA9;--stem:#6FA37E;--plant-shadow:rgba(0,0,0,.45)}}
+:root[data-theme="dark"]{--leaf-a:#5E9A72;--leaf-b:#9FCCA9;--stem:#6FA37E;--plant-shadow:rgba(0,0,0,.45)}
 .p-stemf{fill:var(--stem)} .p-petiole{fill:none;stroke:var(--stem);stroke-width:1.6;stroke-linecap:round}
-.p-vein{fill:none;stroke:var(--leaf-a);stroke-width:.9;opacity:.55}
+.p-vein{fill:none;stroke:var(--leaf-a);stroke-width:.9;opacity:.5}
 .p-sepal{fill:var(--leaf-a)} .p-stamen{fill:var(--stamen)} .p-shadow{fill:var(--plant-shadow)}
 .p-hi{fill:none;stroke:var(--hi);stroke-width:3.5;stroke-linecap:round} .p-pblm{fill:var(--pot-bloom)} .p-shine{fill:var(--hi)}
-.p-goldline{stroke:var(--gold-bright);stroke-width:2} .p-body{fill:var(--ink)} .p-ground{fill:var(--leaf-soft)} .p-fall{fill:var(--pk2)}
-.hl{opacity:.6;animation:hlp 1.3s ease-in-out infinite alternate}
-@keyframes hlp{from{opacity:.25}to{opacity:.9}}
-.change{position:relative;align-self:center;max-width:100%;display:block;text-align:center;font-weight:700;font-size:.9rem;line-height:1.5;color:var(--leaf-dark);text-wrap:balance}
-.change.mute{color:var(--muted);font-weight:500;box-shadow:none}
-.change.new{animation:pop .6s ease-out 1.1s both}
-.change .spark{color:var(--gold-bright);font-size:1.1rem;margin-right:4px}
-/* cards */
-.card{background:var(--surface);border-radius:22px;padding:18px;box-shadow:0 2px 12px var(--shadow);display:flex;flex-direction:column;gap:12px}
-.card h3{font-size:1.15rem;line-height:1.4}
-.eyebrow{font-size:.8rem;letter-spacing:.08em;color:var(--muted);font-weight:700}
-.btn{min-height:3rem;border-radius:999px;padding:8px 20px;border:2px solid var(--leaf);background:var(--surface);color:var(--leaf-dark);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;text-align:center}
-.btn.solid{background:var(--leaf);color:var(--on-leaf)}
-.btn[disabled]{opacity:.45;cursor:not-allowed}
+.p-goldline{stroke:var(--gold-bright);stroke-width:2} .p-body{fill:var(--ink)} .p-ground{fill:var(--accent-soft)} .p-fall{fill:var(--pk2)}
+.hl{opacity:.55;animation:hlp 1.6s ease-in-out infinite alternate}
+@keyframes hlp{from{opacity:.2}to{opacity:.75}}
 
-/* morning image */
-.frame{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:4/5;width:100%;max-width:100%;background:linear-gradient(160deg,var(--sky1),var(--sky2))}
+/* cards: one quiet style; hierarchy comes from type, not colour */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.card h3{font-size:1.1rem;line-height:1.4}
+.eyebrow{font-size:.85rem;color:var(--muted)}
+.btn{min-height:3rem;border-radius:999px;padding:8px 20px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-weight:700;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;text-align:center}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+
+/* morning picture */
+.frame{position:relative;border-radius:18px;overflow:hidden;aspect-ratio:4/5;width:100%;max-width:100%;background:var(--accent-soft)}
 .frame img{display:block;width:100%;height:100%;object-fit:cover;-webkit-touch-callout:default;user-select:auto}
 .frame img.reveal{animation:reveal .9s ease-out}
-.blurimg{position:absolute;inset:-30px;background-size:cover;background-position:center;filter:blur(16px) saturate(1.2)}
-.lock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:16px}
-.lock .ring{width:4.4rem;height:4.4rem;border-radius:50%;background:var(--coral);color:var(--on-coral);display:grid;place-items:center;box-shadow:0 6px 18px var(--shadow)}
-.lock .ring svg{width:2rem;height:2rem}
-.lock .pill{background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 18px;font-weight:700;box-shadow:0 4px 14px var(--shadow)}
+.blurimg{position:absolute;inset:-30px;background-size:cover;background-position:center;filter:blur(18px) saturate(.9)}
+.lock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:16px}
+.lock .ring{width:3.4rem;height:3.4rem;border-radius:50%;background:var(--surface);color:var(--accent);display:grid;place-items:center}
+.lock .ring svg{width:1.4rem;height:1.4rem}
+.lock .pill{background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 16px;font-size:.9rem;font-weight:500}
 .loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted)}
-
-/* partner question */
-.care{border:2px solid var(--gold-bright);background:var(--gold-soft);box-shadow:none}
-.care .eyebrow{color:var(--gold)}
-.opts{display:flex;flex-direction:column;gap:10px}
-.opt{min-height:3.2rem;border-radius:16px;border:2px solid var(--line);background:var(--surface);text-align:left;padding:10px 16px;font-weight:500}
-.opt:active,.opt.sel{border-color:var(--leaf);background:var(--leaf-soft)}
-.reply{display:flex;gap:10px;align-items:flex-start}
-.avatar{flex:none;width:2.6rem;height:2.6rem;border-radius:50%;background:var(--coral-soft);color:var(--coral-text);display:grid;place-items:center;font-weight:900}
-.bubble{background:var(--surface);border:2px solid var(--coral-soft);border-radius:4px 18px 18px 18px;padding:10px 14px;min-width:0}
-.bubble b{display:block;font-size:.8rem;color:var(--coral-text)}
-
-/* surprise card */
-.flip{width:100%;min-height:4.2rem;border-radius:22px;border:2px solid var(--coral-soft);background:var(--surface);color:var(--coral-text);font-size:1.1rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 2px 12px var(--shadow)}
-.flip .gift svg{width:1.6rem;height:1.6rem;display:block}
-.prize{border-radius:22px;background:var(--surface);border:2px solid var(--coral-soft);padding:16px 18px;text-align:center;animation:pop .5s ease-out}
-.prize .p-big{font-family:var(--f-fun);font-size:1.4rem;color:var(--coral-text);line-height:1.3}
 .frame.teaser{aspect-ratio:16/9}
 
-/* log page */
+/* the partner's question sits inside the partner card */
+.care{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);padding-top:14px}
+.care .eyebrow{color:var(--muted)}
+.care h3{font-size:1.08rem}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{min-height:3.2rem;border-radius:16px;border:1.5px solid var(--line);background:var(--surface);text-align:left;padding:10px 16px;font-weight:500}
+.opt:active,.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.reply{display:flex;gap:10px;align-items:flex-start}
+.avatar{flex:none;width:2.2rem;height:2.2rem;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700;font-size:.9rem}
+.bubble{background:var(--paper);border-radius:4px 16px 16px 16px;padding:10px 14px;min-width:0}
+.bubble b{display:block;font-size:.8rem;color:var(--muted)}
+
+/* surprise card */
+.prize{border-radius:24px;background:var(--surface);border:1px solid var(--line);padding:18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;animation:pop .45s ease-out}
+.prize .p-big{font-family:var(--f-serif);font-weight:600;font-size:1.3rem;color:var(--ink);line-height:1.35}
+
+/* records page */
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
 .cal .wd{font-size:.8rem;color:var(--muted)}
 .cal .d{aspect-ratio:1;max-width:100%;border-radius:50%;display:grid;place-items:center;font-variant-numeric:tabular-nums;font-size:.95rem}
-.cal .d.on{background:var(--leaf);color:var(--on-leaf);font-weight:700}
-.cal .d.today{box-shadow:inset 0 0 0 3px var(--coral)}
+.cal .d.on{background:var(--accent);color:var(--on-accent);font-weight:700}
+.cal .d.today{box-shadow:inset 0 0 0 2px var(--gold-bright)}
 .cal .d.pre{color:var(--line)}
 .path{display:flex;flex-direction:column}
 .stone{display:grid;grid-template-columns:3rem 1fr;gap:12px;align-items:center;position:relative;padding-bottom:14px}
-.stone:not(:last-child)::before{content:"";position:absolute;left:1.42rem;top:3rem;bottom:0;width:3px;background:var(--line)}
-.stone.got:not(:last-child)::before{background:var(--leaf)}
-.mini{width:3rem;height:3rem;border-radius:50%;background:var(--bg);border:3px solid var(--line);display:grid;place-items:center;overflow:hidden}
+.stone:not(:last-child)::before{content:"";position:absolute;left:1.45rem;top:3rem;bottom:0;width:2px;background:var(--line)}
+.stone.got:not(:last-child)::before{background:var(--accent)}
+.mini{width:3rem;height:3rem;border-radius:50%;background:var(--paper);border:2px solid var(--line);display:grid;place-items:center;overflow:hidden}
 .mini svg{height:2.5rem;width:auto}
-.stone.got .mini{border-color:var(--leaf);background:var(--leaf-soft)}
+.stone.got .mini{border-color:var(--accent);background:var(--accent-soft)}
 .stone.next .mini{border-color:var(--gold-bright)}
-.stone.next .mini svg{opacity:.85}
-.mini.secret{font-family:var(--f-fun);font-size:1.4rem;color:var(--muted);border-style:dashed}
-.stone h4{font-size:1.05rem}
+.mini.secret{font-family:var(--f-serif);font-size:1.2rem;color:var(--muted);border-style:dashed}
+.stone h4{font-size:1.02rem}
 .fsopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.fsopt{min-height:5rem;border-radius:16px;border:2px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px;font-weight:700}
-.fsopt[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft);color:var(--leaf-dark)}
+.fsopt{min-height:5rem;border-radius:16px;border:1.5px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px;font-weight:700}
+.fsopt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 .qa{display:flex;flex-direction:column;gap:10px}
 .qa div{border-bottom:1px solid var(--line);padding-bottom:8px}
 .qa div:last-child{border:0}
@@ -203,210 +205,182 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* feelings */
 .metric{display:flex;flex-direction:column;gap:6px}
 .faces{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.face{min-height:3.2rem;border-radius:14px;border:2px solid var(--line);background:var(--surface);font-size:1.5rem;line-height:1}
-.face[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft)}
-textarea,input[type=text]{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:10px 14px;min-height:3rem}
+.face{min-height:3.2rem;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--muted);display:grid;place-items:center;padding:4px}
+.face svg,.fc{width:1.8rem;height:1.8rem;display:block}
+.face[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+textarea,input[type=text]{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:10px 14px;min-height:3rem}
 textarea{min-height:5.5rem;resize:vertical}
+textarea:focus,input[type=text]:focus{outline:none;border-color:var(--accent)}
 .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.85rem}
 .legend span::before{content:"";display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:6px;vertical-align:middle;background:var(--c)}
 .chart{width:100%;height:auto;display:block}
-.note{font-size:.85rem;color:var(--muted);border-left:3px solid var(--line);padding-left:10px}
+.note{font-size:.85rem;color:var(--muted);border-left:2px solid var(--line);padding-left:10px}
+
+/* page header on the records and feelings pages */
+.phead{padding:10px 4px 2px}
+.phead h1{font-size:1.6rem;line-height:1.3}
+.phead p{color:var(--muted);font-size:.9rem;margin-top:2px}
 
 /* nav, overlay, misc */
 nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;z-index:5}
 nav.tabs .in{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:100%;max-width:520px}
-nav.tabs button{border:0;background:none;min-height:3.6rem;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);font-size:.9rem;font-weight:700}
-nav.tabs button svg{width:1.5rem;height:1.5rem}
-nav.tabs button[aria-current="page"]{color:var(--coral-text);background:var(--coral-soft)}
-#overlay{position:fixed;inset:0;background:rgba(20,10,6,.6);display:grid;place-items:center;padding:16px;z-index:10}
-#overlay .box{background:var(--surface);border-radius:28px;padding:24px 22px;max-width:420px;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;animation:pop .5s ease-out}
+nav.tabs button{border:0;background:none;min-height:3.5rem;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--muted);font-size:.85rem;font-weight:500}
+nav.tabs button svg{width:1.4rem;height:1.4rem}
+nav.tabs button[aria-current="page"]{color:var(--accent);background:var(--accent-soft);font-weight:700}
+#overlay{position:fixed;inset:0;background:rgba(18,26,21,.55);display:grid;place-items:center;padding:16px;z-index:10}
+#overlay .box{background:var(--surface);border-radius:28px;padding:24px 22px;max-width:420px;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;animation:pop .45s ease-out}
 #overlay .box svg{height:9rem;width:auto}
-#overlay .medal{font-family:var(--f-fun);font-size:2.1rem;color:var(--coral-text);line-height:1.2}
+#overlay .medal{font-family:var(--f-serif);font-weight:700;font-size:1.9rem;color:var(--ink);line-height:1.25}
+#overlay .checkin{min-height:3.4rem;font-size:1.05rem;background:transparent;color:var(--accent);border:1.5px solid var(--accent);box-shadow:none;margin-top:2px}
 #fx{position:fixed;inset:0;pointer-events:none;z-index:20;width:100%;height:100%}
 details.demo{border:1px dashed var(--line);border-radius:16px;padding:8px 14px;color:var(--muted);font-size:.85rem}
 details.demo summary{cursor:pointer;min-height:44px;display:flex;align-items:center}
-footer.fine{font-size:.78rem;color:var(--muted);text-align:center;line-height:1.6}
+footer.fine{font-size:.78rem;color:var(--muted);text-align:center;line-height:1.6;padding-top:4px}
 
-@keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
-@keyframes grow{0%{transform:scale(.9)}55%{transform:scale(1.08)}100%{transform:scale(1)}}
+@keyframes sway{0%,100%{transform:rotate(-1.2deg)}50%{transform:rotate(1.2deg)}}
+@keyframes grow{0%{transform:scale(.92)}55%{transform:scale(1.06)}100%{transform:scale(1)}}
 @keyframes drop{0%{transform:translateY(-30px);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translateY(7rem) scale(.6);opacity:0}}
-@keyframes ring{0%{opacity:.7;transform:scale(.97)}100%{opacity:0;transform:scale(1.07)}}
-@keyframes stamp{0%{transform:scale(2.4) rotate(-12deg);opacity:0}100%{transform:scale(1) rotate(-12deg);opacity:1}}
 @keyframes bump{40%{transform:scale(1.25)}}
 @keyframes floatUp{0%{transform:translate(-50%,0);opacity:0}15%{opacity:1}100%{transform:translate(-50%,-80px);opacity:0}}
-@keyframes pop{from{transform:scale(.85);opacity:.3}to{transform:none;opacity:1}}
-@keyframes reveal{from{filter:blur(16px);transform:scale(1.06)}to{filter:none;transform:none}}
-@keyframes glow{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-@keyframes wiggle{0%,86%,100%{transform:rotate(0)}90%{transform:rotate(-2deg)}94%{transform:rotate(2deg)}}
+@keyframes pop{from{transform:scale(.9);opacity:.3}to{transform:none;opacity:1}}
+@keyframes reveal{from{filter:blur(16px);transform:scale(1.04)}to{filter:none;transform:none}}
 @media (prefers-reduced-motion:reduce){*,*::after{animation:none!important;transition:none!important}.drop{display:none}}
 </style>
 
 <div class="wrap" id="app"></div>
 <nav class="tabs" id="nav" aria-label="主要页面"><div class="in">
-  <button data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21v-7"/><path d="M12 14c0-4 3-6 7-6 0 4-3 6-7 6zM12 12c0-3-2.5-5-6-5 0 3.5 2.5 5 6 5z"/></svg>今天</button>
-  <button data-tab="log"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8.5 15l2 2 4-4"/></svg>记录</button>
-  <button data-tab="feel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/></svg>感觉</button>
+  <button data-tab="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 21v-7"/><path d="M12 14c0-4 3-6 7-6 0 4-3 6-7 6zM12 12c0-3-2.5-5-6-5 0 3.5 2.5 5 6 5z"/></svg>今天</button>
+  <button data-tab="log"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8.5 15l2 2 4-4"/></svg>记录</button>
+  <button data-tab="feel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/></svg>感觉</button>
 </div></nav>
 <div id="overlay" hidden></div>
 <canvas id="fx" hidden></canvas>
 <style>
-/* Morning-garden scene: a full-width sky that follows the time of day, hills at the bottom, the plant standing on the front hill */
-:root{--blush:#FFF3EE}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--blush:#2B201E}}
-:root[data-theme="dark"]{--blush:#2B201E}
-.scene{position:relative;margin:-12px -16px 0;padding:18px 20px 16px;border-radius:0 0 34px 34px;overflow:hidden;display:flex;flex-direction:column;gap:8px;
-  background:linear-gradient(180deg,var(--s1),var(--s2) 45%,var(--s3));color:var(--si);box-shadow:0 8px 24px var(--shadow)}
-.sc-am{--s1:#FFD3BE;--s2:#FFE6CF;--s3:#F9F1DC;--h1:#CFE8C6;--h2:#AFDBA6;--si:#5A3427}
-.sc-day{--s1:#9FD3F2;--s2:#CBE8F8;--s3:#EEF7F0;--h1:#BFE3B4;--h2:#97D093;--si:#21425C}
-.sc-dusk{--s1:#F2A493;--s2:#E6A2BE;--s3:#CDB8E6;--h1:#C2C7A4;--h2:#9FBA8A;--si:#4A2537}
-.sc-night{--s1:#16203C;--s2:#26345E;--s3:#45487A;--h1:#2B4545;--h2:#34574A;--si:#F3EEF8}
-.sky,.hills{position:absolute;left:0;width:100%;pointer-events:none}
-.sky{top:0;height:17rem}
-.hills{bottom:0;height:11rem}
-.scene .dim{position:absolute;inset:0;background:rgba(8,6,16,.42);pointer-events:none;display:none}
-.scene>*:not(.sky):not(.hills):not(.dim):not(.ff){position:relative;z-index:1}
-.sc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-.sc-top .date{color:inherit;opacity:.8}
-.glass{background:rgba(255,255,255,.74);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.sc-night .glass{background:rgba(22,20,40,.58);color:#F3EEF8}
-.chip{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:3px 12px;border-radius:999px;font-size:.85rem;font-weight:700;color:var(--leaf-dark)}
-.chip b{font-size:1.05rem;color:var(--coral-text)}
-.sc-night .chip{color:#9EE3B8} .sc-night .chip b{color:#FFB3A2}
-.scene .change{padding:6px 16px;border-radius:999px}
-.sc-night .change:not(.mute){color:#9EE3B8}
-.sc-prog{border-radius:18px;padding:10px 14px;display:flex;flex-direction:column;gap:6px;font-size:.85rem}
-.sc-prog .bar{background:rgba(0,0,0,.08)}
-.sc-night .sc-prog .bar{background:rgba(255,255,255,.16)}
-.cl{animation:drift 46s ease-in-out infinite alternate}
-.cl.b{animation-duration:62s;animation-direction:alternate-reverse}
-@keyframes drift{from{transform:translateX(-26px)}to{transform:translateX(26px)}}
-.star{animation:tw 3s ease-in-out infinite alternate}
-@keyframes tw{from{opacity:.25}to{opacity:1}}
-.ff{position:absolute;width:7px;height:7px;border-radius:50%;background:#FFF3A0;box-shadow:0 0 10px 4px rgba(255,236,140,.55);z-index:1;pointer-events:none;animation:ffly 6s ease-in-out infinite alternate}
-@keyframes ffly{0%{transform:translate(0,0);opacity:.2}50%{opacity:1}100%{transform:translate(18px,-26px);opacity:.35}}
-.scene.sc-mini{padding-bottom:4.6rem}
-.scene.sc-mini .hills{height:5rem}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .scene:not(.sc-night) .dim{display:block}
-  :root:not([data-theme="light"]) .scene{--si:#F6EFE9}
-  :root:not([data-theme="light"]) .scene .glass{background:rgba(22,18,30,.58);color:#F6EFE9}}
-:root[data-theme="dark"] .scene:not(.sc-night) .dim{display:block}
-:root[data-theme="dark"] .scene{--si:#F6EFE9}
-:root[data-theme="dark"] .scene .glass{background:rgba(22,18,30,.58);color:#F6EFE9}
-/* card headings with a small round icon */
+/* card headings carry a small line icon in the accent colour */
 .ch{display:flex;align-items:center;gap:10px}
-.ci{flex:none;width:2rem;height:2rem;border-radius:50%;display:grid;place-items:center;background:var(--coral-soft);color:var(--coral-text)}
-.ci svg{width:1.1rem;height:1.1rem;display:block}
-.ci.g{background:var(--leaf-soft);color:var(--leaf-dark)}
-.ci.y{background:var(--gold-soft);color:var(--gold)}
-.card.blush{background:var(--blush)}
-.care .eyebrow.ch{gap:8px}
-.care .eyebrow .ci{width:1.6rem;height:1.6rem}
-@media (prefers-reduced-motion:reduce){.cl,.star,.ff{animation:none!important}}
+.ci{flex:none;width:1.9rem;height:1.9rem;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.ci svg{width:1.05rem;height:1.05rem;display:block}
+.ci.g,.ci.y{background:var(--accent-soft);color:var(--accent)}
+.card.blush{background:var(--surface)}
+.mh{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.mh .small{white-space:nowrap}
+/* the smaller things of the day, as one quiet list */
+.list{padding:4px 0;gap:0}
+.rowi{display:flex;align-items:center;gap:12px;width:100%;min-height:3.7rem;padding:10px 18px;background:none;border:0;border-top:1px solid var(--line);color:var(--ink);text-align:left;font-weight:500;text-decoration:none}
+.list>.rowi:first-child,.list>details:first-child>.rowi{border-top:0}
+.rowi .ri{flex:none;width:1.4rem;height:1.4rem;color:var(--accent);display:block}
+.rowi .ri svg{width:100%;height:100%;display:block}
+.rowi .rt{flex:1;min-width:0;line-height:1.45}
+.rowi .rt small{display:block;color:var(--muted);font-weight:400;font-size:.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rowi .chev{flex:none;width:1rem;height:1rem;color:var(--muted)}
+.list details>summary{list-style:none}
+.list details>summary::-webkit-details-marker{display:none}
+.list details[open] .chev{transform:rotate(90deg)}
+.rowmore{padding:0 18px 14px 3.8rem;display:flex;flex-direction:column;gap:10px}
+.list>details{border-top:1px solid var(--line)}
+.list>details:first-child{border-top:0}
+.list>details>.rowi{border-top:0}
 </style>
 <style>
-/* the pet wanders across the hill; festival things sit beside the pot */
-.pet{position:absolute;bottom:0;left:0;width:calc(min(7.6rem,39vw)*var(--ps,1));z-index:2;pointer-events:none;opacity:0}
-.pet-j.jump{animation:hop .7s ease-out .25s 2}
-@keyframes hop{0%,100%{transform:translateY(0)}45%{transform:translateY(-16px)}}
+/* the pet keeps the plant company beside the pot; festival things sit on the other side */
+.pet{position:absolute;bottom:0;left:0;width:calc(min(5.6rem,29vw)*var(--ps,1));z-index:2;pointer-events:none;opacity:0}
+.pet-j.jump{animation:hop .7s ease-out .25s 1}
+@keyframes hop{0%,100%{transform:translateY(0)}45%{transform:translateY(-10px)}}
 .pet-in{transform-origin:50% 100%}
 .pet-in.mirror{transform:scaleX(-1)}
 .pet svg,.deco svg,.ball svg{width:100%;height:auto;display:block;max-width:none}
-.eyes{transform-box:fill-box;transform-origin:50% 50%;animation:blink 4.6s infinite}
+.eyes{transform-box:fill-box;transform-origin:50% 50%;animation:blink 5s infinite}
 @keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
-.ear{transform-box:fill-box;transform-origin:50% 100%;animation:twitch 6.5s infinite}
-@keyframes twitch{0%,86%,100%{transform:rotate(0)}89%{transform:rotate(-16deg)}92%{transform:rotate(0)}95%{transform:rotate(-9deg)}98%{transform:rotate(0)}}
-.flop{transform-box:fill-box;transform-origin:50% 0;animation:flop 5.8s infinite}
-@keyframes flop{0%,86%,100%{transform:rotate(0)}90%{transform:rotate(9deg)}94%{transform:rotate(-4deg)}97%{transform:rotate(2deg)}}
-.breath2{transform-box:fill-box;transform-origin:50% 100%;animation:breath2 3.2s ease-in-out infinite}
-@keyframes breath2{50%{transform:scaleY(1.025)}}
-.breath{transform-box:fill-box;transform-origin:50% 100%;animation:breath 2.6s ease-in-out infinite}
-@keyframes breath{50%{transform:scaleY(1.045)}}
-.ball{position:absolute;bottom:0;left:0;width:1.25rem;z-index:2;pointer-events:none}
-.deco{position:absolute;bottom:2px;left:calc(50% + 2.6rem);width:min(4.6rem,24vw);z-index:1;pointer-events:none}
-.chip.fest{color:var(--gold);margin-left:6px}
-.sc-night .chip.fest{color:#FFD98A}
+.ear{transform-box:fill-box;transform-origin:50% 100%;animation:twitch 7s infinite}
+@keyframes twitch{0%,86%,100%{transform:rotate(0)}89%{transform:rotate(-14deg)}92%{transform:rotate(0)}95%{transform:rotate(-8deg)}98%{transform:rotate(0)}}
+.flop{transform-box:fill-box;transform-origin:50% 0;animation:flop 6.5s infinite}
+@keyframes flop{0%,86%,100%{transform:rotate(0)}90%{transform:rotate(8deg)}94%{transform:rotate(-4deg)}97%{transform:rotate(2deg)}}
+.breath2{transform-box:fill-box;transform-origin:50% 100%;animation:breath2 3.4s ease-in-out infinite}
+@keyframes breath2{50%{transform:scaleY(1.02)}}
+.breath{transform-box:fill-box;transform-origin:50% 100%;animation:breath 2.8s ease-in-out infinite}
+@keyframes breath{50%{transform:scaleY(1.04)}}
+.ball{display:none}
+.deco{position:absolute;bottom:2px;left:calc(50% + 2.4rem);width:min(4rem,21vw);z-index:1;pointer-events:none}
 .petpick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.pp{border:2px solid var(--line);background:var(--surface);border-radius:18px;padding:6px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:700}
-.pp svg{width:86%;height:auto;display:block}
-.pp[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft);color:var(--leaf-dark)}
-select{font:inherit;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:8px 12px;min-height:3rem}
+.pp{border:1.5px solid var(--line);background:var(--surface);border-radius:18px;padding:6px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:700}
+.pp svg{width:80%;height:auto;display:block}
+.pp[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+select{font:inherit;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:8px 12px;min-height:3rem}
 .petrow{display:flex;gap:14px;align-items:center}
 .furpick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
-.fp{border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:2px 2px 6px;display:flex;flex-direction:column;align-items:center;font-weight:700;font-size:.9rem;color:var(--ink);min-width:0}
+.fp{border:1.5px solid var(--line);background:var(--surface);border-radius:14px;padding:2px 2px 6px;display:flex;flex-direction:column;align-items:center;font-weight:500;font-size:.85rem;color:var(--ink);min-width:0}
 .fp svg{width:100%;height:auto;display:block}
-.fp[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft);color:var(--leaf-dark)}
-.petbox{flex:none;width:7rem;border-radius:18px;background:linear-gradient(var(--sky1),var(--sky2));padding:6px}
+.fp[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);font-weight:700}
+.petbox{flex:none;width:6.4rem;border-radius:18px;background:var(--accent-soft);padding:6px}
 .petbox svg{width:100%;height:auto;display:block}
 /* weekly message */
-.ntag{display:inline-block;flex:none;font-size:.8rem;font-weight:700;padding:1px 10px;border-radius:99px;background:var(--sky-soft,#E3F0FB);color:#2F6FA3;line-height:1.7}
-.ntag.g{background:var(--leaf-soft);color:var(--leaf-dark)}
+.ntag{display:inline-block;flex:none;font-size:.8rem;font-weight:700;padding:1px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent);line-height:1.7}
+.ntag.g{background:var(--accent-soft);color:var(--accent)}
 .ntag.gold{background:var(--gold-soft);color:var(--gold)}
-.ndot{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;background:var(--coral);margin-left:6px;vertical-align:middle}
-.ntitle2{font-weight:700;font-size:1.08rem;margin:4px 0 10px}
+.ndot{display:inline-block;width:.55rem;height:.55rem;border-radius:50%;background:var(--pk1);margin-left:6px;vertical-align:middle}
+.ntitle2{font-weight:700;font-size:1.05rem;margin:4px 0 10px}
 #overlay .box.news{text-align:left;align-items:stretch;max-height:calc(100vh - 32px);overflow:auto}
 #overlay .box.news .ntag{align-self:flex-start}
-.ntitle{font-size:1.35rem;line-height:1.35;margin:0}
+.ntitle{font-size:1.35rem;line-height:1.4;margin:0}
 .nimg{width:100%;border-radius:16px;max-height:38vh;object-fit:cover;display:block}
 .nbody{white-space:pre-line;font-size:1.05rem;margin:0}
 .nlist{display:flex;flex-direction:column;gap:8px;margin-top:6px}
-.nitem{display:flex;gap:10px;align-items:center;text-align:left;border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 12px;font:inherit;color:var(--ink);min-height:3.2rem}
-.nitem .nt{font-weight:700;min-width:0}
+.nitem{display:flex;gap:10px;align-items:center;text-align:left;border:1.5px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 12px;font:inherit;color:var(--ink);min-height:3.2rem}
+.nitem .nt{font-weight:500;min-width:0}
 /* stage 2-3 surprise cards and the before-and-after card */
-.prize .ntag{margin-bottom:6px}
-.p-fact{font-size:1.12rem;font-weight:700;margin:4px 0 6px;line-height:1.55}
-.qopts{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.p-fact{font-family:var(--f-serif);font-size:1.12rem;font-weight:600;margin:4px 0 6px;line-height:1.6}
+.qopts{display:flex;flex-direction:column;gap:8px;margin-top:6px;align-self:stretch}
 .qopts .opt{width:100%;text-align:center}
-.chg{display:grid;grid-template-columns:3.2em 1fr auto;gap:10px;align-items:center;margin-top:10px}
+.chg{display:grid;grid-template-columns:3.2em 1fr auto;gap:10px;align-items:center;margin-top:8px}
 .chg-l{font-weight:700}
 .chg-bars{display:flex;flex-direction:column;gap:4px}
-.chg-bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
-.chg-bar i{display:block;height:100%;border-radius:99px;background:#F6C7B6}
-.chg-bar.now i{background:var(--coral)}
-.chg-t{font-size:.9rem;color:var(--muted,#7a6a62)}
-.chg-t.up{color:var(--leaf-dark)}
-#toast{position:fixed;left:50%;top:14px;width:max-content;transform:translate(-50%,-140%);background:var(--ink,#3a2f2a);color:#fff;padding:10px 18px;border-radius:99px;font-weight:700;z-index:20;transition:transform .3s;max-width:calc(100% - 32px);text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.chg-bar{height:8px;border-radius:99px;background:var(--paper);overflow:hidden}
+.chg-bar i{display:block;height:100%;border-radius:99px;background:var(--muted);opacity:.35}
+.chg-bar.now i{background:var(--accent);opacity:1}
+.chg-t{font-size:.9rem;color:var(--muted)}
+.chg-t.up{color:var(--accent)}
+#toast{position:fixed;left:50%;top:14px;width:max-content;transform:translate(-50%,-140%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:99px;font-weight:500;z-index:20;transition:transform .3s;max-width:calc(100% - 32px);text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.18)}
 #toast.show{transform:translate(-50%,0)}
 .ov-pics{display:flex;justify-content:center;align-items:flex-end;gap:6px}
 #overlay .box .ov-pics svg{height:7rem;width:auto}
-#overlay .box .ov-pics svg:last-child{height:5.4rem}
+#overlay .box .ov-pics svg:last-child{height:4.6rem}
 @media (prefers-reduced-motion:reduce){.pet-j.jump,.breath,.breath2,.eyes,.ear,.flop{animation:none!important}}
 /* plans: picker, today's small tasks, weekly weight */
 .plans{display:flex;flex-direction:column;gap:10px}
-.plc{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:2px solid var(--line);background:var(--surface);border-radius:18px;padding:12px 14px;min-height:4.4rem;color:var(--ink)}
-.plc .ci{width:2.7rem;height:2.7rem}
-.plc .ci svg{width:1.45rem;height:1.45rem}
-.plc b{display:block;font-size:1.08rem;line-height:1.4}
+.plc{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1.5px solid var(--line);background:var(--surface);border-radius:18px;padding:12px 14px;min-height:4.4rem;color:var(--ink)}
+.plc .ci{width:2.6rem;height:2.6rem}
+.plc .ci svg{width:1.35rem;height:1.35rem}
+.plc b{display:block;font-family:var(--f-serif);font-weight:600;font-size:1.08rem;line-height:1.4}
 .plc .small{display:block;line-height:1.5}
-.plc[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft)}
-.plc[aria-pressed="true"] b{color:var(--leaf-dark)}
+.plc[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
 .plchg summary{list-style:none;cursor:pointer}
 .plchg summary::-webkit-details-marker{display:none}
 .plchg[open] summary{margin-bottom:8px}
-.tlist{display:flex;flex-direction:column;gap:8px}
-.task{display:flex;align-items:center;gap:12px;width:100%;min-height:3.5rem;border-radius:16px;border:2px solid var(--line);background:var(--surface);padding:8px 14px;text-align:left;font-weight:700;color:var(--ink)}
-.task .tk{flex:none;width:1.9rem;height:1.9rem;border-radius:50%;border:2.5px solid var(--line);display:grid;place-items:center;color:transparent}
-.task .tk svg{width:1.05rem;height:1.05rem;display:block}
+#tasks{padding-bottom:4px}
+.tlist{display:flex;flex-direction:column;margin:0 -18px}
+.task{display:flex;align-items:center;gap:14px;width:100%;min-height:3.6rem;padding:8px 18px;border:0;border-top:1px solid var(--line);background:none;text-align:left;font-weight:500;color:var(--ink)}
+.task .tk{flex:none;width:1.75rem;height:1.75rem;border-radius:50%;border:1.5px solid var(--muted);display:grid;place-items:center;color:transparent;transition:background .2s,border-color .2s}
+.task .tk svg{width:1rem;height:1rem;display:block}
 .task .tt{flex:1;min-width:0;line-height:1.45}
-.task .tp{flex:none;font-size:.8rem;font-weight:900;color:var(--gold)}
-.task[aria-pressed="true"]{border-color:var(--leaf);background:var(--leaf-soft);color:var(--leaf-dark)}
-.task[aria-pressed="true"] .tk{background:var(--leaf);border-color:var(--leaf);color:var(--on-leaf)}
-.task[aria-pressed="true"] .tp{color:var(--leaf-dark)}
-.task.pop .tk{animation:pop .45s ease-out}
-.tdone{font-weight:700;color:var(--leaf-dark);text-align:center}
+.task .tp{flex:none;font-size:.8rem;font-weight:700;color:var(--gold)}
+.task[aria-pressed="true"] .tk{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.task[aria-pressed="true"] .tt{color:var(--muted)}
+.task.pop .tk{animation:pop .4s ease-out}
+.tdone{font-family:var(--f-serif);font-weight:600;color:var(--accent);text-align:center;padding:10px 0 8px;border-top:1px solid var(--line);margin:0 -18px}
 .kgrow{display:flex;align-items:center;gap:10px}
 .kgrow input{flex:1;min-width:0;font-size:1.2rem;font-weight:700;font-variant-numeric:tabular-nums}
 .kgrow span{font-weight:700}
-.kgerr{color:var(--coral-text);font-weight:700;font-size:.9rem}
+.kgerr{color:#B3412F;font-weight:700;font-size:.9rem}
 /* chart series colours (validated for colour-blind separation, stepped for dark mode) */
 :root{--c1:#2A78D6;--c2:#EB6834;--c3:#1BAF7A;--c4:#EDA100}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c1:#3987E5;--c2:#D95926;--c3:#199E70;--c4:#C98500}}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c1:#3987E5;--c2:#D95926;--c3:#199E70;--c4:#C98500}.kgerr{color:#F29A86}}
 :root[data-theme="dark"]{--c1:#3987E5;--c2:#D95926;--c3:#199E70;--c4:#C98500}
-details.rows summary{cursor:pointer;color:var(--leaf-dark);font-weight:700;font-size:.9rem;min-height:44px;display:flex;align-items:center}
+details.rows summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:.9rem;min-height:44px;display:flex;align-items:center}
 .rtab{width:100%;border-collapse:collapse;font-size:.9rem;font-variant-numeric:tabular-nums}
 .rtab th,.rtab td{padding:6px 4px;border-top:1px solid var(--line);text-align:center}
 .rtab th{color:var(--muted);font-weight:700;border-top:0}
 .rtab td:first-child,.rtab th:first-child{text-align:left}
+.rtab .fc{width:1.2rem;height:1.2rem;display:inline-block;vertical-align:-3px;margin-right:2px}
 </style>
 <script>
 /* demo: the claude.ai preview, or ?demo on the real site (kept apart from real data) */
@@ -930,13 +904,13 @@ function petSVG(kind,st,cos,pose,fur){
   return `<svg viewBox="0 0 140 104" role="img" aria-label="${cat?'小猫':'小狗'}">${s}</svg>`;
 }
 
-/* ---------- pet behaviour: waddles, runs, sits, looks around, waves, grooms, lies down, stretches, chases its ball ---------- */
+/* ---------- pet behaviour: stays beside the pot; sits, looks around, waves, grooms, lies down, stretches, takes a few slow steps ---------- */
 let PET={x:null,face:1,t:0,bx:null,woke:false};
 function petPose(pose,cls){const el=$('#petw'),pin=$('#petin');if(!el||!pin)return;pin.innerHTML=petSVG(S.pet,+el.dataset.stage,el.dataset.cos||'',pose,S.fur);pin.className='pet-in'+(PET.face<0?' mirror':'')+(cls?' '+cls:'')}
 function petMove(el,x,dur,ease){el.style.transition=dur?`transform ${dur.toFixed(2)}s ${ease||'linear'}`:'none';el.style.transform=`translateX(${Math.round(x)}px)`}
 function petStart(){
   clearTimeout(PET.t);const el=$('#petw');if(!el)return;
-  const W=el.parentElement.clientWidth,w=el.offsetWidth,minX=-w*.06,maxX=Math.max(minX,W-w*.94),home=Math.max(minX,Math.min(maxX,W/2-w-6));
+  const W=el.parentElement.clientWidth,w=el.offsetWidth,sv=el.parentElement.querySelector('svg'),pot=sv?sv.getBoundingClientRect().width*.22:40,minX=-w*.06,maxX=Math.max(minX,W-w*.94),home=Math.max(minX,Math.min(maxX,W/2-pot-w*.8));
   const awake=el.dataset.mode==='awake',gentle=calm();
   if(PET.x==null||!awake)PET.x=home;
   PET.x=Math.max(minX,Math.min(maxX,PET.x));petMove(el,PET.x,0);el.style.opacity=1;
@@ -953,8 +927,8 @@ function petStart(){
     if(!document.body.contains(el))return;
     const r=Math.random(),st=+el.dataset.stage;
     if(ball&&!gentle&&r<.2)go(PET.bx-w*.55,true,()=>{const nb=8+Math.random()*(W-40);PET.bx=nb;ball.style.transition='transform 1.4s cubic-bezier(.2,.7,.3,1)';ball.style.transform=`translateX(${Math.round(nb)}px)`;rest('sit',1000)});
-    else if(r<.58)go(minX+Math.random()*(maxX-minX),Math.random()<.25,()=>rest(Math.random()<.5?'sit':'look',1300+Math.random()*1500));
-    else if(r<.70)rest(st>=4&&Math.random()<.5?'wave':'sit',2600+Math.random()*2400);
+    else if(r<.4)go(Math.max(minX,home-w*.7)+Math.random()*w*.85,false,()=>rest(Math.random()<.5?'sit':'look',2200+Math.random()*2200));
+    else if(r<.62)rest(st>=4&&Math.random()<.4?'wave':'sit',3200+Math.random()*2800);
     else if(r<.79)rest('look',1800+Math.random()*1400);
     else if(r<.89)rest('lie',3200+Math.random()*3000);
     else if(r<.96)rest('groom',2200+Math.random()*1400);
@@ -1028,7 +1002,7 @@ function newsBox(x){
   else if(x.type==='优惠'||x.btn)act=`<a class="btn solid" href="${waLink(`${S.partner} 你好，我是${S.name}，我想了解「${x.title}」`)}" target="_blank" rel="noopener">${esc(x.btn||'WhatsApp 问 '+S.partner)}</a>`;
   return `<div class="box news" role="dialog" aria-modal="true" aria-label="${esc(x.title)}"><span class="ntag ${NTAG[x.type]||'b'}">${x.tag?esc(x.tag):x.series?'新手小贴士':esc(x.type)}</span>
     <h2 class="ntitle">${esc(x.title)}</h2>${x.img?`<img class="nimg" src="${esc(x.img)}" alt="">`:''}<p class="nbody">${esc(x.body)}</p>${act}
-    <button class="checkin" style="min-height:3.6rem;font-size:1.15rem;margin-top:4px" data-act="nclose"><span>知道了</span></button></div>`}
+    <button class="checkin" data-act="nclose"><span>知道了</span></button></div>`}
 function showNews(x){if(!x)return;if(!S.seen.includes(x.id)){S.seen.push(x.id);if(S.seen.length>80)S.seen=S.seen.slice(-80);save()}
   const o=$('#overlay');o.innerHTML=newsBox(x);o.hidden=false;o.querySelector('button').focus();const c=$('.ncard .ndot');if(c)c.remove()}
 function maybeNews(){if(tab!=='today'||!$('#overlay').hidden||!S.onboarded||!S.checks[today()])return;showNews(newsNow().pop)}
@@ -1166,84 +1140,68 @@ const TICK=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wi
 const kgFmt=v=>(Math.round(v*10)/10).toFixed(1).replace(/\.0$/,'');
 let justTask='';
 
-/* ---------- the sky scene ---------- */
-const cloudS=(x,y,s,o,c,b)=>`<g class="cl${b?' b':''}"><g transform="translate(${x} ${y}) scale(${s})" opacity="${o}" style="fill:${c}"><ellipse rx="34" ry="16"/><ellipse cx="-22" cy="4" rx="22" ry="12"/><ellipse cx="24" cy="5" rx="24" ry="12"/><ellipse cx="4" cy="-10" rx="20" ry="14"/></g></g>`;
-function skySVG(p){
-  let s='';
-  if(p==='night'){
-    [[40,40,1.6],[86,22,1.1],[130,60,1.4],[176,30,1],[214,78,1.6],[250,24,1.2],[350,40,1.4],[368,110,1],[24,120,1.2],[110,128,1],[200,140,1.3],[330,160,1],[60,190,1.1],[260,190,1.4],[160,96,.9],[290,124,1.1]]
-      .forEach(([x,y,r],i)=>{s+=`<circle class="star" cx="${x}" cy="${y}" r="${r}" fill="#FFF8E0" style="animation-delay:${-(i%7)*.45}s"/>`});
-    s+=`<defs><mask id="moonm"><rect width="390" height="340" fill="#fff"/><circle cx="314" cy="86" r="28" fill="#000"/></mask></defs><circle cx="300" cy="96" r="46" fill="#F6EFC8" opacity=".14"/><circle cx="300" cy="96" r="30" fill="#F6EFC8" mask="url(#moonm)"/>`;
-  }else{
-    const sun={am:[300,132,42,'#FFD267','#FFE9B0'],day:[312,96,34,'#FFF1A6','#FFFBE3'],dusk:[312,150,40,'#FF9F6B','#FFD0A8']}[p];
-    s+=`<circle cx="${sun[0]}" cy="${sun[1]}" r="${sun[2]*1.75}" fill="${sun[4]}" opacity=".65"/><circle cx="${sun[0]}" cy="${sun[1]}" r="${sun[2]}" fill="${sun[3]}"/>`;
-    const cc=p==='dusk'?'#FFE3EC':'#FFFFFF',o=p==='dusk'?.75:.92;
-    s+=cloudS(92,176,1,o,cc)+cloudS(250,236,.72,o*.85,cc,1)+cloudS(48,286,.5,o*.7,cc);
-  }
-  return `<svg class="sky" viewBox="0 0 390 340" preserveAspectRatio="xMidYMin slice" aria-hidden="true">${s}</svg>`;
-}
-const HILLS=`<svg class="hills" viewBox="0 0 390 200" preserveAspectRatio="none" aria-hidden="true"><path d="M0 50C80 16 170 22 250 38C312 50 356 38 390 30V200H0Z" style="fill:var(--h1)"/><path d="M0 88C76 60 166 64 236 76C298 88 350 82 390 70V200H0Z" style="fill:var(--h2)"/>`+
-  [[24,120,'#F59AB0'],[58,150,'#FFD267'],[340,118,'#FAAA88'],[366,150,'#F59AB0'],[310,172,'#FFFFFF'],[84,184,'#FFFFFF']].map(([x,y,c])=>`<circle cx="${x}" cy="${y}" r="3.4" fill="${c}" opacity=".9"/>`).join('')+`</svg>`;
-function scene(inner,mini){
-  const p=period();
-  const ff=p==='night'&&!mini?[[20,46],[76,38],[28,64],[70,58],[52,30]].map(([l,t],i)=>`<span class="ff" style="left:${l}%;top:${t}%;animation-delay:${-i*1.3}s"></span>`).join(''):'';
-  return `<section class="scene sc-${p}${mini?' sc-mini':''}">${skySVG(p)}${HILLS}<div class="dim"></div>${ff}${inner}</section>`;
-}
-function miniScene(title,sub){return scene(`<div class="sc-top"><div><h1 class="hello" style="font-size:1.7rem">${title}</h1>${sub?`<p class="date">${sub}</p>`:''}</div></div>`,true)}
-
-/* ---------- today ---------- */
-function gardenScene(){
+/* ---------- the day-card: today's date, greeting and plant, tinted like today's morning card ---------- */
+const CHEV=`<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>`;
+const dayTheme=()=>THEMES[hash(today())%THEMES.length];
+const heroStyle=()=>{const th=dayTheme();return `--t-bg:${th.bg};--t-deep:${th.deep};--t-ink:${th.ink}`};
+function dateBlock(){const d=pd(today());return `<div class="h-date"><span class="h-num">${d.getDate()}</span><span class="h-md">${MONTHS[d.getMonth()]}<br>星期${'日一二三四五六'[d.getDay()]}</span></div>`}
+function phead(title,sub){return `<header class="phead"><h1>${title}</h1>${sub?`<p>${sub}</p>`:''}</header>`}
+function hero(){
   const n=count(),m=nextMile(),prev=[...MILES].reverse().find(x=>n>=x.n),base=prev?prev.n:0;
   const pct=m?Math.round((n-base)/(m.n-base)*100):100,doneT=!!S.checks[today()]&&n>0,pc=costume();
-  const cap=doneT?`<p class="change glass${justChecked?' new':''}"><span class="spark" aria-hidden="true">✦</span><span>${grow(n).label}</span></p>`
-    :`<p class="change mute glass">${n?'今天浇水后，花会有新的变化':'浇第一次水，种子就会发芽'}</p>`;
+  const cap=doneT?`<p class="h-cap${justChecked?' new':''}">${grow(n).label}</p>`:`<p class="h-cap mute">${n?'今天浇水后，花会有新的变化':'浇第一次水，种子就会发芽'}</p>`;
   const drop=justChecked&&!calm()?`<svg class="drop" viewBox="0 0 24 32" aria-hidden="true"><path d="M12 1S2 13.5 2 20.5a10 10 0 0 0 20 0C22 13.5 12 1 12 1z"/></svg>`:'';
-  return scene(`<div class="sc-top"><div style="min-width:0"><h1 class="hello" style="font-size:1.75rem">${esc(S.name)}，<span style="display:inline-block">${greetWord()}！</span></h1><p class="date">${dateLine()}</p><span class="chip glass">${stageName(n)} · 累计 <b>${n}</b> 天</span>${pc.label?`<span class="chip glass fest">✦ ${pc.label}</span>`:''}</div>
-      <div class="pts" id="pts" aria-label="积分 ${S.points}">${COIN}<span>${S.points}</span></div></div>
-    <div class="plant" id="plant" style="height:${f1((260-vbY0(grow(n)))/260*12.5)}rem">${plantSVG(n,{cls:justChecked?'grow':'',hl:doneT})}${drop}${itemDeco(pc)}${petMarkup(n,pc,doneT)}</div>
+  return `<section class="hero" style="${heroStyle()}">
+    <div class="h-top">${dateBlock()}<div class="h-pts" id="pts" aria-label="积分 ${S.points}">积分<b>${S.points}</b></div></div>
+    <h1 class="h-greet">${esc(S.name)}，${greetWord()}</h1>${pc.label?`<p class="h-fest">${esc(pc.label)}</p>`:''}
+    <div class="plant" id="plant" style="height:${f1((260-vbY0(grow(n)))/260*12.5)}rem"><span class="disc" aria-hidden="true"></span>${plantSVG(n,{cls:justChecked?'grow':'',hl:doneT})}${drop}${itemDeco(pc)}${S.hidePet?'':petMarkup(n,pc,doneT)}</div>
     ${cap}
-    ${m?`<div class="sc-prog glass"><div class="row-b"><span>再 <b>${m.n-n}</b> 天${m.stage}</span><span>礼物：${m.gift}</span></div><div class="bar" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${Math.max(pct,3)}%"></i></div></div>`
-      :`<div class="sc-prog glass" style="text-align:center"><b>90 天毕业了！</b>好习惯已经养成。</div>`}`);
+    <div class="h-foot">${m?`<div class="row-b"><span>累计 <b>${n}</b> 天</span><span>再 <b>${m.n-n}</b> 天${m.stage}</span></div>
+      <div class="bar" role="progressbar" aria-label="离下一份礼物" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${Math.max(pct,3)}%"></i></div>
+      <span>下一份礼物：${m.gift}</span>`:`<div class="row-b"><span>累计 <b>${n}</b> 天</span><span>90 天毕业了，好习惯已经养成</span></div>`}</div>
+  </section>`;
 }
 function furPick(kind,cur){return `<div class="furpick">${FUR[kind].map(f=>`<button class="fp" data-fur="${f.k}" aria-pressed="${cur===f.k}">${petThumb(kind,f.k)}<span>${f.n}</span></button>`).join('')}</div>`}
 function petMarkup(n,pc,awake){
   const st=petStage(n);
-  return `<div class="pet" id="petw" data-mode="${awake?'awake':'sleep'}" data-stage="${st}" data-cos="${pc.cos}" style="--ps:${petScale(st)}"><div class="pet-j${justChecked&&!calm()?' jump':''}"><div class="pet-in" id="petin">${petSVG(S.pet,st,pc.cos,awake?'sit':'sleep',S.fur)}</div></div></div>`+(awake&&st>=5?`<div class="ball" id="ball">${BALL(S.pet)}</div>`:'');
+  return `<div class="pet" id="petw" data-mode="${awake?'awake':'sleep'}" data-stage="${st}" data-cos="${pc.cos}" style="--ps:${petScale(st)}"><div class="pet-j${justChecked&&!calm()?' jump':''}"><div class="pet-in" id="petin">${petSVG(S.pet,st,pc.cos,awake?'sit':'sleep',S.fur)}</div></div></div>`;
 }
-function doneBlock(){
+/* after the check-in: one quiet card with the partner's words, and her question when there is one */
+function doneCard(makeup){
   const r=fill(REPLIES[hash(today())%REPLIES.length]);
-  return `<div class="done" id="done"><div class="done-top"><div class="stamp${justChecked?' new':''}">已打卡</div>
-    <div style="min-width:0"><h2 class="done-t">今天打卡完成</h2><p class="small muted">花浇好了，${esc(S.petName)}也吃饱了 · <span class="gold">积分 +10</span></p></div></div>
-    <div class="reply"><div class="avatar">${esc(S.partner[0])}</div><p class="small" style="min-width:0"><b>${esc(S.partner)}：</b>${esc(r)}</p></div></div>`;
+  return `<section class="card donec" id="done"><div class="d-head"><span class="d-check${justChecked?' new':''}">${TICK}</span>
+    <div style="min-width:0;flex:1"><h2 class="done-t">今天打卡完成</h2><p class="small muted" style="text-wrap:balance">${S.hidePet?'花浇好了，继续保持':'花浇好了，'+esc(S.petName)+'吃饱了'}</p></div><span class="d-pts">+10<small>积分</small></span></div>
+    <div class="reply"><div class="avatar">${esc(S.partner[0])}</div><p class="small" style="min-width:0"><b>${esc(S.partner)}：</b>${esc(r)}</p></div>${careBlock()}${makeup}</section>`;
 }
 function morningCard(done){
-  const g=imgWord(),head=`<h3 class="ch"><span class="ci">${I.sun}</span>今天的${g}图</h3>`;
-  if(!done)return `<section class="card blush">${head}<div class="frame teaser"><div class="blurimg" id="mblur"></div><div class="lock"><div class="ring">${LOCK}</div><p class="pill">打卡后就能领取</p></div></div></section>`;
+  const g=imgWord();
+  if(!done)return `<section class="card"><div class="mh"><h3>今天的${g}图</h3><span class="small muted">打卡后就能领取</span></div><div class="frame teaser"><div class="blurimg" id="mblur"></div><div class="lock"><div class="ring">${LOCK}</div></div></div></section>`;
   const tip=tipToday();
-  return `<section class="card blush" id="mcard"><div class="row-b">${head}<span class="tag ok">已领取</span></div>
-    <div class="frame"><p class="loading" id="mload">正在准备${g}图…</p><img id="mimg" alt="今天的${g}图：${esc(tip)}" hidden${justChecked?' class="reveal"':''}></div>
-    <p class="small muted">长按图片，可以保存或转发给家人朋友。</p></section>`;
+  return `<section class="card" id="mcard"><div class="mh"><h3>今天的${g}图</h3><span class="small muted">长按可以保存、转发</span></div>
+    <div class="frame"><p class="loading" id="mload">正在准备${g}图…</p><img id="mimg" alt="今天的${g}图：${esc(tip)}" hidden${justChecked?' class="reveal"':''}></div></section>`;
 }
+/* the surprise card: a quiet row until she opens it */
+const flipRow=()=>`<button class="rowi flip" data-act="flip"><span class="ri">${GIFT}</span><span class="rt">翻开今天的惊喜卡</span>${CHEV}</button>`;
 function flipBlock(){
   const f=S.flips[today()];
-  if(!f)return `<button class="flip" data-act="flip"><span class="gift">${GIFT}</span><span>翻开今天的惊喜卡</span></button>`;
-  if(f.type==='gift')return `<div class="prize"><div class="p-big">中奖了！小礼物一份</div><p>告诉 ${esc(S.partner)}，下次见面领取。</p><a class="btn solid" style="margin-top:10px" href="${waLink(`${S.partner} 你好，我是${S.name}，今天翻惊喜卡中了一份小礼物！`)}" target="_blank" rel="noopener">用 WhatsApp 告诉 ${esc(S.partner)}</a></div>`;
+  if(!f)return `<section class="card list">${flipRow()}</section>`;
+  if(f.type==='gift')return `<div class="prize"><div class="p-big">中奖了！小礼物一份</div><p>告诉 ${esc(S.partner)}，下次见面领取。</p><a class="btn solid" style="margin-top:8px" href="${waLink(`${S.partner} 你好，我是${S.name}，今天翻惊喜卡中了一份小礼物！`)}" target="_blank" rel="noopener">用 WhatsApp 告诉 ${esc(S.partner)}</a></div>`;
   if(f.type==='pts')return `<div class="prize"><div class="p-big">积分 +5</div><p class="small muted">明天再来翻一张</p></div>`;
   if(f.type==='fact'){const L=factList(f);return `<div class="prize fact"><span class="ntag g">${f.p&&PLANS[f.p]?PLANS[f.p].name:'营养'}小知识</span><p class="p-fact">${esc(L[f.i%L.length])}</p><p class="small muted">明天再来翻一张</p></div>`}
   if(f.type==='quiz'){const L=quizList(f),Q=L[f.i%L.length];
-    if(f.ans==null)return `<div class="prize quiz"><span class="ntag gold">小测验 · 答对 +5 积分</span><p class="p-fact">${esc(Q.q)}</p><div class="qopts">${Q.o.map((o,j)=>`<button class="opt" data-quiz="${j}">${esc(o)}</button>`).join('')}</div></div>`;
+    if(f.ans==null)return `<div class="prize quiz"><span class="ntag gold">小测验，答对 +5 积分</span><p class="p-fact">${esc(Q.q)}</p><div class="qopts">${Q.o.map((o,j)=>`<button class="opt" data-quiz="${j}">${esc(o)}</button>`).join('')}</div></div>`;
     const ok=f.ans===Q.a;return `<div class="prize quiz"><span class="ntag gold">小测验</span><p class="p-fact">${ok?'答对了！积分 +5':'答案是「'+esc(Q.o[Q.a])+'」，积分 +2'}</p><p>${esc(Q.w)}</p><p class="small muted">明天再来翻一张</p></div>`}
   return `<div class="prize"><div class="p-big">${esc(f.text)}</div><p class="small muted">明天再来翻一张</p></div>`;
 }
 function careDay(){const d=dayNum(),t=today();for(let k=d;k>=Math.max(1,d-2);k--){if(!CARE[k])continue;const a=S.answers[k];if(k===d||!a||a.d===t)return k}return 0}
 function careBlock(){
-  const d=careDay(),c=CARE[d];if(!c)return '';const a=S.answers[d],eb=`<span class="eyebrow ch"><span class="ci y">${I.chat}</span>${c.t}</span>`;
+  const d=careDay(),c=CARE[d];if(!c)return '';const a=S.answers[d],eb=`<p class="eyebrow">${esc(S.partner)} 想问你</p>`;
   if(a){const need=(NEED[d]||[]).includes(a.a);
-    return `<div class="card care">${eb}<h3>${c.q}</h3><p>你的回答：<b>${esc(a.a)}</b></p>
+    return `<div class="care">${eb}<h3>${c.q}</h3><p>你的回答：<b>${esc(a.a)}</b></p>
     <div class="reply"><div class="avatar">${esc(S.partner[0])}</div><div class="bubble"><b>${esc(S.partner)}</b>${esc(fill(c.r(a.a)))}</div></div>
     ${need?`<a class="btn solid" href="${waLink(`${S.partner} 你好，我是${S.name}。第 ${d} 天的问题「${c.q}」，我的回答是：${a.a}`)}" target="_blank" rel="noopener">用 WhatsApp 告诉 ${esc(S.partner)}</a>`:''}</div>`}
   const pt=PLAN_TXT[planOf(S)],opts=(d===45&&pt&&pt.c45)||c.o;
-  return `<div class="card care">${eb}<h3>${c.q}</h3>
+  return `<div class="care">${eb}<h3>${c.q}</h3>
     <div class="opts">${opts.map(o=>`<button class="opt" data-care="${d}" data-a="${esc(o)}">${esc(o)}</button>`).join('')}</div></div>`;
 }
 /* the plan's three small habits for today; they earn points but never change the check-in count */
@@ -1257,15 +1215,16 @@ function tasksCard(){
 function planPick(cur){return `<div class="plans" role="group" aria-label="选计划">${Object.keys(PLANS).map(k=>`<button class="plc" data-plan="${k}" aria-pressed="${cur===k}"><span class="ci ${PLAN_CI[k]}">${PLAN_IC[k]}</span><span style="min-width:0"><b>${PLANS[k].name}</b><span class="small muted">${PLANS[k].desc}</span></span></button>`).join('')}</div>`}
 function viewToday(){
   const t=today(),done=!!S.checks[t],y=add(t,-1),canMakeup=y>=S.start&&!S.checks[y],stg=stageOf(count());
-  if(moved())return gardenScene()+`<section class="card" style="background:var(--gold-soft);border:0"><h3 class="ch"><span class="ci y">${I.phone}</span>你的小花已经搬家了</h3><p>你的记录已经搬到手机桌面的图标（或新手机）。请从那里打开打卡，${/^[\x20-\x7E]+$/.test(S.partner)?esc(S.partner)+' ':esc(S.partner)}才看得到你的记录。</p></section>`+footer();
-  return gardenScene()+
-    (done?doneBlock()+careBlock():`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>我今天吃了营养<span class="sub">点一下，给花浇水</span></span></button>`)+
-    (canMakeup?`<button class="link-btn" data-act="makeup">昨天忘了打卡？点这里补上</button>`:'')+tasksCard()+
-    (stg===3?newsCard():'')+morningCard(done)+(done?flipBlock():'')+(stg<3?newsCard():'')+changeCard()+(S.a2hs?'':homeCard())+demoTools()+footer();
+  if(moved())return hero()+`<section class="card"><h3 class="ch"><span class="ci">${I.phone}</span>你的小花已经搬家了</h3><p>你的记录已经搬到手机桌面的图标（或新手机）。请从那里打开打卡，${/^[\x20-\x7E]+$/.test(S.partner)?esc(S.partner)+' ':esc(S.partner)}才看得到你的记录。</p></section>`+footer();
+  const rows=(stg===3?newsRow():'')+(stg<3?newsRow():'')+(S.a2hs?'':homeRow());
+  const mk=canMakeup?`<button class="link-btn" data-act="makeup">昨天忘了打卡？点这里补上</button>`:'';
+  return hero()+
+    (done?doneCard(mk):`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>我今天吃了营养<span class="sub">点一下，给花浇水</span></span></button>`+mk)+
+    (done?morningCard(true)+flipBlock():'')+tasksCard()+(done?'':morningCard(false))+changeCard()+
+    (rows?`<section class="card list">${rows}</section>`:'')+demoTools()+footer();
 }
-function newsCard(){const {card}=newsNow();if(!card)return '';
-  return `<section class="card ncard"><div class="row-b"><h3 class="ch"><span class="ci y">${I.mail}</span>本周信息${S.seen.includes(card.id)?'':'<span class="ndot" aria-label="新"></span>'}</h3><span class="ntag ${NTAG[card.type]||'b'}">${card.series?'新手小贴士':esc(card.type)}</span></div>
-    <p class="ntitle2">${esc(card.title)}</p><button class="btn" data-act="news" data-nid="${card.id}">打开看看</button></section>`}
+function newsRow(){const {card}=newsNow();if(!card)return '';
+  return `<button class="rowi ncard" data-act="news" data-nid="${card.id}"><span class="ri">${I.mail}</span><span class="rt">本周信息${S.seen.includes(card.id)?'':'<span class="ndot" aria-label="新"></span>'}<small class="ntitle2">${esc(card.title)}</small></span>${CHEV}</button>`}
 /* stage 2+: the customer's own before-and-after, the strongest kind of value */
 function changeCard(){if(stageOf(count())<2)return '';const F=S.feel,t=today(),pk=planOf(S);
   const first=F.filter(x=>diff(S.start,x.d)<30),recent=F.filter(x=>diff(S.start,x.d)>=30&&diff(x.d,t)<30);
@@ -1280,9 +1239,9 @@ function changeCard(){if(stageOf(count())<2)return '';const F=S.feel,t=today(),p
 function libraryCard(){const L=newsList();if(!L.length)return '';
   return `<div class="card"><h3 class="ch"><span class="ci y">${I.mail}</span>知识库</h3><p class="small muted">之前的信息都在这里，随时可以重看</p>
     <div class="nlist">${L.map(x=>`<button class="nitem" data-act="news" data-nid="${x.id}"><span class="ntag ${NTAG[x.type]||'b'}">${x.series?'小贴士':esc(x.type)}</span><span class="nt">${esc(x.title)}</span></button>`).join('')}</div></div>`}
-function homeCard(){
-  return `<section class="card"><div class="row-b"><h3 class="ch"><span class="ci g">${I.phone}</span>放到手机桌面</h3><button class="link-btn" style="padding:0" data-act="a2hs">我放好了</button></div>
-    <p class="small muted">以后像 App 一样一点就打开。<br>iPhone：点分享键（方框加箭头），选「添加到主屏幕」。加好后从桌面图标打开，你的小花会自动搬过去。<br>Android：点右上角三个点，选「添加到主屏幕」或「安装应用」。</p></section>`;
+function homeRow(){
+  return `<details class="a2hs"><summary class="rowi"><span class="ri">${I.phone}</span><span class="rt">放到手机桌面<small>以后像 App 一样，一点就打开</small></span>${CHEV}</summary>
+    <div class="rowmore small muted"><p>iPhone：点分享键（方框加箭头），选「添加到主屏幕」。加好后从桌面图标打开，你的小花会自动搬过去。</p><p>Android：点右上角三个点，选「添加到主屏幕」或「安装应用」。</p><button class="btn" data-act="a2hs">我放好了</button></div></details>`;
 }
 
 /* ---------- records ---------- */
@@ -1302,7 +1261,7 @@ function viewLog(){
     if(nx&&nx.id===ms.id)return `<div class="stone next"><div class="mini">${plantSVG(ms.n)}</div><div><h4>${ms.name} · ${ms.stage} <span class="tag">下一阶段</span></h4><p class="small muted">再打卡 ${ms.n-n} 天 · 可以领：${ms.gift}</p></div></div>`;
     return `<div class="stone"><div class="mini secret" aria-label="还没揭晓">?</div><div><h4>${ms.name} · 到时候揭晓</h4><p class="small muted">累计 ${ms.n} 天 · 礼物：${ms.gift}</p></div></div>`}).join('');
   const ans=Object.entries(S.answers).map(([d,a])=>`<div><p class="small muted">第 ${d} 天 · ${esc(CARE[d]?CARE[d].q:'')}</p><p><b>${esc(a.a)}</b></p></div>`).join('');
-  return miniScene('我的记录',`累计打卡 ${n} 天 · ${STAGE_NAME[stageOf(n)]} · 积分 ${S.points}`)+
+  return phead('我的记录',`累计打卡 ${n} 天，${STAGE_NAME[stageOf(n)]}，积分 ${S.points}`)+
     `<div class="card"><div class="row-b"><h3 class="ch"><span class="ci g">${I.cal}</span>${m+1}月</h3><span class="muted small">这个月打卡 ${mc} 天</span></div><div class="cal">${cells}</div>
       <p class="note">绿色圆圈是已经打卡的日子。漏了一两天没关系，奖励是按累计天数算的。</p></div>
     <div class="card"><h3 class="ch"><span class="ci ${PLAN_CI[pk]}">${PLAN_IC[pk]}</span>我的计划：${PLANS[pk].name}</h3><p class="small muted" style="margin-top:-4px">${PLANS[pk].desc}</p>
@@ -1310,7 +1269,7 @@ function viewLog(){
     <div class="card"><h3 class="ch"><span class="ci">${I.flower}</span>我的花和奖励</h3><div class="path">${path}</div></div>
     <div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>我的宠物</h3><div class="petrow"><div class="petbox">${petSVG(S.pet,petStage(n),costume().cos,'sit',S.fur)}</div><div style="min-width:0"><p><b>${esc(S.petName)}</b>（${S.pet==='dog'?'小狗':'小猫'}）</p><p class="small muted">${PET_TXT[petStage(n)]}</p></div></div>
       <label for="pn2" class="small muted">改名字</label><div class="row"><input type="text" id="pn2" maxlength="8" value="${esc(S.petName)}" style="flex:1;min-width:0"><button class="btn" data-act="rename">保存</button></div>
-      <p class="small muted" style="margin-top:14px">换毛色</p>${furPick(S.pet,furOf(S.pet,S.fur).k)}</div>
+      <p class="small muted" style="margin-top:14px">换毛色</p>${furPick(S.pet,furOf(S.pet,S.fur).k)}<button class="link-btn" data-act="pettoggle">${S.hidePet?'在「今天」页显示宠物':'不在「今天」页显示宠物'}</button></div>
     ${libraryCard()}
     ${ans?`<div class="card"><h3 class="ch"><span class="ci y">${I.chat}</span>我和伙伴的问答</h3><div class="qa">${ans}</div></div>`:''}
     <div class="card"><h3 class="ch"><span class="ci g">${I.font}</span>字体大小</h3><p class="small muted">选一个你看得最清楚的</p>${fontPick()}</div>`+(CLOUD?'<p class="small" style="text-align:center;margin:6px 0 0"><button class="link-btn" data-act="delme">删除我的资料</button></p>':'')+footer();
@@ -1319,12 +1278,15 @@ function viewLog(){
 /* ---------- feelings ---------- */
 /* weekly feelings: one line per measure (skin joins for the skin plan); a table view sits underneath */
 const FSER=[['e','精神','var(--c1)'],['s','睡眠','var(--c2)'],['g','肠胃','var(--c3)'],['sk','皮肤','var(--c4)']];
-const FACES=['😣','🙁','😐','🙂','😄'];
+/* five simple line faces, from not good to very good */
+const FACE_D=['M8.2 16.7c1.1-1.5 2.4-2.2 3.8-2.2s2.7.7 3.8 2.2','M8.7 16.1c.9-.9 2-1.3 3.3-1.3s2.4.4 3.3 1.3','M8.9 15.4h6.2','M8.7 14.3c.9 1 2 1.5 3.3 1.5s2.4-.5 3.3-1.5','M8.1 13.7c1.1 1.9 2.4 2.8 3.9 2.8s2.8-.9 3.9-2.8'];
+const faceIn=v=>`<circle cx="12" cy="12" r="9.2"/><circle cx="9" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1" fill="currentColor" stroke="none"/><path d="${FACE_D[v-1]}"/>`;
+const faceSVG=v=>`<svg class="fc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">${faceIn(v)}</svg>`;
 function chart(){
   const F=S.feel;if(!F.length)return '<p class="note">记录第一次以后，这里会画出你的变化。</p>';
   const W=320,H=170,L=30,R=14,T=12,B=30,xs=i=>F.length===1?(L+W-R)/2:L+i*(W-L-R)/(F.length-1),ys=v=>T+(5-v)*(H-T-B)/4;
   const ser=FSER.filter(([k])=>F.some(f=>f[k]));let g='';
-  for(let v=1;v<=5;v++)g+=`<line x1="${L}" x2="${W-R}" y1="${ys(v)}" y2="${ys(v)}" style="stroke:var(--line)"/><text x="4" y="${ys(v)+6}" font-size="15">${FACES[v-1]}</text>`;
+  for(let v=1;v<=5;v++)g+=`<line x1="${L}" x2="${W-R}" y1="${ys(v)}" y2="${ys(v)}" style="stroke:var(--line)"/><svg x="2" y="${ys(v)-9}" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" style="stroke:var(--muted);color:var(--muted)">${faceIn(v)}</svg>`;
   const lines=ser.map(([k,,c],j)=>{const dy=(j-(ser.length-1)/2)*3.6,P=F.map((f,i)=>f[k]?[xs(i),ys(f[k])+dy,i]:null).filter(Boolean);
     return `<polyline style="fill:none;stroke:${c};stroke-width:3;stroke-linejoin:round;stroke-linecap:round" points="${P.map(p=>p[0]+','+p[1]).join(' ')}"/>`+
       P.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="${p[2]===F.length-1?5.5:4.5}" style="fill:${c};stroke:var(--surface);stroke-width:2"/>`).join('')}).join('');
@@ -1333,7 +1295,7 @@ function chart(){
     <div class="legend">${ser.map(([,l,c])=>`<span style="--c:${c}">${l}</span>`).join('')}</div>
     ${F.length<2?'<p class="note">每个星期记录一次，就能看到自己的变化。</p>':''}
     <details class="rows"><summary>看全部记录</summary><table class="rtab"><tr><th>日期</th>${ser.map(([,l])=>`<th>${l}</th>`).join('')}</tr>
-      ${F.slice().reverse().map(f=>`<tr><td>${esc(f.d.slice(5).replace('-','/'))}</td>${ser.map(([k])=>`<td>${f[k]?FACES[f[k]-1]+' '+f[k]:'–'}</td>`).join('')}</tr>`).join('')}</table></details>`;
+      ${F.slice().reverse().map(f=>`<tr><td>${esc(f.d.slice(5).replace('-','/'))}</td>${ser.map(([k])=>`<td>${f[k]?faceSVG(f[k])+f[k]:'–'}</td>`).join('')}</tr>`).join('')}</table></details>`;
 }
 /* weekly weight, only if she chose to fill it in */
 function kgCard(){
@@ -1357,13 +1319,13 @@ const feelReady=()=>feelMetrics().every(([k])=>draft[k]);
 function viewFeel(){
   const last=S.feel[S.feel.length-1],can=!last||diff(last.d,today())>=7,M=feelMetrics();
   const kgField=planOf(S)==='weight'?`<div class="metric"><label for="kg">体重（可以不填，伙伴看得到）</label><div class="kgrow"><input type="text" id="kg" inputmode="decimal" maxlength="5" autocomplete="off" placeholder="例如 62.5" value="${esc(draft.kg)}"><span>公斤</span></div><p class="kgerr" id="kgerr" hidden>请填 25 到 250 之间的数字，例如 62.5</p></div>`:'';
-  const form=can?`<div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>这个星期感觉怎样？</h3>${M.map(([k,l])=>`<div class="metric"><span>${l}</span><div class="faces">${FACES.map((f,i)=>`<button class="face" data-m="${k}" data-v="${i+1}" aria-pressed="${draft[k]===i+1}" aria-label="${l} ${i+1}分">${f}</button>`).join('')}</div></div>`).join('')}${kgField}
-      <button class="btn solid" data-act="feel" ${feelReady()?'':'disabled'}>保存这星期的感觉（+10 积分）</button></div>`
+  const form=can?`<div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>这个星期感觉怎样？</h3>${M.map(([k,l])=>`<div class="metric"><span>${l}</span><div class="faces">${[1,2,3,4,5].map(v=>`<button class="face" data-m="${k}" data-v="${v}" aria-pressed="${draft[k]===v}" aria-label="${l} ${v}分">${faceSVG(v)}</button>`).join('')}</div></div>`).join('')}${kgField}
+      <button class="btn solid" data-act="feel" ${feelReady()?'':'disabled'}>保存（+10 积分）</button></div>`
     :`<div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>这星期已经记录了</h3><p class="muted">${7-diff(last.d,today())} 天后再来记录一次。</p></div>`;
-  const qs=S.questions.map(q=>`<div><p class="small muted">第 ${q.day} 天</p><p>${esc(q.text)}</p><p class="small" style="color:var(--leaf-dark)">已打开 WhatsApp 发给 ${esc(S.partner)}</p></div>`).join('');
-  return miniScene('我的感觉','这里只记录感觉，不是医疗诊断')+
-    `${form}<div class="card"><h3 class="ch"><span class="ci g">${I.chart}</span>我的变化</h3>${chart()}</div>${kgCard()}
-    <div class="card"><h3 class="ch"><span class="ci y">${I.chat}</span>有什么想问 ${esc(S.partner)}？</h3><label for="q" class="small muted">写下你的问题，${esc(S.partner)} 会回复你。身体不舒服，请先看医生。</label>
+  const qs=S.questions.map(q=>`<div><p class="small muted">第 ${q.day} 天</p><p>${esc(q.text)}</p><p class="small" style="color:var(--accent)">已打开 WhatsApp 发给 ${esc(S.partner)}</p></div>`).join('');
+  return phead('我的感觉','这里只记录感觉，不是医疗诊断')+
+    `${form}<div class="card"><h3 class="ch"><span class="ci">${I.chart}</span>我的变化</h3>${chart()}</div>${kgCard()}
+    <div class="card"><h3 class="ch"><span class="ci">${I.chat}</span>有什么想问 ${esc(S.partner)}？</h3><label for="q" class="small muted">写下你的问题，${esc(S.partner)} 会回复你。身体不舒服，请先看医生。</label>
       <textarea id="q" placeholder="例如：营养要饭前吃还是饭后吃？"></textarea><a class="btn solid" id="askbtn" data-act="ask" href="${waLink(askText(''))}" target="_blank" rel="noopener">用 WhatsApp 发给 ${esc(S.partner)}</a>
       ${qs?`<div class="qa">${qs}</div>`:''}</div>`+footer();
 }
@@ -1371,9 +1333,9 @@ function viewFeel(){
 /* ---------- first visit ---------- */
 function viewOnboard(){
   const ok=draftName.trim()&&draftAnchor&&draftOk;
-  return scene(`<div class="sc-top"><div><h1 class="hello">欢迎你！</h1><p class="date">一起养一盆健康花</p></div></div>
-      <div class="plant" style="height:7.5rem">${plantSVG(0)}</div>
-      <p class="change glass" style="color:inherit"><span style="display:inline-block">每天吃完营养，点一下打卡，</span><span style="display:inline-block">种子就会慢慢长大开花。</span></p>`)+
+  return `<section class="hero" style="${heroStyle()}"><div class="h-top">${dateBlock()}</div><h1 class="h-greet">欢迎你，一起养一盆健康花</h1>
+      <div class="plant" style="height:7.5rem"><span class="disc" aria-hidden="true"></span>${plantSVG(0)}</div>
+      <p class="h-cap mute"><span style="display:inline-block">每天吃完营养，点一下打卡，</span><span style="display:inline-block">种子就会慢慢长大开花。</span></p></section>`+
     (CLOUD&&!S.pcode&&!PCODE&&!PI.phone?`<div class="card" style="background:var(--gold-soft);border:0"><h3>还不知道你的伙伴是谁</h3><p>请用伙伴发给你的链接打开，或请伙伴给你扫二维码。这样你的奖励和问题才会送到伙伴那里。</p></div>`:'')+`<div class="card"><h3>1. 哪一种字看得最清楚？</h3>${fontPick()}</div>
     <div class="card"><label for="nm"><h3>2. 我们怎么称呼你？</h3></label><input type="text" id="nm" placeholder="例如：陈姐" value="${esc(draftName)}"></div>
     <div class="card"><h3>3. 你想先照顾哪一方面？</h3><p class="small muted" style="margin-top:-6px">每天会有 3 个小任务。以后可以在「记录」页换。</p>${planPick(draftPlan)}</div>
@@ -1416,22 +1378,24 @@ function render(){
 let lastW=innerWidth;addEventListener('resize',()=>{if(innerWidth===lastW)return;lastW=innerWidth;if(tab==='today')petStart()});
 function bumpPts(){const p=$('#pts');if(p){p.classList.remove('bump');void p.offsetWidth;p.classList.add('bump')}}
 function toDone(){const el=$('#done');if(el)el.scrollIntoView({behavior:calm()?'auto':'smooth',block:'start'})}
+/* a few soft petals drift down, only for gifts and milestones */
 function confetti(){
   if(calm())return;
   const c=$('#fx'),x=c.getContext('2d'),dpr=Math.min(devicePixelRatio||1,2),W=innerWidth,H=innerHeight;
   c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);c.hidden=false;
-  const cs=getComputedStyle(document.documentElement),cols=['--coral','--gold-bright','--leaf','--petal','--petal2'].map(v=>cs.getPropertyValue(v).trim());
-  const P=Array.from({length:110},()=>({x:W/2+(Math.random()-.5)*W*.4,y:H*.42,vx:(Math.random()-.5)*13,vy:-Math.random()*15-6,r:Math.random()*7+5,c:cols[Math.random()*cols.length|0],a:Math.random()*6,va:(Math.random()-.5)*.35}));
+  const cs=getComputedStyle(document.documentElement),cols=['--pk2','--pk1','--cr2','--pk3','--leaf-b'].map(v=>cs.getPropertyValue(v).trim()||'#EE9EAF');
+  const P=Array.from({length:28},()=>({x:Math.random()*W,y:-20-Math.random()*H*.5,vy:1.2+Math.random()*1.4,sw:Math.random()*6.28,r:5+Math.random()*5,c:cols[Math.random()*cols.length|0],a:Math.random()*6.28,va:(Math.random()-.5)*.06}));
   let f=0;(function step(){x.clearRect(0,0,W,H);
-    P.forEach(p=>{p.vy+=.42;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.a+=p.va;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});
-    if(++f<120)requestAnimationFrame(step);else{x.clearRect(0,0,W,H);c.hidden=true}})();
+    P.forEach(p=>{p.y+=p.vy;p.sw+=.03;p.a+=p.va;x.save();x.translate(p.x+Math.sin(p.sw)*18,p.y);x.rotate(p.a);x.globalAlpha=.9;x.fillStyle=p.c;
+      x.beginPath();x.ellipse(0,0,p.r,p.r*.55,0,0,Math.PI*2);x.fill();x.restore()});
+    if(++f<230)requestAnimationFrame(step);else{x.clearRect(0,0,W,H);c.hidden=true}})();
 }
 function celebrate(m){
   const o=$('#overlay'),line=m.stage==='开花'?'你的花开了！':`你的花${m.stage}了！`;
-  o.innerHTML=`<div class="box" role="dialog" aria-modal="true" aria-label="${m.name}"><div class="ov-pics">${plantSVG(m.n,{hl:true})}${petSVG(S.pet,petStage(m.n),'','sit',S.fur)}</div>
-    <div class="medal">${m.name}</div><p style="font-size:1.15rem;font-weight:700">${line}累计打卡 ${m.n} 天</p><p>${esc(S.petName)}${PET_MS[m.id]||''}</p>
-    <p>你的奖励：<b>${m.gift}</b></p><a class="btn solid" href="${waLink(`${S.partner} 你好，我是${S.name}，我完成了「${m.name}」，累计打卡 ${m.n} 天！奖励是：${m.gift}`)}" target="_blank" rel="noopener">告诉 ${esc(S.partner)} 领取奖励</a>
-    <button class="checkin" style="min-height:4rem;font-size:1.2rem;margin-top:6px" data-act="close"><span>好的</span></button></div>`;
+  o.innerHTML=`<div class="box" role="dialog" aria-modal="true" aria-label="${m.name}"><div class="ov-pics">${plantSVG(m.n,{hl:true})}${S.hidePet?'':petSVG(S.pet,petStage(m.n),'','sit',S.fur)}</div>
+    <div class="medal">${m.name}</div><p style="font-family:var(--f-serif);font-size:1.1rem;font-weight:600">${line}累计打卡 ${m.n} 天</p>${S.hidePet?'':`<p>${esc(S.petName)}${PET_MS[m.id]||''}</p>`}
+    <p>你的奖励：<b>${m.gift}</b></p><a class="btn solid" style="align-self:stretch" href="${waLink(`${S.partner} 你好，我是${S.name}，我完成了「${m.name}」，累计打卡 ${m.n} 天！奖励是：${m.gift}`)}" target="_blank" rel="noopener">告诉 ${esc(S.partner)} 领取奖励</a>
+    <button class="checkin" data-act="close"><span>好的</span></button></div>`;
   o.hidden=false;o.querySelector('button').focus();confetti();
 }
 function checkMile(){
@@ -1440,7 +1404,7 @@ function checkMile(){
 }
 function keepName(){const el=$('#nm');if(el)draftName=el.value}
 function afterWater(scroll){
-  render();justChecked=false;bumpPts();confetti();
+  render();justChecked=false;bumpPts();
   setTimeout(()=>document.querySelectorAll('.drop').forEach(el=>el.remove()),1200);
   setTimeout(()=>{if(!checkMile()){if(scroll)toDone();setTimeout(maybeNews,1900)}},1700);
 }
@@ -1458,7 +1422,7 @@ document.addEventListener('click',e=>{
   if(b.dataset.care){const d=b.dataset.care;S.answers[d]={a:b.dataset.a,d:t};S.points+=5;save();
     if(b.dataset.a==='去记录我的感觉')tab='feel';render();bumpPts();return}
   if(b.dataset.m){draft[b.dataset.m]=+b.dataset.v;render();return}
-  if('quiz' in b.dataset){const f=S.flips[t];if(f&&f.type==='quiz'&&f.ans==null){const L=quizList(f);f.ans=+b.dataset.quiz;const ok=f.ans===L[f.i%L.length].a;S.points+=ok?5:2;save();render();bumpPts();if(ok)confetti()}return}
+  if('quiz' in b.dataset){const f=S.flips[t];if(f&&f.type==='quiz'&&f.ans==null){const L=quizList(f);f.ans=+b.dataset.quiz;const ok=f.ans===L[f.i%L.length].a;S.points+=ok?5:2;save();render();bumpPts()}return}
   if(b.dataset.plan){const k=b.dataset.plan;if(!PLANS[k])return;
     if(!S.onboarded){keepName();draftPlan=k;render();return}
     if(planOf(S)!==k){S.plan=k;S.planD=t;draft={e:0,s:0,g:0,sk:0,kg:''};save();toast('已换成「'+PLANS[k].name+'」计划')}
@@ -1466,7 +1430,7 @@ document.addEventListener('click',e=>{
   if(b.dataset.task){const id=b.dataset.task,L=((S.tasks||(S.tasks={}))[t]||[]).slice(),i=L.indexOf(id);
     if(i>=0){L.splice(i,1);S.points=Math.max(0,S.points-2)}else{L.push(id);S.points+=2;justTask=id}
     if(L.length)S.tasks[t]=L;else delete S.tasks[t];
-    const all=PLANS[planOf(S)].tasks.every(([k])=>L.includes(k));save();render();justTask='';bumpPts();if(all&&i<0)confetti();return}
+    const all=PLANS[planOf(S)].tasks.every(([k])=>L.includes(k));save();render();justTask='';bumpPts();return}
   if(b.dataset.anchor){keepName();draftAnchor=b.dataset.anchor;render();return}
   switch(a){
     case 'check':S.checks[t]=1;S.points+=10;justChecked=true;PET.woke=true;save();afterWater(true);break;
@@ -1489,7 +1453,7 @@ document.addEventListener('click',e=>{
       else{const pk=planOf(S),pt=PLAN_TXT[pk];
         if(pt&&((S.quizN||0)+(S.pquizN||0))%2){f={type:'quiz',p:pk,i:(S.pquizN||0)%pt.quiz.length,ans:null};S.pquizN=(S.pquizN||0)+1}
         else{f={type:'quiz',i:(S.quizN||0)%QUIZ.length,ans:null};S.quizN=(S.quizN||0)+1}}
-      S.flips[t]=f;save();render();if(f.type==='gift'||f.type==='pts'){bumpPts();confetti()}break}
+      S.flips[t]=f;save();render();if(f.type==='gift'||f.type==='pts')bumpPts();if(f.type==='gift')confetti();break}
     case 'feel':{if(!feelReady())return;const pk=planOf(S),rec={d:t,day:dayNum(),e:draft.e,s:draft.s,g:draft.g};
       if(pk==='skin')rec.sk=draft.sk;
       if(pk==='weight'){const raw=String(draft.kg||'').trim().replace(/[,，。]/g,'.');
@@ -1497,6 +1461,7 @@ document.addEventListener('click',e=>{
       S.feel.push(rec);draft={e:0,s:0,g:0,sk:0,kg:''};S.points+=10;save();render();break}
     case 'ask':{const v=$('#q').value.trim();if(!v)return;S.questions.unshift({day:dayNum(),text:v});save();render();break}
     case 'a2hs':S.a2hs=true;save();render();break;
+    case 'pettoggle':S.hidePet=!S.hidePet;save();render();toast(S.hidePet?'「今天」页不再显示宠物':'「今天」页会显示宠物');break;
     case 'rename':{const v=($('#pn2')||{}).value;if(v&&v.trim()){S.petName=v.trim().slice(0,8);save();render()}break}
     case 'cos':demoCos=demoCos+1>=DEMO_COS.length?-1:demoCos+1;render();break;
     case 'cosoff':demoCos=-1;render();break;
