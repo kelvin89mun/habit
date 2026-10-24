@@ -94,6 +94,9 @@ td.n,th.n{text-align:right}
 .dots{display:flex;gap:3px}
 .dots i{width:13px;height:13px;border-radius:4px;background:var(--line)}
 .dots i.on{background:var(--leaf)}
+.daily{border:2px solid var(--leaf-soft)}
+.msg{white-space:pre-line;word-break:break-all;background:var(--bg);border:1px dashed var(--line);border-radius:12px;padding:10px 12px;font-size:.95rem}
+details.how summary{cursor:pointer;color:var(--blue);font-weight:700;font-size:.9rem;margin-top:8px;min-height:2.2rem;display:flex;align-items:center}
 </style>
 </head>
 <body>
@@ -220,9 +223,54 @@ function planFilter(L){return `<div class="chips pf" role="group" aria-label="�
 /* the partner's link can carry a plan, so the customer's sign-up already has it chosen */
 const planLink=k=>SITE+'?p='+ME.code+(k&&k!=='base'?'&plan='+k:'');
 const INVITE={
-  base:l=>`你好！我们一起养一盆「健康花」吧 🌱\n每天吃完营养，打开这个网页点一下打卡，小花就会慢慢长大开花，还有小猫小狗陪你，达到天数有礼物送给你。\n不用下载，点这里就能开始：\n${l}`,
-  weight:l=>`你好！我们一起参加「体重管理」打卡吧 🌱\n每天吃完营养点一下打卡，再做 3 个小任务：喝够水、走一走、晚餐七分饱。每星期记录一次体重，看看自己的变化。小花会慢慢开花，达到天数还有礼物送给你。\n不用下载，点这里就能开始：\n${l}`,
-  skin:l=>`你好！我们一起参加「美肌保养」打卡吧 🌸\n每天吃完营养点一下打卡，再做 3 个小任务：早上护肤防晒、晚上洗脸护肤、喝够水。每星期记录一次皮肤感觉。小花会慢慢开花，达到天数还有礼物送给你。\n不用下载，点这里就能开始：\n${l}`};
+  base:l=>`你好！我们一起养一盆「健康花」吧 🌱\n每天吃完营养，打开这个网页点一下打卡，小花就会慢慢长大开花，还有小猫小狗陪你，达到天数有礼物送给你。\n以后每天早上，我会在 WhatsApp 发链接给你，点一下就能打卡。\n不用下载，点这里就能开始：\n${l}`,
+  weight:l=>`你好！我们一起参加「体重管理」打卡吧 🌱\n每天吃完营养点一下打卡，再做 3 个小任务：喝够水、走一走、晚餐七分饱。每星期记录一次体重，看看自己的变化。小花会慢慢开花，达到天数还有礼物送给你。\n以后每天早上，我会在 WhatsApp 发链接给你，点一下就能打卡。\n不用下载，点这里就能开始：\n${l}`,
+  skin:l=>`你好！我们一起参加「美肌保养」打卡吧 🌸\n每天吃完营养点一下打卡，再做 3 个小任务：早上护肤防晒、晚上洗脸护肤、喝够水。每星期记录一次皮肤感觉。小花会慢慢开花，达到天数还有礼物送给你。\n以后每天早上，我会在 WhatsApp 发链接给你，点一下就能打卡。\n不用下载，点这里就能开始：\n${l}`};
+
+/* ---------- the morning message: a line that changes every day, plus the partner's link ---------- */
+const DAILY=[
+  '早安 🌸 今天的早安图出来了，吃完营养点这里打卡就能领：',
+  '早安！新的一天，先照顾好自己。吃完营养，来给小花浇水：',
+  '早安 ☀️ 今天的早安图很漂亮，打卡后就能保存，转发给家人：',
+  '早上好！营养吃了吗？吃完点一下，小花又长大一点：',
+  '早安 🌿 你的小花在等你浇水哦：',
+  '早安！今天也给自己一点时间，吃完营养来打个卡：',
+  '早上好 🌸 打卡后可以翻今天的惊喜卡，看看有什么：',
+  '早安！一杯温水，一份营养，好的一天从这里开始：',
+  '早安 ☀️ 今天的早安图准备好了，打卡就能领：',
+  '早上好！坚持一点点，每天都在变好。来打卡吧：',
+  '早安 🌿 吃完营养记得来浇水，看看小花今天有什么变化：',
+  '早安！今天的小任务，也可以顺便打个勾哦：',
+  '早上好 🌸 照顾好自己，才能照顾好家人。来打卡：',
+  '早安！新的早安图出来了，记得转发给家人朋友：',
+  '早安 ☀️ 营养跟着早餐一起吃，最不容易忘记。吃完来打卡：',
+  '早上好！你的小花今天也想见你：',
+  '早安 🌿 每一天的打卡，都是送给自己的礼物：',
+  '早安！吃完营养点一下，三秒钟就好：',
+  '早上好 🌸 今天的早安图配了一句暖心的话，打卡就能看：',
+  '早安！离下一份礼物又近一天了，来打卡吧：',
+  '早安 ☀️ 天气好不好，都要好好吃饭、好好照顾自己：',
+  '早上好！今天也一起加油，吃完营养来打卡：',
+  '早安 🌿 小花需要你浇水，你也要好好照顾自己：',
+  '早安！今天的惊喜卡等你来翻：',
+  '早上好 🌸 好习惯就是每天一点点。来浇水吧：',
+  '早安！吃完营养，顺便记一下这个星期的感觉：',
+  '早安 ☀️ 新的一天，新的早安图：',
+  '早上好！打卡后把早安图发给好朋友，一起开心：',
+  '早安 🌿 今天也给你的小花浇点水吧：',
+  '早安！谢谢你每天照顾自己，来打卡吧：'];
+const dayOfYear=d=>Math.round((new Date(d.getFullYear(),d.getMonth(),d.getDate())-new Date(d.getFullYear(),0,1))/864e5)+1;
+const dailyText=()=>DAILY[dayOfYear(new Date())%DAILY.length]+'\n'+SITE+'?p='+ME.code;
+const sentToday=()=>{try{return localStorage.getItem('habit_team_sent')===today()}catch(e){return false}};
+const markSent=()=>{try{localStorage.setItem('habit_team_sent',today())}catch(e){}};
+function dailyCard(){
+  const t=dailyText(),sent=sentToday();
+  return `<section class="card daily"><div class="top"><h3>今天的早安信息</h3>${sent?'<span class="tag g">今天已经发了</span>':'<span class="tag y">还没发</span>'}</div>
+    <p class="small muted">每天早上发一次给客人，她点链接就能打卡、领早安图。每天的句子都不一样。</p>
+    <div class="msg">${esc(t)}</div>
+    <div class="row" style="margin-top:10px"><a class="btn wa" data-sent="1" href="https://wa.me/?text=${encodeURIComponent(t)}" target="_blank" rel="noopener">用 WhatsApp 发</a><button class="btn" data-act="copy" data-sent="1" data-text="${esc(t)}">复制</button></div>
+    <details class="how"><summary>怎样一次发给全部客人？</summary><p class="small">在 WhatsApp 建一个「广播」名单，把客人都加进去，以后每天发到这个名单就好。客人要先存你的号码，才收得到广播。也可以发到你的客人群。</p></details></section>`;
+}
 
 /* ---------- data ---------- */
 async function loadAll(){
@@ -301,8 +349,8 @@ function giftItem(x,g,who){
 function viewToday(M){
   if(!M.length)return hello(M)+`<div class="card"><h3>开始吧</h3><p>你还没有客人。到「我的链接」复制你的专属链接，或给客人扫二维码，客人一注册就会出现在这里。</p><button class="btn solid" data-tab="link">去我的链接</button></div>`;
   const nd=M.filter(x=>x.needs.length).sort((a,b)=>b.needs.length-a.needs.length),gl=M.flatMap(x=>x.gifts.map(g=>[x,g])),not=M.filter(x=>!x.today&&x.S.onboarded);
-  const remind=x=>`${x.name} 你好！今天的营养吃了吗？吃完记得打开小花打卡哦 🌱`;
-  return hello(M)+
+  const remind=x=>`${x.name} 你好！今天的营养吃了吗？吃完记得打开小花打卡哦 🌱\n${SITE}?p=${ME.code}`;
+  return hello(M)+dailyCard()+
     `<section class="card"><h3>要跟进 <span class="tag">${nd.length}</span></h3>${nd.length?nd.map(needItem).join(''):'<p class="empty">都很好，没有要跟进的 👍</p>'}</section>`+
     `<section class="card"><h3>要送的礼物 <span class="tag g">${gl.length}</span></h3>${gl.length?gl.map(([x,g])=>giftItem(x,g)).join(''):'<p class="empty">暂时没有</p>'}</section>`+
     `<section class="card"><h3>今天还没打卡 <span class="tag y">${not.length}</span></h3>${not.length?not.map(x=>`<div class="item"><div class="top"><div><span class="nm">${esc(x.name)}</span><p class="small muted">最后打卡：${ago(x.last)}</p></div><a class="btn wa sm" href="${wa(x.phone,remind(x))}" target="_blank" rel="noopener">提醒</a></div></div>`).join(''):'<p class="empty">全部都打卡了 🎉</p>'}</section>`}
@@ -423,6 +471,7 @@ document.addEventListener('click',async e=>{
     if(a==='assign'){const sel=document.querySelector(`select[data-assign="${id}"]`);if(!sel||!sel.value)return;b.disabled=true;await SB.rpc('assign_customer',{p_customer:id,p_code:sel.value});await loadAll();render();toast('已分配');return}
   }catch(x){toast(errText(x));b.disabled=false}
 });
+document.addEventListener('click',e=>{if(e.target.closest('[data-sent]')){markSent();setTimeout(()=>{if(TAB==='today'&&$('#modal').hidden)render()},400)}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modal').hidden=true});
 $('#modal').addEventListener('click',e=>{if(e.target.id==='modal')$('#modal').hidden=true});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&ME&&ME.status==='active'&&Date.now()-LOADED>60000&&$('#modal').hidden)loadAll().then(render).catch(()=>{})});

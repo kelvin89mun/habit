@@ -1141,6 +1141,7 @@ const kgFmt=v=>(Math.round(v*10)/10).toFixed(1).replace(/\.0$/,'');
 let justTask='';
 
 /* ---------- the day-card: today's date, greeting and plant, tinted like today's morning card ---------- */
+const IOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const CHEV=`<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>`;
 const dayTheme=()=>THEMES[hash(today())%THEMES.length];
 const heroStyle=()=>{const th=dayTheme();return `--t-bg:${th.bg};--t-deep:${th.deep};--t-ink:${th.ink}`};
@@ -1171,7 +1172,8 @@ function doneCard(makeup){
   const r=fill(REPLIES[hash(today())%REPLIES.length]);
   return `<section class="card donec" id="done"><div class="d-head"><span class="d-check${justChecked?' new':''}">${TICK}</span>
     <div style="min-width:0;flex:1"><h2 class="done-t">今天打卡完成</h2><p class="small muted" style="text-wrap:balance">${S.hidePet?'花浇好了，继续保持':'花浇好了，'+esc(S.petName)+'吃饱了'}</p></div><span class="d-pts">+10<small>积分</small></span></div>
-    <div class="reply"><div class="avatar">${esc(S.partner[0])}</div><p class="small" style="min-width:0"><b>${esc(S.partner)}：</b>${esc(r)}</p></div>${careBlock()}${makeup}</section>`;
+    <div class="reply"><div class="avatar">${esc(S.partner[0])}</div><p class="small" style="min-width:0"><b>${esc(S.partner)}：</b>${esc(r)}</p></div>
+    ${dayNum()<=3?`<p class="small muted">以后每天早上，${esc(S.partner)} 会在 WhatsApp 发链接给你，点开就能打卡。</p>`:''}${careBlock()}${makeup}</section>`;
 }
 function morningCard(done){
   const g=imgWord();
@@ -1216,7 +1218,7 @@ function planPick(cur){return `<div class="plans" role="group" aria-label="选�
 function viewToday(){
   const t=today(),done=!!S.checks[t],y=add(t,-1),canMakeup=y>=S.start&&!S.checks[y],stg=stageOf(count());
   if(moved())return hero()+`<section class="card"><h3 class="ch"><span class="ci">${I.phone}</span>你的小花已经搬家了</h3><p>你的记录已经搬到手机桌面的图标（或新手机）。请从那里打开打卡，${/^[\x20-\x7E]+$/.test(S.partner)?esc(S.partner)+' ':esc(S.partner)}才看得到你的记录。</p></section>`+footer();
-  const rows=(stg===3?newsRow():'')+(stg<3?newsRow():'')+(S.a2hs?'':homeRow());
+  const rows=(stg===3?newsRow():'')+(stg<3?newsRow():'')+(S.a2hs||IOS||STANDALONE?'':homeRow());
   const mk=canMakeup?`<button class="link-btn" data-act="makeup">昨天忘了打卡？点这里补上</button>`:'';
   return hero()+
     (done?doneCard(mk):`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>我今天吃了营养<span class="sub">点一下，给花浇水</span></span></button>`+mk)+
@@ -1241,7 +1243,7 @@ function libraryCard(){const L=newsList();if(!L.length)return '';
     <div class="nlist">${L.map(x=>`<button class="nitem" data-act="news" data-nid="${x.id}"><span class="ntag ${NTAG[x.type]||'b'}">${x.series?'小贴士':esc(x.type)}</span><span class="nt">${esc(x.title)}</span></button>`).join('')}</div></div>`}
 function homeRow(){
   return `<details class="a2hs"><summary class="rowi"><span class="ri">${I.phone}</span><span class="rt">放到手机桌面<small>以后像 App 一样，一点就打开</small></span>${CHEV}</summary>
-    <div class="rowmore small muted"><p>iPhone：点分享键（方框加箭头），选「添加到主屏幕」。加好后从桌面图标打开，你的小花会自动搬过去。</p><p>Android：点右上角三个点，选「添加到主屏幕」或「安装应用」。</p><button class="btn" data-act="a2hs">我放好了</button></div></details>`;
+    <div class="rowmore small muted"><p>点右上角三个点，选「添加到主屏幕」或「安装应用」。</p><button class="btn" data-act="a2hs">我放好了</button></div></details>`;
 }
 
 /* ---------- records ---------- */
