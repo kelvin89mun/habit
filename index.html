@@ -380,6 +380,11 @@ details.rows summary{cursor:pointer;color:var(--accent);font-weight:700;font-siz
 .rtab th,.rtab td{padding:6px 4px;border-top:1px solid var(--line);text-align:center}
 .rtab th{color:var(--muted);font-weight:700;border-top:0}
 .rtab td:first-child,.rtab th:first-child{text-align:left}
+.monthc{border:1.5px solid var(--gold-bright);background:var(--gold-soft)}
+.monthc .btn.solid{align-self:flex-start}
+.mlist{display:flex;flex-direction:column;margin:0 -18px}
+.mlist .rowi{border-top:1px solid var(--line)}
+#overlay .box.month{gap:12px;max-height:calc(100vh - 32px);overflow:auto}
 .rtab .fc{width:1.2rem;height:1.2rem;display:inline-block;vertical-align:-3px;margin-right:2px}
 </style>
 <script>
@@ -455,6 +460,29 @@ const quizList=f=>f&&f.p&&PLAN_TXT[f.p]?PLAN_TXT[f.p].quiz:QUIZ;
 /* the morning picture's line: every other day it comes from her plan */
 function tipToday(){const t=today(),P=PLAN_TXT[planOf(S)];return P&&hash(t+'plan')%2?P.tips[hash(t)%P.tips.length]:TIPS[hash(t)%TIPS.length]}
 const PLANQ=(()=>{try{const v=(new URLSearchParams(location.search).get('plan')||'').toLowerCase();return PLANS[v]?v:''}catch(e){return ''}})();
+/*SHARE-MONTH*/
+/* one journey month (30 days from her start) summed up from her own records; her page and the partner's dashboard both use it */
+const MONTH_LEN=30;
+function monthStats(st,k,t){
+  const ok=s=>/^\d{4}-\d{2}-\d{2}$/.test(s||''),D=s=>{const[a,b,c]=String(s).split('-').map(Number);return new Date(a,b-1,c)},
+    Y=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),A=(s,n)=>{const d=D(s);d.setDate(d.getDate()+n);return Y(d)};
+  if(!st||!ok(st.start)||!(k>=1))return null;
+  const from=A(st.start,MONTH_LEN*(k-1)),to=A(st.start,MONTH_LEN*k-1);
+  if(!(t>to))return null;
+  const ck=st.checks&&typeof st.checks==='object'?Object.keys(st.checks).filter(ok):[];
+  const plan=typeof st.plan==='string'&&Object.prototype.hasOwnProperty.call(PLANS,st.plan)?st.plan:'base',tk=st.tasks&&typeof st.tasks==='object'?st.tasks:{};
+  const tasks=PLANS[plan].tasks.map(([id,l])=>({l,n:Object.keys(tk).filter(d=>ok(d)&&d>=from&&d<=to&&Array.isArray(tk[d])&&tk[d].includes(id)).length}));
+  const F=(Array.isArray(st.feel)?st.feel:[]).filter(f=>f&&typeof f==='object'&&ok(f.d)),inW=F.filter(f=>f.d>=from&&f.d<=to),prev=F.filter(f=>f.d<from);
+  const pair=key=>{const w=inW.filter(f=>typeof f[key]==='number'),p=prev.filter(f=>typeof f[key]==='number'),b=w[w.length-1],a=p.length?p[p.length-1]:w[0];return a&&b&&a!==b?[a[key],b[key]]:null};
+  const feel=[['e','精神'],['s','睡眠'],['g','肠胃'],['sk','皮肤']].map(([key,l])=>{const q=pair(key);return q?{l,a:q[0],b:q[1],d:q[1]-q[0]}:null}).filter(Boolean);
+  const kq=pair('kg'),kg=kq?{a:kq[0],b:kq[1],d:Math.round((kq[1]-kq[0])*10)/10}:null;
+  const gifts=MILES.filter(m=>{const v=st.gifts&&st.gifts[m.id];return typeof v==='string'&&v>=from&&v<=to}).map(m=>m.name);
+  return {k,from,to,days:ck.filter(d=>d>=from&&d<=to).length,len:MONTH_LEN,total:ck.filter(d=>d<=to).length,plan,tasks,feel,kg,gifts};
+}
+/* every finished month so far, oldest first */
+function monthsOf(st,t){const L=[];for(let k=1;k<=24;k++){const m=monthStats(st,k,t);if(!m)break;L.push(m)}return L}
+const monthLine=m=>m.days>=25?'这个月几乎每天都没忘记，太厉害了！':m.days>=18?'大部分日子都记得吃，继续保持！':m.days>=10?'有几天忘了没关系，下个月我们一起把天数拉高。':'这个月比较忙吧？下个月我每天早上提醒你。';
+/*END-MONTH*/
 const COIN=`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" style="fill:var(--gold-bright)"/><circle cx="12" cy="12" r="7" style="fill:none;stroke:var(--gold);stroke-width:1.6"/><path d="M12 8.6v6.8M9.4 12h5.2" style="fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round"/></svg>`;
 const DROP=`<svg viewBox="0 0 24 32" aria-hidden="true"><path d="M12 1S2 13.5 2 20.5a10 10 0 0 0 20 0C22 13.5 12 1 12 1z" style="fill:currentColor"/></svg>`;
 const LOCK=`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10.5" rx="3" style="fill:currentColor"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" style="fill:none;stroke:currentColor;stroke-width:2.4"/></svg>`;
@@ -694,6 +722,69 @@ async function fillMorning(){
     if(i2){i2.src=url;i2.hidden=false;const ld=$('#mload');if(ld)ld.hidden=true}
     if(b2)b2.style.backgroundImage=`url(${url})`;
   }catch(e){}
+}
+/* ---------- 「这个月的你」: after every 30 days, a card she can keep and forward (her own records only, no health claims) ---------- */
+const PLANT_INK={'--leaf-a':'#4C7A5B','--leaf-b':'#8DB596','--stem':'#5B8666','--pk0':'#B9466A','--pk1':'#D9677F','--pk2':'#EE9EAF','--pk3':'#FBE6EA','--cr0':'#C0603F','--cr1':'#DE8762','--cr2':'#F1B394','--cr3':'#FCEADF','--bl1':'#5E8FC4','--bl2':'#9BC0E3','--bl3':'#E2EEF8',
+  '--pot-a':'#D9A387','--pot-b':'#C4876A','--pot-c':'#A86C52','--glz-a':'#D3E2D8','--glz-b':'#A9C6B5','--glz-c':'#83A693','--stamen':'#A47718','--plant-shadow':'rgba(31,43,36,.13)','--hi':'rgba(255,255,255,.16)','--pot-bloom':'rgba(255,255,255,.85)',
+  '--gold-bright':'#C9A659','--accent-soft':'#E4ECE5','--soil':'#6A4B39','--ink':'#1F2B24'};
+/* her plant as a still picture: the page's colours written in, no animation */
+function plantImage(n){
+  const v=k=>PLANT_INK[k]||'#888888';
+  const css=`.p-stemf{fill:${v('--stem')}}.p-petiole{fill:none;stroke:${v('--stem')};stroke-width:1.6;stroke-linecap:round}.p-vein{fill:none;stroke:${v('--leaf-a')};stroke-width:.9;opacity:.5}.p-sepal{fill:${v('--leaf-a')}}.p-stamen{fill:${v('--stamen')}}.p-shadow{fill:${v('--plant-shadow')}}.p-hi{fill:none;stroke:${v('--hi')};stroke-width:3.5;stroke-linecap:round}.p-pblm{fill:${v('--pot-bloom')}}.p-shine{fill:${v('--hi')}}.p-goldline{stroke:${v('--gold-bright')};stroke-width:2}.p-ground{fill:${v('--accent-soft')}}.p-fall{fill:${v('--pk2')}}.p-ctr{fill:${v('--gold-bright')}}.p-soil{fill:${v('--soil')}}.p-band{stroke:#fff;stroke-width:4;opacity:.25;fill:none}.p-seed{fill:${v('--soil')}}.p-body{fill:${v('--ink')}}`;
+  let s=plantSVG(n).replace(/var\((--[\w-]+)\)/g,(_,k)=>v(k)).replace(/<animate(Transform)?\b[^>]*\/>/g,'');
+  const vb=(s.match(/viewBox="([\d.\s-]+)"/)||[])[1],[,,vw,vh]=(vb||'0 0 200 260').split(/\s+/).map(Number);
+  s=s.replace(/^<svg /,`<svg xmlns="http://www.w3.org/2000/svg" width="${vw*4}" height="${vh*4}" `).replace(/(<svg[^>]*>)/,'$1<style>'+css+'</style>');
+  return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(s)});
+}
+/* what the card lists: what went well first, never a decline (that stays on her feelings page) */
+function monthRows(m){
+  const R=[];m.feel.filter(f=>f.d>0).forEach(f=>R.push([f.l,'变好了']));
+  if(m.kg&&m.kg.d<=-.3)R.push(['体重',`轻了 ${kgFmt(-m.kg.d)} 公斤`]);else if(m.kg&&Math.abs(m.kg.d)<.3)R.push(['体重','差不多']);
+  const t=m.tasks.filter(x=>x.n>0).sort((a,b)=>b.n-a.n)[0];if(t)R.push([t.l,`${t.n} 天`]);
+  m.feel.filter(f=>f.d===0).forEach(f=>R.push([f.l,'差不多']));
+  if(!R.length)R.push(['累计打卡',`${m.total} 天`]);
+  return R.slice(0,4);
+}
+const monthAlt=m=>`第 ${m.k} 个月：30 天里打卡 ${m.days} 天。`+monthRows(m).map(r=>r[0]+r[1]).join('，')+'。';
+let MOCACHE={};
+async function monthURL(m){
+  const key=[m.k,m.days,m.total,S.name,S.partner,JSON.stringify(monthRows(m))].join('|');
+  if(MOCACHE[key])return MOCACHE[key];
+  const W=900,H=1125,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  const th=THEMES[(m.k-1)%THEMES.length],f=pd(m.from),t=pd(m.to),range=`${f.getMonth()+1}月${f.getDate()}日 – ${t.getMonth()+1}月${t.getDate()}日`;
+  const rows=monthRows(m),line=`${S.partner}：${monthLine(m)}`,head=`${S.name}的第 ${m.k} 个月`;
+  const words=head+'这 30 天里，记得吃营养的日子'+range+rows.map(r=>r[0]+r[1]).join('')+line+'这里只是你自己的记录，不是医疗诊断';
+  try{await Promise.race([Promise.all([document.fonts.load('240px "DM Serif Display"',String(m.days)),document.fonts.load('600 60px "Noto Serif SC"',words),document.fonts.load('500 36px "Noto Serif SC"',words)]),new Promise(r=>setTimeout(r,3500))])}catch(e){}
+  x.fillStyle=th.bg;x.fillRect(0,0,W,H);
+  x.fillStyle=th.deep;x.beginPath();x.arc(650,300,175,0,Math.PI*2);x.fill();
+  x.strokeStyle=th.deep;x.lineWidth=3;x.beginPath();x.arc(650,300,212,0,Math.PI*2);x.stroke();
+  try{const im=await plantImage(m.total),h=340,w=im.width/im.height*h;x.drawImage(im,650-w/2,452-h,w,h)}catch(e){}
+  const serif=(w,px)=>`${w} ${px}px "Noto Serif SC","Songti SC",serif`;
+  x.textAlign='left';x.textBaseline='alphabetic';x.fillStyle=th.ink;
+  x.font=serif(600,38);x.globalAlpha=.75;wrapLines(x,head,360).slice(0,2).forEach((l,i)=>x.fillText(l,84,120+i*48));x.globalAlpha=1;
+  x.font=serif(700,64);x.fillText('这 30 天',84,250);
+  x.font=serif(500,30);x.globalAlpha=.7;x.fillText(range,84,300);x.globalAlpha=1;
+  x.font='240px "DM Serif Display","Noto Serif SC",serif';x.fillText(String(m.days),74,540);const nw=x.measureText(String(m.days)).width;
+  x.font=serif(600,56);x.fillText('天',74+nw+14,540);
+  x.font=serif(500,34);x.globalAlpha=.75;x.fillText('30 天里，记得吃营养的日子',84,600);x.globalAlpha=1;
+  x.fillStyle=th.acc;x.fillRect(84,652,72,5);
+  let y=735;
+  for(const [l,v] of rows){x.fillStyle=th.ink;x.font=serif(500,38);x.fillText(l,84,y);x.textAlign='right';x.font=serif(700,38);x.fillText(v,W-84,y);x.textAlign='left';
+    x.globalAlpha=.18;x.fillRect(84,y+24,W-168,2);x.globalAlpha=1;y+=66}
+  x.fillStyle=th.ink;x.font=serif(500,34);const L=wrapLines(x,line,W-168).slice(0,2);L.forEach((l,i)=>x.fillText(l,84,H-150+(2-L.length)*48+i*48));
+  x.font=serif(500,24);x.globalAlpha=.6;x.fillText('这里只是你自己的记录，不是医疗诊断',84,H-56);x.globalAlpha=1;
+  const url=c.toDataURL('image/jpeg',.92);MOCACHE[key]=url;return url;
+}
+async function showMonth(k){
+  const m=monthsOf(S,today()).find(x=>x.k===+k);if(!m)return;
+  if(!(S.seenM||[]).includes(m.k)){S.seenM=(S.seenM||[]).concat(m.k);save();if(tab==='today')render()}
+  const o=$('#overlay');
+  o.innerHTML=`<div class="box month" role="dialog" aria-modal="true" aria-label="第 ${m.k} 个月的你"><h2 class="ntitle">第 ${m.k} 个月的你</h2>
+    <div class="frame mframe"><p class="loading" id="moload">正在准备你的小结…</p><img id="moimg" alt="${esc(monthAlt(m))}" hidden></div>
+    <p class="small muted">长按图片，可以保存或转发给家人朋友。</p><button class="checkin" data-act="nclose"><span>好的</span></button></div>`;
+  o.hidden=false;o.querySelector('button').focus();
+  try{const url=await monthURL(m),im=$('#moimg');if(im){im.src=url;im.hidden=false;const l=$('#moload');if(l)l.hidden=true}}
+  catch(e){const l=$('#moload');if(l)l.textContent='小结暂时做不出来，请稍后再打开'}
 }
 
 /* ---------- the pet: four-legged, walks and runs around the hill, grows on gift days, dresses up on festivals ---------- */
@@ -1219,12 +1310,17 @@ function viewToday(){
   const t=today(),done=!!S.checks[t],y=add(t,-1),canMakeup=y>=S.start&&!S.checks[y],stg=stageOf(count());
   if(moved())return hero()+`<section class="card"><h3 class="ch"><span class="ci">${I.phone}</span>你的小花已经搬家了</h3><p>你的记录已经搬到手机桌面的图标（或新手机）。请从那里打开打卡，${/^[\x20-\x7E]+$/.test(S.partner)?esc(S.partner)+' ':esc(S.partner)}才看得到你的记录。</p></section>`+footer();
   const rows=(stg===3?newsRow():'')+(stg<3?newsRow():'')+(S.a2hs||IOS||STANDALONE?'':homeRow());
-  const mk=canMakeup?`<button class="link-btn" data-act="makeup">昨天忘了打卡？点这里补上</button>`:'';
+  const mk=canMakeup?`<button class="link-btn" data-act="makeup">昨天忘了打卡？点这里补上</button>`:'',mn=monthNew();
   return hero()+
-    (done?doneCard(mk):`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>我今天吃了营养<span class="sub">点一下，给花浇水</span></span></button>`+mk)+
+    (done?doneCard(mk):`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>我今天吃了营养<span class="sub">点一下，给花浇水</span></span></button>`+mk)+(mn?monthCard(mn):'')+
     (done?morningCard(true)+flipBlock():'')+tasksCard()+(done?'':morningCard(false))+changeCard()+
     (rows?`<section class="card list">${rows}</section>`:'')+demoTools()+footer();
 }
+/* a finished month she hasn't opened yet (shown for ten days after it ends) */
+function monthNew(){const L=monthsOf(S,today()),m=L[L.length-1];return m&&diff(m.to,today())<=10&&!(S.seenM||[]).includes(m.k)?m:null}
+function monthCard(m){return `<section class="card monthc"><div class="mh"><h3>第 ${m.k} 个月的你</h3><span class="small">打卡 ${m.days} 天</span></div><p class="small">你的这 30 天小结出来了，看看自己的变化，也可以保存起来转发。</p><button class="btn solid" data-act="month" data-k="${m.k}">打开看看</button></section>`}
+function monthListCard(){const L=monthsOf(S,today());
+  return `<div class="card"><h3 class="ch"><span class="ci">${I.cal}</span>每月小结</h3>${L.length?`<div class="mlist">${L.map(m=>`<button class="rowi" data-act="month" data-k="${m.k}"><span class="rt">第 ${m.k} 个月<small>打卡 ${m.days} 天</small></span>${CHEV}</button>`).join('')}</div>`:'<p class="small muted">打卡满 30 天以后，这里会出现你的第一份小结。</p>'}</div>`}
 function newsRow(){const {card}=newsNow();if(!card)return '';
   return `<button class="rowi ncard" data-act="news" data-nid="${card.id}"><span class="ri">${I.mail}</span><span class="rt">本周信息${S.seen.includes(card.id)?'':'<span class="ndot" aria-label="新"></span>'}<small class="ntitle2">${esc(card.title)}</small></span>${CHEV}</button>`}
 /* stage 2+: the customer's own before-and-after, the strongest kind of value */
@@ -1266,6 +1362,7 @@ function viewLog(){
   return phead('我的记录',`累计打卡 ${n} 天，${STAGE_NAME[stageOf(n)]}，积分 ${S.points}`)+
     `<div class="card"><div class="row-b"><h3 class="ch"><span class="ci g">${I.cal}</span>${m+1}月</h3><span class="muted small">这个月打卡 ${mc} 天</span></div><div class="cal">${cells}</div>
       <p class="note">绿色圆圈是已经打卡的日子。漏了一两天没关系，奖励是按累计天数算的。</p></div>
+    ${monthListCard()}
     <div class="card"><h3 class="ch"><span class="ci ${PLAN_CI[pk]}">${PLAN_IC[pk]}</span>我的计划：${PLANS[pk].name}</h3><p class="small muted" style="margin-top:-4px">${PLANS[pk].desc}</p>
       <details class="plchg"><summary class="link-btn" style="padding:0">换一个计划</summary>${planPick(pk)}<p class="small muted" style="margin-top:8px">换计划不会影响打卡天数、积分和礼物。</p></details></div>
     <div class="card"><h3 class="ch"><span class="ci">${I.flower}</span>我的花和奖励</h3><div class="path">${path}</div></div>
@@ -1359,7 +1456,7 @@ function demoTools(){
     <button class="btn" data-act="jump">直接到下一个礼物日</button><button class="btn" data-act="fast">连续打卡 7 天</button>
     <button class="btn" data-act="new">看新客人第一天</button><button class="btn" data-act="sample">恢复示例</button></div>
     ${S.onboarded?`<div class="row" style="padding-bottom:8px">${Object.keys(PLANS).map(k=>`<button class="btn" data-plan="${k}" aria-pressed="${planOf(S)===k}">看${PLANS[k].name}</button>`).join('')}</div>`:''}
-    <div class="row" style="padding-bottom:8px"><button class="btn" data-act="newsdemo">看本周信息弹窗</button><button class="btn" data-act="cos">看节日装扮${demoCos>=0?`（${demoCos+1}/${DEMO_COS.length}）`:''}</button>${demoCos>=0?'<button class="btn" data-act="cosoff">看平常样子</button>':''}</div>
+    <div class="row" style="padding-bottom:8px"><button class="btn" data-act="newsdemo">看本周信息弹窗</button><button class="btn" data-act="month1">看第一个月小结</button><button class="btn" data-act="cos">看节日装扮${demoCos>=0?`（${demoCos+1}/${DEMO_COS.length}）`:''}</button>${demoCos>=0?'<button class="btn" data-act="cosoff">看平常样子</button>':''}</div>
     <div class="row" style="padding-bottom:8px">${[['am','看早上'],['day','看中午'],['dusk','看傍晚'],['night','看晚上'],['','跟随时间']].map(([k,l])=>`<button class="btn" data-period="${k}" aria-pressed="${demoP===k}">${l}</button>`).join('')}</div>
     <p>${S.sample?'现在显示的是示例客人「陈姐」的资料。':''}想看花每天的变化：先点「跳到明天」，再点打卡。试用版的资料只存在这部手机里。</p></details>`;
 }
@@ -1470,6 +1567,11 @@ document.addEventListener('click',e=>{
     case 'close':$('#overlay').hidden=true;toDone();break;
     case 'nclose':$('#overlay').hidden=true;break;
     case 'delme':cloudDelete();break;
+    case 'month':showMonth(b.dataset.k);break;
+    case 'month1':{const st=add(ymd(new Date()),-32);S.offset=0;S.start=st;S.checks={};S.tasks={};S.seenM=[];
+      for(let i=0;i<32;i++){const d=add(st,i);if(i%6!==4)S.checks[d]=1;if(i%3)S.tasks[d]=['water',i%2?'move':'meal']}
+      S.feel=[{d:st,day:1,e:2,s:3,g:3,kg:68.5},{d:add(st,8),day:9,e:3,s:3,g:3},{d:add(st,22),day:23,e:4,s:3,g:4,kg:67.6},{d:add(st,29),day:30,e:4,s:4,g:4,kg:67.2}];
+      S.gifts={m1:st,m7:add(st,7),m21:add(st,20),m30:add(st,28)};save();tab='today';render();scrollTo(0,0);showMonth(1);break}
     case 'news':{const id=b.dataset.nid,x=newsList().find(n=>n.id===id)||[newsNow().card].find(n=>n&&n.id===id);showNews(x);break}
     case 'newsdemo':showNews(newsNow().card||demoNews()[2]);break;
     case 'next':S.offset=(S.offset||0)+1;save();render();scrollTo(0,0);break;
@@ -1495,5 +1597,7 @@ if(PI.phone)S.pphone=PI.phone;
 if(PI.name)S.partner=PI.name;
 save();loadNews();render();fetchNews();cloudInit();
 if(!DEMO&&tab==='today'&&S.onboarded&&S.checks[today()])setTimeout(maybeNews,1500);
+/* the partner's month-summary link opens that summary straight away */
+{const mq=+(new URLSearchParams(location.search).get('m')||0);if(mq&&S.onboarded)setTimeout(()=>showMonth(mq),600)}
 </script>
 </body></html>
