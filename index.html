@@ -12,7 +12,17 @@
 <link rel="icon" href="icon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-title" content="营养好习惯">
-<!--OG-->
+<!-- the WhatsApp link preview: every daily link shows the windowsill instead of a bare address -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="营养好习惯">
+<meta property="og:title" content="营养好习惯">
+<meta property="og:description" content="每天吃完营养，点一下打卡，和伙伴一起养一盆健康花。">
+<meta property="og:image" content="https://kelvin89mun.github.io/habit/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="窗台上一盆开花的植物，旁边坐着一只小猫">
+<meta name="twitter:card" content="summary_large_image">
 <script>window.APP_MODE='prod'</script>
 <style>html,body{margin:0;padding:0}</style>
 </head>
@@ -57,7 +67,9 @@ body{background:var(--paper);color:var(--ink);font-family:var(--f-body);line-hei
 h1,h2,h3,h4,p{margin:0}
 h1,h2,h3,h4{font-family:var(--f-serif);font-weight:600;font-feature-settings:"halt";letter-spacing:.01em;text-wrap:balance}
 p,li{text-wrap:pretty}
-.h-cap,.task .tt,.rowi .rt,.checkin,.btn,.opt,.reply p{text-wrap:balance}
+.h-cap,.task .tt,.rowi .rt,.checkin,.btn,.opt,.reply p,#overlay .box>p:not(.nbody),footer.fine{text-wrap:balance}
+/* short display lines break at punctuation or spaces, never inside a phrase like 七分饱 or 健康花 */
+h1,h2,h3,h4,.h-cap,.p-fact,.reply p,.opt,#overlay .box>p:not(.nbody){word-break:keep-all;overflow-wrap:anywhere}
 .h-cap,.p-fact,.ntitle,#overlay .medal{font-feature-settings:"halt"}
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:3px solid var(--gold-bright);outline-offset:2px}
@@ -87,6 +99,19 @@ button{font:inherit;color:inherit;cursor:pointer}
 .h-foot b{font-family:var(--f-num);font-weight:400;font-size:1.15rem}
 .h-foot .bar{background:var(--bar-bg)}
 .h-foot .bar i{background:currentColor;opacity:.7}
+.hero .checkin{margin:10px -10px 4px;width:calc(100% + 20px);padding-inline:14px;gap:10px}
+.hero .checkin .ic{width:2rem;height:2rem}
+.hero .link-btn{color:inherit;opacity:.8;margin:-6px 0 -4px}
+/* short screens (a small phone, or the browser inside WhatsApp): tighten the day-card so the button stays on the first screen.
+   The caption before the check-in only repeats the button's own line, so it steps aside. */
+@media (max-height:720px){
+  .hero{padding-top:14px;gap:2px}
+  .h-num{font-size:2.7rem}
+  .h-greet{font-size:1.32rem;margin-top:2px}
+  .h-scene{margin-top:0}
+  .h-cap.pre{display:none}
+  .hero .checkin{min-height:3.6rem;margin-top:6px;padding-block:8px}
+}
 /* the scene keeps the room's proportions, so the plant always stands on the sill */
 .h-scene{position:relative;margin:4px -20px 0;aspect-ratio:390/300}
 .h-scene .room{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -199,7 +224,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .stone.got .mini{border-color:var(--accent);background:var(--accent-soft)}
 .stone.next .mini{border-color:var(--gold-bright)}
 .mini.secret{font-family:var(--f-serif);font-size:1.2rem;color:var(--muted);border-style:dashed}
-.stone h4{font-size:1.02rem}
+.stone h4{font-size:1.02rem;text-wrap:wrap}
 .fsopts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .fsopt{min-height:5rem;border-radius:16px;border:1.5px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 4px;font-weight:700}
 .fsopt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
@@ -210,7 +235,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* feelings */
 .metric{display:flex;flex-direction:column;gap:6px}
 .faces{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.face{min-height:3.2rem;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--muted);display:grid;place-items:center;padding:4px}
+.face{min-height:3.2rem;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 0 5px;min-width:0}
+.face .fw{font-size:.68rem;line-height:1.2;white-space:nowrap;font-weight:500}
 .face svg,.fc{width:1.8rem;height:1.8rem;display:block}
 .face[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 textarea,input[type=text]{width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:10px 14px;min-height:3rem}
@@ -344,6 +370,11 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1.5px soli
 .chg-bar.now i{background:var(--accent);opacity:1}
 .chg-t{font-size:.9rem;color:var(--muted)}
 .chg-t.up{color:var(--accent)}
+/* weight: the numbers and the verdict share one line when they fit, otherwise the verdict drops below on the right */
+.chg.kg{grid-template-columns:3.2em 1fr}
+.kgv{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:10px;min-width:0}
+.kgv>*{white-space:nowrap}
+.kgv b{margin-left:auto}
 #toast{position:fixed;left:50%;top:14px;width:max-content;transform:translate(-50%,-140%);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:99px;font-weight:500;z-index:20;transition:transform .3s;max-width:calc(100% - 32px);text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.18)}
 #toast.show{transform:translate(-50%,0)}
 .ov-pics{display:flex;justify-content:center;align-items:flex-end;gap:6px}
@@ -404,10 +435,11 @@ const KEY='yyhabit_v2'+(DEMO&&window.APP_MODE!=='demo'?'_demo':'');
 const MILES=[
   {id:'m1',n:1,name:'启程',stage:'发芽',gift:'电子贺卡 + 伙伴语音祝福'},
   {id:'m7',n:7,name:'第一周',stage:'长高一大截',gift:'好习惯勋章 + 团队群表扬'},
-  {id:'m21',n:18,name:'21 天',stage:'长出新枝',gift:'分格营养盒'},
+  /* names say the period, not a day count: the gift comes after N check-ins, so a missed day or two never makes the name wrong */
+  {id:'m21',n:18,name:'三个星期',stage:'长出新枝',gift:'分格营养盒'},
   {id:'m30',n:25,name:'第一个月',stage:'结出花苞',gift:'精美保温杯'},
-  {id:'m66',n:55,name:'66 天 习惯养成',stage:'开花',gift:'营养品大礼'},
-  {id:'m90',n:75,name:'90 天 毕业',stage:'开满枝头',gift:'毕业证书 + 营养品'}
+  {id:'m66',n:55,name:'习惯养成',stage:'开花',gift:'营养品大礼'},
+  {id:'m90',n:75,name:'毕业',stage:'开满枝头',gift:'毕业证书 + 营养品'}
 ];
 const STAGES=[[0,'一颗种子'],[1,'发芽了'],[7,'小苗长高了'],[18,'长出新枝'],[25,'结出花苞'],[55,'开花了'],[75,'花开满枝']];
 const TIPS=['每天喝够水，小口慢慢喝，身体更舒服。','饭后散步十五分钟，消化好，心情也好。','早一点睡，睡前少看手机。','每一餐有一半是蔬菜，颜色越多越好。','早上晒晒太阳，十多分钟就够了。','打个电话给老朋友，聊聊天，笑一笑。','营养跟着三餐一起吃，比较不容易忘记。','口渴就喝白开水，少喝甜饮料。','坐久了站起来，伸伸腰，动一动。','慢慢吸气，慢慢吐气，做三次深呼吸。','吃饭细嚼慢咽，七分饱刚刚好。','今天给自己一点时间，做喜欢的事。','照顾好自己，才能照顾好家人。','坚持一点点，每天都在变好。'];
@@ -1297,17 +1329,17 @@ function roomSVG(p,c){
 const cupSVG=(p,c)=>{const china=c.dim?'#C8CBD7':'#FCFAF6';return `<svg class="cup" viewBox="0 0 44 46" aria-hidden="true" style="color:${c.ink}">${p==='am'||p==='day'?'<path class="steam" d="M17 13c-3-3 3-5 0-9"/><path class="steam b" d="M24 13c-3-3 3-5 0-9"/>':''}<ellipse cx="21" cy="43" rx="17" ry="2.6" fill="${c.dim?'#3A3F55':'#E3D9CA'}"/><path d="M7 17h28v10a11 11 0 0 1-11 11h-6A11 11 0 0 1 7 27z" fill="${china}"/><path d="M35 20h3a4.5 4.5 0 0 1 0 9h-3" fill="none" stroke="${china}" stroke-width="2.6"/><rect x="7" y="21" width="28" height="2.4" fill="${c.acc}" opacity=".55"/></svg>`};
 function dateBlock(){const d=pd(today());return `<div class="h-date"><span class="h-num">${d.getDate()}</span><span class="h-md">${MONTHS[d.getMonth()]}<br>星期${'日一二三四五六'[d.getDay()]}</span></div>`}
 function phead(title,sub){return `<header class="phead"><h1>${title}</h1>${sub?`<p>${sub}</p>`:''}</header>`}
-function hero(){
+function hero(act){
   const n=count(),m=nextMile(),prev=[...MILES].reverse().find(x=>n>=x.n),base=prev?prev.n:0;
   const pct=m?Math.round((n-base)/(m.n-base)*100):100,doneT=!!S.checks[today()]&&n>0,pc=costume();
-  const cap=doneT?`<p class="h-cap${justChecked?' new':''}">${grow(n).label}</p>`:`<p class="h-cap mute">${n?'今天浇水后，花会有新的变化':'浇第一次水，种子就会发芽'}</p>`;
+  const cap=doneT?`<p class="h-cap${justChecked?' new':''}">${grow(n).label}</p>`:`<p class="h-cap mute${act?' pre':''}">${n?'今天浇水后，花会有新的变化':'浇第一次水，种子就会发芽'}</p>`;
   const drop=justChecked&&!calm()?`<svg class="drop" viewBox="0 0 24 32" aria-hidden="true"><path d="M12 1S2 13.5 2 20.5a10 10 0 0 0 20 0C22 13.5 12 1 12 1z"/></svg>`:'';
   const p=period(),c=scenePal(p),deco=itemDeco(pc);
   return `<section class="hero" style="${heroStyle(p)}">
     <div class="h-top">${dateBlock()}<div class="h-pts" id="pts" aria-label="积分 ${S.points}">积分<b>${S.points}</b></div></div>
     <h1 class="h-greet">${esc(S.name)}，${greetWord()}</h1>${pc.label?`<p class="h-fest">${esc(pc.label)}</p>`:''}
     <div class="h-scene">${roomSVG(p,c)}<div class="plant" id="plant" style="height:${f1((260-vbY0(grow(n)))/260*76)}%">${plantSVG(n,{cls:justChecked?'grow':'',hl:doneT})}${drop}${deco}${S.hidePet?'':petMarkup(n,pc,doneT)}</div>${deco?'':cupSVG(p,c)}</div>
-    ${cap}
+    ${cap}${act||''}
     <div class="h-foot">${m?`<div class="row-b"><span>累计 <b>${n}</b> 天</span><span>再 <b>${m.n-n}</b> 天${m.stage}</span></div>
       <div class="bar" role="progressbar" aria-label="离下一份礼物" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${Math.max(pct,3)}%"></i></div>
       <span>下一份礼物：${m.gift}</span>`:`<div class="row-b"><span>累计 <b>${n}</b> 天</span><span>90 天毕业了，好习惯已经养成</span></div>`}</div>
@@ -1378,8 +1410,10 @@ function viewToday(){
   const rows=(done?'':mornLocked())+(stg===3?newsRow():'')+(stg<3?newsRow():'')+(S.a2hs||IOS||STANDALONE?'':homeRow());
   const gifts=done?`<section class="card list">${mornRow()}${S.flips[t]?'':flipRow()}</section>`+flipBlock():'';
   const mk=canMakeup?`<button class="link-btn" data-act="makeup">昨天忘了打卡？点这里补上</button>`:'',mn=monthNew();
-  return hero()+
-    (done?doneCard(mk):`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>我今天吃了营养<span class="sub">点一下，给花浇水</span></span></button>`+mk)+(mn?monthCard(mn):'')+
+  /* the one action sits right under the plant, so it is on the first screen even on a small phone with big text */
+  const btn=`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>我今天吃了营养<span class="sub">点一下，给花浇水</span></span></button>`;
+  return hero(done?'':btn+mk)+
+    (done?doneCard(mk):'')+(mn?monthCard(mn):'')+
     gifts+tasksCard()+changeCard()+
     (rows?`<section class="card list">${rows}</section>`:'')+demoTools()+footer();
 }
@@ -1398,9 +1432,9 @@ function changeCard(){if(stageOf(count())<2)return '';const F=S.feel,t=today(),p
   const M=[['e','精神'],['s','睡眠'],['g','肠胃'],['sk','皮肤']].filter(([k])=>avg(first,k)&&avg(recent,k));
   const K=F.filter(x=>typeof x.kg==='number'),kd=K.length>1?K[K.length-1].kg-K[0].kg:0;
   if(!M.length&&K.length<2)return `<section class="card">${head}<p class="small muted">每个星期在「感觉」页记录精神、睡眠和肠胃${pk==='skin'?'，还有皮肤':pk==='weight'?'，还有体重':''}。第一个月和最近一个月都有记录后，这里就会出现比较。</p><button class="btn" data-tab="feel">去记录感觉</button></section>`;
-  return `<section class="card">${head}${M.length?'<p class="small muted">浅色是第一个月，深色是最近一个月</p>':''}${M.map(([k,l])=>{const a=avg(first,k),b=avg(recent,k),d=b-a;
+  return `<section class="card">${head}${M.length?'<p class="small muted" style="word-break:keep-all">浅色是第一个月，深色是最近一个月</p>':''}${M.map(([k,l])=>{const a=avg(first,k),b=avg(recent,k),d=b-a;
     return `<div class="chg"><span class="chg-l">${l}</span><span class="chg-bars"><span class="chg-bar"><i style="width:${Math.round(a*20)}%"></i></span><span class="chg-bar now"><i style="width:${Math.round(b*20)}%"></i></span></span><b class="chg-t${d>.2?' up':''}">${d>.2?'变好了':d<-.2?'问问伙伴':'差不多'}</b></div>`}).join('')}
-    ${K.length>1?`<div class="chg"><span class="chg-l">体重</span><span class="small">${kgFmt(K[0].kg)} → ${kgFmt(K[K.length-1].kg)} 公斤</span><b class="chg-t${kd<=-.3?' up':''}">${kd<=-.3?'轻了 '+kgFmt(-kd)+' 公斤':kd>=.3?'问问伙伴':'差不多'}</b></div>`:''}</section>`}
+    ${K.length>1?`<div class="chg kg"><span class="chg-l">体重</span><span class="kgv"><span class="small">${kgFmt(K[0].kg)} → ${kgFmt(K[K.length-1].kg)} 公斤</span><b class="chg-t${kd<=-.3?' up':''}">${kd<=-.3?'轻了 '+kgFmt(-kd)+' 公斤':kd>=.3?'问问伙伴':'差不多'}</b></span></div>`:''}</section>`}
 function libraryCard(){const L=newsList();if(!L.length)return '';
   return `<div class="card"><h3 class="ch"><span class="ci y">${I.mail}</span>知识库</h3><p class="small muted">之前的信息都在这里，随时可以重看</p>
     <div class="nlist">${L.map(x=>`<button class="nitem" data-act="news" data-nid="${x.id}"><span class="ntag ${NTAG[x.type]||'b'}">${x.series?'小贴士':esc(x.type)}</span><span class="nt">${esc(x.title)}</span></button>`).join('')}</div></div>`}
@@ -1430,7 +1464,7 @@ function viewLog(){
     `<div class="card"><div class="row-b"><h3 class="ch"><span class="ci g">${I.cal}</span>${m+1}月</h3><span class="muted small">这个月打卡 ${mc} 天</span></div><div class="cal">${cells}</div>
       <p class="note">绿色圆圈是已经打卡的日子。漏了一两天没关系，奖励是按累计天数算的。</p></div>
     ${monthListCard()}
-    <div class="card"><h3 class="ch"><span class="ci ${PLAN_CI[pk]}">${PLAN_IC[pk]}</span>我的计划：${PLANS[pk].name}</h3><p class="small muted" style="margin-top:-4px">${PLANS[pk].desc}</p>
+    <div class="card"><div class="row-b"><h3 class="ch"><span class="ci ${PLAN_CI[pk]}">${PLAN_IC[pk]}</span>我的计划</h3><span class="tag">${PLANS[pk].name}</span></div><p class="small muted" style="margin-top:-4px;word-break:keep-all;text-wrap:balance">${PLANS[pk].desc}</p>
       <details class="plchg"><summary class="link-btn" style="padding:0">换一个计划</summary>${planPick(pk)}<p class="small muted" style="margin-top:8px">换计划不会影响打卡天数、积分和礼物。</p></details></div>
     <div class="card"><h3 class="ch"><span class="ci">${I.flower}</span>我的花和奖励</h3><div class="path">${path}</div></div>
     <div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>我的宠物</h3><div class="petrow"><div class="petbox">${petSVG(S.pet,petStage(n),costume().cos,'sit',S.fur)}</div><div style="min-width:0"><p><b>${esc(S.petName)}</b>（${S.pet==='dog'?'小狗':'小猫'}）</p><p class="small muted">${PET_TXT[petStage(n)]}</p></div></div>
@@ -1448,6 +1482,8 @@ const FSER=[['e','精神','var(--c1)'],['s','睡眠','var(--c2)'],['g','肠胃',
 const FACE_D=['M8.2 16.7c1.1-1.5 2.4-2.2 3.8-2.2s2.7.7 3.8 2.2','M8.7 16.1c.9-.9 2-1.3 3.3-1.3s2.4.4 3.3 1.3','M8.9 15.4h6.2','M8.7 14.3c.9 1 2 1.5 3.3 1.5s2.4-.5 3.3-1.5','M8.1 13.7c1.1 1.9 2.4 2.8 3.9 2.8s2.8-.9 3.9-2.8'];
 const faceIn=v=>`<circle cx="12" cy="12" r="9.2"/><circle cx="9" cy="10" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="10" r="1" fill="currentColor" stroke="none"/><path d="${FACE_D[v-1]}"/>`;
 const faceSVG=v=>`<svg class="fc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">${faceIn(v)}</svg>`;
+/* the five faces look alike at a glance, so each one carries a word */
+const FACE_W=['很差','不太好','一般','不错','很好'];
 function chart(){
   const F=S.feel;if(!F.length)return '<p class="note">记录第一次以后，这里会画出你的变化。</p>';
   const W=320,H=170,L=30,R=14,T=12,B=30,xs=i=>F.length===1?(L+W-R)/2:L+i*(W-L-R)/(F.length-1),ys=v=>T+(5-v)*(H-T-B)/4;
@@ -1485,7 +1521,7 @@ const feelReady=()=>feelMetrics().every(([k])=>draft[k]);
 function viewFeel(){
   const last=S.feel[S.feel.length-1],can=!last||diff(last.d,today())>=7,M=feelMetrics();
   const kgField=planOf(S)==='weight'?`<div class="metric"><label for="kg">体重（可以不填，伙伴看得到）</label><div class="kgrow"><input type="text" id="kg" inputmode="decimal" maxlength="5" autocomplete="off" placeholder="例如 62.5" value="${esc(draft.kg)}"><span>公斤</span></div><p class="kgerr" id="kgerr" hidden>请填 25 到 250 之间的数字，例如 62.5</p></div>`:'';
-  const form=can?`<div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>这个星期感觉怎样？</h3>${M.map(([k,l])=>`<div class="metric"><span>${l}</span><div class="faces">${[1,2,3,4,5].map(v=>`<button class="face" data-m="${k}" data-v="${v}" aria-pressed="${draft[k]===v}" aria-label="${l} ${v}分">${faceSVG(v)}</button>`).join('')}</div></div>`).join('')}${kgField}
+  const form=can?`<div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>这个星期感觉怎样？</h3>${M.map(([k,l])=>`<div class="metric"><span>${l}</span><div class="faces">${[1,2,3,4,5].map(v=>`<button class="face" data-m="${k}" data-v="${v}" aria-pressed="${draft[k]===v}" aria-label="${l}：${FACE_W[v-1]}">${faceSVG(v)}<span class="fw" aria-hidden="true">${FACE_W[v-1]}</span></button>`).join('')}</div></div>`).join('')}${kgField}
       <button class="btn solid" data-act="feel" ${feelReady()?'':'disabled'}>保存（+10 积分）</button></div>`
     :`<div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>这星期已经记录了</h3><p class="muted">${7-diff(last.d,today())} 天后再来记录一次。</p></div>`;
   const qs=S.questions.map(q=>`<div><p class="small muted">第 ${q.day} 天</p><p>${esc(q.text)}</p><p class="small" style="color:var(--accent)">已打开 WhatsApp 发给 ${esc(S.partner)}</p></div>`).join('');
@@ -1498,7 +1534,7 @@ function viewFeel(){
 
 /* ---------- first visit ---------- */
 function viewOnboard(){
-  const ok=draftName.trim()&&draftAnchor&&draftOk;
+  const ok=draftName.trim()&&draftOk;
   const p=period(),c=scenePal(p);
   return `<section class="hero" style="${heroStyle(p)}"><div class="h-top">${dateBlock()}</div><h1 class="h-greet">欢迎你，一起养一盆健康花</h1>
       <div class="h-scene">${roomSVG(p,c)}<div class="plant" style="height:${f1((260-vbY0(grow(0)))/260*76)}%">${plantSVG(0)}</div>${cupSVG(p,c)}</div>
@@ -1506,11 +1542,10 @@ function viewOnboard(){
     (CLOUD&&!S.pcode&&!PCODE&&!PI.phone?`<div class="card" style="background:var(--gold-soft);border:0"><h3>还不知道你的伙伴是谁</h3><p>请用伙伴发给你的链接打开，或请伙伴给你扫二维码。这样你的奖励和问题才会送到伙伴那里。</p></div>`:'')+`<div class="card"><h3>1. 哪一种字看得最清楚？</h3>${fontPick()}</div>
     <div class="card"><label for="nm"><h3>2. 我们怎么称呼你？</h3></label><input type="text" id="nm" placeholder="例如：陈姐" value="${esc(draftName)}"></div>
     <div class="card"><h3>3. 你想先照顾哪一方面？</h3><p class="small muted" style="margin-top:-6px">每天会有 3 个小任务。以后可以在「记录」页换。</p>${planPick(draftPlan)}</div>
-    <div class="card"><h3>4. 你打算什么时候吃营养？</h3><div class="opts">${['早餐后','午餐后','晚餐后'].map(a=>`<button class="opt${draftAnchor===a?' sel':''}" data-anchor="${a}">${a}</button>`).join('')}</div></div>
-    <div class="card"><h3>5. 你想养小猫还是小狗？</h3><div class="petpick">${['cat','dog'].map(k=>`<button class="pp" data-pet="${k}" aria-pressed="${draftPet===k}">${petSVG(k,1,'','sit',k===draftPet?draftFur:'')}<span>${k==='cat'?'小猫':'小狗'}</span></button>`).join('')}</div>
+    <div class="card"><h3>4. 你想养小猫还是小狗？</h3><div class="petpick">${['cat','dog'].map(k=>`<button class="pp" data-pet="${k}" aria-pressed="${draftPet===k}">${petSVG(k,1,'','sit',k===draftPet?draftFur:'')}<span>${k==='cat'?'小猫':'小狗'}</span></button>`).join('')}</div>
       <p class="small muted" style="margin-top:12px">选一个毛色</p>${furPick(draftPet,furOf(draftPet,draftFur).k)}
       <label for="pn" class="small muted">它的名字（可以改）</label><input type="text" id="pn" maxlength="8" value="${esc(draftPetName)}"></div>
-    <div class="card"><h3>6. 你的生日（可以不填）</h3><p class="small muted">生日那天，宠物会戴上生日帽陪你庆祝。</p>
+    <div class="card"><h3>5. 你的生日（可以不填）</h3><p class="small muted">生日那天，宠物会戴上生日帽陪你庆祝。</p>
       <div class="row"><select id="bm" aria-label="生日月份"><option value="">月</option>${Array.from({length:12},(_,i)=>`<option value="${i+1}"${+draftBM===i+1?' selected':''}>${i+1} 月</option>`).join('')}</select>
       <select id="bd" aria-label="生日日期"><option value="">日</option>${Array.from({length:31},(_,i)=>`<option value="${i+1}"${+draftBD===i+1?' selected':''}>${i+1} 日</option>`).join('')}</select></div></div>
     <div class="card"><label style="display:flex;gap:12px;align-items:flex-start"><input type="checkbox" id="ok" ${draftOk?'checked':''} style="width:1.6rem;height:1.6rem;flex:none;margin-top:4px">
@@ -1561,7 +1596,7 @@ function celebrate(m){
   const o=$('#overlay'),line=m.stage==='开花'?'你的花开了！':`你的花${m.stage}了！`;
   o.innerHTML=`<div class="box" role="dialog" aria-modal="true" aria-label="${m.name}"><div class="ov-pics">${plantSVG(m.n,{hl:true})}${S.hidePet?'':petSVG(S.pet,petStage(m.n),'','sit',S.fur)}</div>
     <div class="medal">${m.name}</div><p style="font-family:var(--f-serif);font-size:1.1rem;font-weight:600">${line}累计打卡 ${m.n} 天</p>${S.hidePet?'':`<p>${esc(S.petName)}${PET_MS[m.id]||''}</p>`}
-    <p>你的奖励：<b>${m.gift}</b></p><a class="btn solid" style="align-self:stretch" href="${waLink(`${S.partner} 你好，我是${S.name}，我完成了「${m.name}」，累计打卡 ${m.n} 天！奖励是：${m.gift}`)}" target="_blank" rel="noopener">告诉 ${esc(S.partner)} 领取奖励</a>
+    <p>你的奖励：<b>${m.gift.replace(/ \+ /g,' + ')}</b></p><a class="btn solid" style="align-self:stretch" href="${waLink(`${S.partner} 你好，我是${S.name}，我完成了「${m.name}」，累计打卡 ${m.n} 天！奖励是：${m.gift}`)}" target="_blank" rel="noopener">告诉 ${esc(S.partner)} 领取奖励</a>
     <button class="checkin" data-act="close"><span>好的</span></button></div>`;
   o.hidden=false;o.querySelector('button').focus();confetti();
 }
@@ -1647,7 +1682,7 @@ document.addEventListener('click',e=>{
     case 'prev':if(diff(S.start,add(t,-1))>=0){S.offset=(S.offset||0)-1;save();render()}break;
     case 'new':{const fs=S.fs;S=fresh();S.fs=fs;draftName='';draftAnchor='';draftOk=false;draftPet='cat';draftFur='';draftPetName='招财';draftBM='';draftBD='';draftPlan=PLANQ||'base';tab='today';save();render();scrollTo(0,0);break}
     case 'sample':S=seed();tab='today';save();render();scrollTo(0,0);break;
-    case 'start':keepName();if(!(draftName.trim()&&draftAnchor&&draftOk))return;
+    case 'start':keepName();if(!(draftName.trim()&&draftOk))return;
       S.name=draftName.trim();S.anchor=draftAnchor;S.plan=PLANS[draftPlan]?draftPlan:'base';S.planD=t;S.pet=draftPet;S.fur=furOf(draftPet,draftFur).k;S.petName=(draftPetName.trim()||PETN[draftPet]).slice(0,8);
       S.bday=draftBM&&draftBD?String(draftBM).padStart(2,'0')+'-'+String(draftBD).padStart(2,'0'):'';S.onboarded=true;S.consent=t;S.start=t;tab='today';save();render();scrollTo(0,0);if(CLOUD)cloudSave(true);break;
   }

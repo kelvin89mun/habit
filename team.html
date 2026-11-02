@@ -5,17 +5,28 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>团队后台 · 营养好习惯</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#FFE3D3">
+<meta property="og:title" content="团队后台 · 营养好习惯">
+<meta property="og:description" content="看客人打卡、发每天的早安信息、补货和每月小结。">
+<meta property="og:image" content="https://kelvin89mun.github.io/habit/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="theme-color" content="#F2F4EF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121714" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="icon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="icon-180.png">
 <script src="qrcode.js"></script>
 <style>
-:root{--bg:#FFF4EC;--surface:#FFFFFF;--ink:#3A2F2A;--muted:#7A6A62;--line:#F0DDD3;--coral:#E8684A;--coral-soft:#FFE5DC;--coral-text:#B8462A;
-  --leaf:#2E9A5A;--leaf-soft:#DFF3E6;--leaf-dark:#1F7A45;--gold:#9A6512;--gold-soft:#FFF1D6;--blue:#2F6FA3;--blue-soft:#E3F0FB;--shadow:0 4px 18px rgba(120,70,40,.08)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1D1714;--surface:#2A221E;--ink:#F5EAE3;--muted:#BFAEA4;--line:#43362F;--coral:#F0805F;--coral-soft:#4A2C22;--coral-text:#FFB49C;
-  --leaf:#4CC27C;--leaf-soft:#1F3A2A;--leaf-dark:#8FE0B0;--gold:#F2C46B;--gold-soft:#3E3219;--blue:#8CC3F0;--blue-soft:#1E3142;--shadow:none}}
-:root[data-theme="dark"]{--bg:#1D1714;--surface:#2A221E;--ink:#F5EAE3;--muted:#BFAEA4;--line:#43362F;--coral:#F0805F;--coral-soft:#4A2C22;--coral-text:#FFB49C;
-  --leaf:#4CC27C;--leaf-soft:#1F3A2A;--leaf-dark:#8FE0B0;--gold:#F2C46B;--gold-soft:#3E3219;--blue:#8CC3F0;--blue-soft:#1E3142;--shadow:none}
+/* same 「日签」 palette as the customer page: sage paper, one deep-green accent; terracotta only for things that need attention.
+   (the old token names stay so the rules below keep working: coral = the accent now) */
+:root{--bg:#F2F4EF;--surface:#FFFFFF;--ink:#1F2B24;--muted:#5F6B63;--line:#DDE3DA;--coral:#2F5D46;--coral-soft:#E4ECE5;--coral-text:#2F5D46;--on-accent:#FFFFFF;
+  --leaf:#2F5D46;--leaf-soft:#E4ECE5;--leaf-dark:#2F5D46;--gold:#86682A;--gold-soft:#F4EEDD;--blue:#2F6FA3;--blue-soft:#E3EEF7;
+  --alert:#B5523A;--alert-soft:#F6E5DE;--alert-text:#9A3F2A;--on-alert:#FFFFFF;--wa:#1E8449;--hello:linear-gradient(135deg,#E4EADF,#F2F4EF);--shadow:0 4px 18px rgba(31,43,36,.06)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121714;--surface:#1A211D;--ink:#E9EFEA;--muted:#A3AFA7;--line:#2C3630;--coral:#8CC2A3;--coral-soft:#213129;--coral-text:#8CC2A3;--on-accent:#0E1A13;
+  --leaf:#8CC2A3;--leaf-soft:#213129;--leaf-dark:#8CC2A3;--gold:#D9B76E;--gold-soft:#2E2918;--blue:#8CC3F0;--blue-soft:#1E3142;
+  --alert:#E8907A;--alert-soft:#3A221B;--alert-text:#F2A48F;--on-alert:#2A0F08;--hello:linear-gradient(135deg,#213129,#1A211D);--shadow:none;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121714;--surface:#1A211D;--ink:#E9EFEA;--muted:#A3AFA7;--line:#2C3630;--coral:#8CC2A3;--coral-soft:#213129;--coral-text:#8CC2A3;--on-accent:#0E1A13;
+  --leaf:#8CC2A3;--leaf-soft:#213129;--leaf-dark:#8CC2A3;--gold:#D9B76E;--gold-soft:#2E2918;--blue:#8CC3F0;--blue-soft:#1E3142;
+  --alert:#E8907A;--alert-soft:#3A221B;--alert-text:#F2A48F;--on-alert:#2A0F08;--hello:linear-gradient(135deg,#213129,#1A211D);--shadow:none;color-scheme:dark}
 *{box-sizing:border-box}
 html{font-size:17px;-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC",system-ui,sans-serif;line-height:1.6}
@@ -37,9 +48,9 @@ input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--
 input:focus,textarea:focus,select:focus{outline:none;border-color:var(--coral)}
 textarea{min-height:5rem;resize:vertical}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-weight:700;border-radius:14px;padding:9px 14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none;min-height:2.8rem}
-.btn.solid{background:var(--coral);border-color:var(--coral);color:#fff}
-.btn.green{background:var(--leaf);border-color:var(--leaf);color:#fff}
-.btn.wa{background:#25A35A;border-color:#25A35A;color:#fff}
+.btn.solid{background:var(--coral);border-color:var(--coral);color:var(--on-accent)}
+.btn.green{background:var(--leaf);border-color:var(--leaf);color:var(--on-accent)}
+.btn.wa{background:var(--wa);border-color:var(--wa);color:#fff}
 .btn.sm{padding:5px 10px;min-height:2.3rem;font-size:.9rem;border-radius:12px}
 .btn.block{width:100%}
 .btn:disabled{opacity:.5}
@@ -50,24 +61,24 @@ textarea{min-height:5rem;resize:vertical}
 .item{border-top:1px solid var(--line);padding:12px 0}
 .item:first-of-type{border-top:0}
 .item .nm{font-weight:700;font-size:1.05rem}
-.tag{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 9px;border-radius:99px;background:var(--coral-soft);color:var(--coral-text);margin:2px 4px 2px 0}
+.tag{display:inline-block;font-size:.8rem;font-weight:700;padding:1px 9px;border-radius:99px;background:var(--alert-soft);color:var(--alert-text);margin:2px 4px 2px 0}
 .tag.g{background:var(--leaf-soft);color:var(--leaf-dark)}.tag.y{background:var(--gold-soft);color:var(--gold)}.tag.b{background:var(--blue-soft);color:var(--blue)}
 .cus{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;font:inherit;color:var(--ink);background:none;border:0;border-top:1px solid var(--line);padding:12px 2px;cursor:pointer}
 .cus:first-of-type{border-top:0}
 .cus .r{text-align:right;flex:none}
 .empty{text-align:center;color:var(--muted);padding:14px 4px}
-.err{color:var(--coral-text);font-weight:700;margin-top:8px}
+.err{color:var(--alert-text);font-weight:700;margin-top:8px}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:5}
 nav.tabs .in{display:flex;gap:4px;max-width:640px;width:100%}
 nav.tabs button{flex:1;font:inherit;font-weight:700;font-size:.92rem;padding:8px 2px;border-radius:12px;border:0;background:none;color:var(--muted)}
 nav.tabs button[aria-current="page"]{background:var(--coral-soft);color:var(--coral-text)}
-nav.tabs .badge{display:inline-block;min-width:1.2rem;padding:0 5px;border-radius:99px;background:var(--coral);color:#fff;font-size:.72rem;margin-left:3px;line-height:1.3rem}
-#modal{position:fixed;inset:0;background:rgba(20,10,6,.55);z-index:10;display:flex;align-items:flex-end;justify-content:center}
+nav.tabs .badge{display:inline-block;min-width:1.2rem;padding:0 5px;border-radius:99px;background:var(--alert);color:var(--on-alert);font-size:.72rem;margin-left:3px;line-height:1.3rem}
+#modal{position:fixed;inset:0;background:rgba(14,22,17,.55);z-index:10;display:flex;align-items:flex-end;justify-content:center}
 #modal .sheet{background:var(--bg);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:16px 16px 28px}
 .grid28{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin:6px 0}
 .grid28 span{aspect-ratio:1;border-radius:7px;background:var(--line);font-size:.68rem;display:grid;place-items:center;color:var(--muted)}
-.grid28 span.on{background:var(--leaf);color:#fff}
-.grid28 span.today{outline:2px solid var(--coral)}
+.grid28 span.on{background:var(--leaf);color:var(--on-accent)}
+.grid28 span.today{outline:2px solid var(--gold)}
 table{width:100%;border-collapse:collapse;font-size:.92rem}
 th,td{text-align:left;padding:8px 6px;border-top:1px solid var(--line);vertical-align:top}
 th{color:var(--muted);font-weight:700;border-top:0}
@@ -75,10 +86,9 @@ td.n,th.n{text-align:right}
 .qr{display:flex;justify-content:center;margin:10px 0}
 .qr img{width:min(240px,70vw);height:auto;border-radius:14px;background:#fff;padding:10px}
 .link{word-break:break-all;background:var(--bg);border:1px dashed var(--line);border-radius:12px;padding:8px 10px;font-weight:700}
-#toast{position:fixed;left:50%;top:14px;transform:translate(-50%,-160%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:700;z-index:20;transition:transform .3s;max-width:calc(100% - 32px);text-align:center}
+#toast{position:fixed;left:50%;top:14px;width:max-content;transform:translate(-50%,-160%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:700;z-index:20;transition:transform .3s;max-width:calc(100% - 32px);text-align:center}
 #toast.show{transform:translate(-50%,0)}
-.hello{background:linear-gradient(135deg,#FFE3D3,#FFF4EC);border:0}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hello{background:linear-gradient(135deg,#4A2C22,#2A221E)}}
+.hello{background:var(--hello);border:0}
 .feel td{white-space:nowrap}
 .faces{letter-spacing:2px}
 .tag.pl{background:var(--bg);color:var(--ink);border:1px solid var(--line);font-weight:700}
@@ -87,13 +97,14 @@ td.n,th.n{text-align:right}
 .chips.pf button.chip[aria-pressed="true"]{background:var(--coral-soft);border-color:var(--coral);color:var(--coral-text)}
 .tkrow{display:grid;grid-template-columns:1fr auto 2.8em;gap:10px;align-items:center;padding:7px 0;border-top:1px solid var(--line)}
 .tkrow:first-of-type{border-top:0}
+.tkrow>span:first-child{word-break:keep-all;overflow-wrap:anywhere;text-wrap:balance}
 .tkrow b{text-align:right;font-variant-numeric:tabular-nums}
 .dots{display:flex;gap:3px}
 .dots i{width:13px;height:13px;border-radius:4px;background:var(--line)}
 .dots i.on{background:var(--leaf)}
 .daily{border:2px solid var(--leaf-soft)}
 .msg{white-space:pre-line;word-break:break-all;background:var(--bg);border:1px dashed var(--line);border-radius:12px;padding:10px 12px;font-size:.95rem}
-details.how summary{cursor:pointer;color:var(--blue);font-weight:700;font-size:.9rem;margin-top:8px;min-height:2.2rem;display:flex;align-items:center}
+details.how summary{cursor:pointer;color:var(--coral-text);font-weight:700;font-size:.9rem;margin-top:8px;min-height:2.2rem;display:flex;align-items:center}
 </style>
 </head>
 <body>
@@ -105,10 +116,11 @@ details.how summary{cursor:pointer;color:var(--blue);font-weight:700;font-size:.
 const MILES=[
   {id:'m1',n:1,name:'启程',stage:'发芽',gift:'电子贺卡 + 伙伴语音祝福'},
   {id:'m7',n:7,name:'第一周',stage:'长高一大截',gift:'好习惯勋章 + 团队群表扬'},
-  {id:'m21',n:18,name:'21 天',stage:'长出新枝',gift:'分格营养盒'},
+  /* names say the period, not a day count: the gift comes after N check-ins, so a missed day or two never makes the name wrong */
+  {id:'m21',n:18,name:'三个星期',stage:'长出新枝',gift:'分格营养盒'},
   {id:'m30',n:25,name:'第一个月',stage:'结出花苞',gift:'精美保温杯'},
-  {id:'m66',n:55,name:'66 天 习惯养成',stage:'开花',gift:'营养品大礼'},
-  {id:'m90',n:75,name:'90 天 毕业',stage:'开满枝头',gift:'毕业证书 + 营养品'}
+  {id:'m66',n:55,name:'习惯养成',stage:'开花',gift:'营养品大礼'},
+  {id:'m90',n:75,name:'毕业',stage:'开满枝头',gift:'毕业证书 + 营养品'}
 ];
 const CARE={
   1:{t:'第 1 天 · 伙伴关心',q:'营养开始吃了吗？你打算每天什么时候吃？',o:['早餐后吃','午餐后吃','晚餐后吃','还没开始吃'],
@@ -466,7 +478,7 @@ function openCus(id){
   $('#modal').innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(x.name)}">
     <div class="top"><div><h2>${esc(x.name)}</h2><p class="muted small">${ME.is_leader&&c.partner_code!==ME.code?esc(pname(c.partner_code))+' 的客人 · ':''}${PLANS[x.plan].emoji} ${esc(PLANS[x.plan].name)} · 第 ${x.dn} 天 · 累计 ${x.n} 天 · ${STAGE[x.stage]} · 积分 ${esc(S.points||0)}</p></div><button class="btn sm" data-act="close">关闭</button></div>
     ${x.needs.length?`<div class="card">${x.needs.map(n=>`<span class="tag${n.kind==='miss'?'':n.kind==='ask'?' b':' y'}">${esc(n.text)}</span>`).join('')}${x.needs.some(n=>n.key)?`<div style="margin-top:8px"><button class="btn sm" data-act="handled" data-id="${c.id}">已跟进</button></div>`:''}</div>`:''}
-    <div class="card"><h3>最近 4 个星期</h3><div class="grid28">${grid}</div><p class="small muted">最后打卡：${ago(x.last)} · 宠物：${esc(S.petName||'')}（${S.pet==='dog'?'小狗':'小猫'}）</p></div>
+    <div class="card"><h3>最近 4 个星期</h3><div class="grid28">${grid}</div><p class="small muted">最后打卡：${ago(x.last)} · 宠物：${S.petName?esc(S.petName)+'（'+(S.pet==='dog'?'小狗':'小猫')+'）':(S.pet==='dog'?'小狗':'小猫')}</p></div>
     <div class="card"><h3>小任务（最近 7 天）</h3>${x.tk7.map(r=>`<div class="tkrow"><span>${esc(r.l)}</span><span class="dots" aria-hidden="true">${r.days.map(on=>`<i class="${on?'on':''}"></i>`).join('')}</span><b>${r.days.filter(Boolean).length}/7</b></div>`).join('')}<p class="small muted">每一格是一天，最右边是今天</p></div>
     ${K.length?`<div class="card"><h3>体重记录</h3>${K.length>1?`<p>第一次 <b>${kgFmt(K[0].kg)}</b> 公斤 → 最近 <b>${kgFmt(K[K.length-1].kg)}</b> 公斤 <span class="tag${kd<=-.05?' g':kd>=.05?' y':''}">${Math.abs(kd)<.05?'没有变化':(kd<0?'−':'+')+kgFmt(Math.abs(kd))+' 公斤'}</span></p>`:''}<table><tr><th>日期</th><th class="n">公斤</th></tr>${K.slice(-8).reverse().map(f=>`<tr><td>${esc(f.d||'')}</td><td class="n">${kgFmt(f.kg)}</td></tr>`).join('')}</table></div>`:''}
     <div class="card"><h3>感觉记录</h3>${feel.length?`<table class="feel"><tr><th>日期</th><th>精神</th><th>睡眠</th><th>肠胃</th>${hasSk?'<th>皮肤</th>':''}</tr>${feel.map(f=>`<tr><td>${esc(f.d||'')}</td><td class="faces">${FACE[f.e]||''} ${esc(f.e)}</td><td class="faces">${FACE[f.s]||''} ${esc(f.s)}</td><td class="faces">${FACE[f.g]||''} ${esc(f.g)}</td>${hasSk?`<td class="faces">${f.sk?FACE[f.sk]+' '+esc(f.sk):'–'}</td>`:''}</tr>`).join('')}</table>`:'<p class="empty">还没有记录</p>'}</div>
