@@ -392,7 +392,9 @@ details.rows summary{cursor:pointer;color:var(--accent);font-weight:700;font-siz
 .monthc .btn.solid{align-self:flex-start}
 .mlist{display:flex;flex-direction:column;margin:0 -18px}
 .mlist .rowi{border-top:1px solid var(--line)}
-#overlay .box.month{gap:12px;max-height:calc(100vh - 32px);overflow:auto}
+#overlay .box.month,#overlay .box.pic{gap:12px;max-height:calc(100vh - 32px);overflow:auto}
+.rowi.locked{color:var(--muted);cursor:default}
+.rowi.locked .ri{color:var(--muted)}
 .rtab .fc{width:1.2rem;height:1.2rem;display:inline-block;vertical-align:-3px;margin-right:2px}
 </style>
 <script>
@@ -722,14 +724,6 @@ function morningURL(){
     const url=c.toDataURL('image/jpeg',.9);MCACHE={key,url};return url;
   })();
   mBusy={key,p};return p;
-}
-async function fillMorning(){
-  if(!$('#mimg')&&!$('#mblur'))return;
-  try{const url=await morningURL();
-    const i2=$('#mimg'),b2=$('#mblur');
-    if(i2){i2.src=url;i2.hidden=false;const ld=$('#mload');if(ld)ld.hidden=true}
-    if(b2)b2.style.backgroundImage=`url(${url})`;
-  }catch(e){}
 }
 /* ---------- 「这个月的你」: after every 30 days, a card she can keep and forward (her own records only, no health claims) ---------- */
 const PLANT_INK={'--leaf-a':'#4C7A5B','--leaf-b':'#8DB596','--stem':'#5B8666','--pk0':'#B9466A','--pk1':'#D9677F','--pk2':'#EE9EAF','--pk3':'#FBE6EA','--cr0':'#C0603F','--cr1':'#DE8762','--cr2':'#F1B394','--cr3':'#FCEADF','--bl1':'#5E8FC4','--bl2':'#9BC0E3','--bl3':'#E2EEF8',
@@ -1332,18 +1326,24 @@ function doneCard(makeup){
     <div class="reply"><div class="avatar">${esc(S.partner[0])}</div><p class="small" style="min-width:0"><b>${esc(S.partner)}：</b>${esc(r)}</p></div>
     ${dayNum()<=3?`<p class="small muted">以后每天早上，${esc(S.partner)} 会在 WhatsApp 发链接给你，点开就能打卡。</p>`:''}${careBlock()}${makeup}</section>`;
 }
-function morningCard(done){
-  const g=imgWord();
-  if(!done)return `<section class="card"><div class="mh"><h3>今天的${g}图</h3><span class="small muted">打卡后就能领取</span></div><div class="frame teaser"><div class="blurimg" id="mblur"></div><div class="lock"><div class="ring">${LOCK}</div></div></div></section>`;
-  const tip=tipToday();
-  return `<section class="card" id="mcard"><div class="mh"><h3>今天的${g}图</h3><span class="small muted">长按可以保存、转发</span></div>
-    <div class="frame"><p class="loading" id="mload">正在准备${g}图…</p><img id="mimg" alt="今天的${g}图：${esc(tip)}" hidden${justChecked?' class="reveal"':''}></div></section>`;
-}
 /* the surprise card: a quiet row until she opens it */
 const flipRow=()=>`<button class="rowi flip" data-act="flip"><span class="ri">${GIFT}</span><span class="rt">翻开今天的惊喜卡</span>${CHEV}</button>`;
+/* today's picture is a small row; it opens on request (many customers forward it to their family groups) */
+const mornIcon=()=>period()==='night'?TICON.pm:I.sun;
+const mornRow=()=>`<button class="rowi morn" data-act="mimg"><span class="ri">${mornIcon()}</span><span class="rt">今天的${imgWord()}图<small>保存下来，转发给家人朋友</small></span>${CHEV}</button>`;
+const mornLocked=()=>`<div class="rowi morn locked"><span class="ri">${LOCK}</span><span class="rt">今天的${imgWord()}图<small>打卡后就能领取</small></span></div>`;
+async function showMorning(){
+  const g=imgWord(),o=$('#overlay');
+  o.innerHTML=`<div class="box pic" role="dialog" aria-modal="true" aria-label="今天的${g}图"><h2 class="ntitle">今天的${g}图</h2>
+    <div class="frame"><p class="loading" id="mload">正在准备${g}图…</p><img id="mimg" alt="今天的${g}图：${esc(tipToday())}" hidden></div>
+    <p class="small muted">长按图片，可以保存或转发给家人朋友。</p><button class="checkin" data-act="nclose"><span>好的</span></button></div>`;
+  o.hidden=false;o.querySelector('button').focus();
+  try{const url=await morningURL(),im=$('#mimg');if(im){im.src=url;im.hidden=false;const l=$('#mload');if(l)l.hidden=true}}
+  catch(e){const l=$('#mload');if(l)l.textContent='图片暂时做不出来，请稍后再打开'}
+}
 function flipBlock(){
   const f=S.flips[today()];
-  if(!f)return `<section class="card list">${flipRow()}</section>`;
+  if(!f)return '';
   if(f.type==='gift')return `<div class="prize"><div class="p-big">中奖了！小礼物一份</div><p>告诉 ${esc(S.partner)}，下次见面领取。</p><a class="btn solid" style="margin-top:8px" href="${waLink(`${S.partner} 你好，我是${S.name}，今天翻惊喜卡中了一份小礼物！`)}" target="_blank" rel="noopener">用 WhatsApp 告诉 ${esc(S.partner)}</a></div>`;
   if(f.type==='pts')return `<div class="prize"><div class="p-big">积分 +5</div><p class="small muted">明天再来翻一张</p></div>`;
   if(f.type==='fact'){const L=factList(f);return `<div class="prize fact"><span class="ntag g">${f.p&&PLANS[f.p]?PLANS[f.p].name:'营养'}小知识</span><p class="p-fact">${esc(L[f.i%L.length])}</p><p class="small muted">明天再来翻一张</p></div>`}
@@ -1375,11 +1375,12 @@ function planPick(cur){return `<div class="plans" role="group" aria-label="选�
 function viewToday(){
   const t=today(),done=!!S.checks[t],y=add(t,-1),canMakeup=y>=S.start&&!S.checks[y],stg=stageOf(count());
   if(moved())return hero()+`<section class="card"><h3 class="ch"><span class="ci">${I.phone}</span>你的小花已经搬家了</h3><p>你的记录已经搬到手机桌面的图标（或新手机）。请从那里打开打卡，${/^[\x20-\x7E]+$/.test(S.partner)?esc(S.partner)+' ':esc(S.partner)}才看得到你的记录。</p></section>`+footer();
-  const rows=(stg===3?newsRow():'')+(stg<3?newsRow():'')+(S.a2hs||IOS||STANDALONE?'':homeRow());
+  const rows=(done?'':mornLocked())+(stg===3?newsRow():'')+(stg<3?newsRow():'')+(S.a2hs||IOS||STANDALONE?'':homeRow());
+  const gifts=done?`<section class="card list">${mornRow()}${S.flips[t]?'':flipRow()}</section>`+flipBlock():'';
   const mk=canMakeup?`<button class="link-btn" data-act="makeup">昨天忘了打卡？点这里补上</button>`:'',mn=monthNew();
   return hero()+
     (done?doneCard(mk):`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>我今天吃了营养<span class="sub">点一下，给花浇水</span></span></button>`+mk)+(mn?monthCard(mn):'')+
-    (done?morningCard(true)+flipBlock():'')+tasksCard()+(done?'':morningCard(false))+changeCard()+
+    gifts+tasksCard()+changeCard()+
     (rows?`<section class="card list">${rows}</section>`:'')+demoTools()+footer();
 }
 /* a finished month she hasn't opened yet (shown for ten days after it ends) */
@@ -1539,7 +1540,7 @@ function render(){
   $('#nav').hidden=false;
   app.innerHTML=tab==='today'?viewToday():tab==='log'?viewLog():viewFeel();
   document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===tab?'page':'false'));
-  if(tab==='today'){fillMorning();setTimeout(petStart,0)}
+  if(tab==='today'){setTimeout(petStart,0);if(S.checks[today()])morningURL().catch(()=>{})}
 }
 let lastW=innerWidth;addEventListener('resize',()=>{if(innerWidth===lastW)return;lastW=innerWidth;if(tab==='today')petStart()});
 function bumpPts(){const p=$('#pts');if(p){p.classList.remove('bump');void p.offsetWidth;p.classList.add('bump')}}
@@ -1635,6 +1636,7 @@ document.addEventListener('click',e=>{
     case 'nclose':$('#overlay').hidden=true;break;
     case 'delme':cloudDelete();break;
     case 'month':showMonth(b.dataset.k);break;
+    case 'mimg':showMorning();break;
     case 'month1':{const st=add(ymd(new Date()),-32);S.offset=0;S.start=st;S.checks={};S.tasks={};S.seenM=[];
       for(let i=0;i<32;i++){const d=add(st,i);if(i%6!==4)S.checks[d]=1;if(i%3)S.tasks[d]=['water',i%2?'move':'meal']}
       S.feel=[{d:st,day:1,e:2,s:3,g:3,kg:68.5},{d:add(st,8),day:9,e:3,s:3,g:3},{d:add(st,22),day:23,e:4,s:3,g:4,kg:67.6},{d:add(st,29),day:30,e:4,s:4,g:4,kg:67.2}];
