@@ -66,8 +66,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .tag.ok{background:var(--accent);color:var(--on-accent)}
 .gold{color:var(--gold);font-weight:700}
 
-/* the day-card: today's date, greeting and the plant, tinted like today's morning card */
-.hero{--t-bg:#E4EADF;--t-deep:#CEDBC6;--t-ink:#2E4233;position:relative;border-radius:30px;padding:20px 20px 18px;background:var(--t-bg);color:var(--t-ink);display:flex;flex-direction:column;gap:6px;overflow:hidden}
+/* the day-card: her windowsill. The view outside follows the time of day; the wall takes today's morning-card colour */
+.hero{--wall:#E4EADF;--t-ink:#2E4233;--bar-bg:rgba(255,255,255,.6);position:relative;border-radius:30px;padding:20px 20px 16px;background:var(--wall);color:var(--t-ink);display:flex;flex-direction:column;gap:4px;overflow:hidden}
 .h-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .h-date{display:flex;align-items:center;gap:10px}
 .h-num{font-family:var(--f-num);font-size:3.4rem;line-height:.9;font-variant-numeric:lining-nums}
@@ -77,29 +77,31 @@ button{font:inherit;color:inherit;cursor:pointer}
 .h-pts.bump b{display:inline-block;animation:bump .6s}
 .h-greet{position:relative;z-index:1;font-size:1.5rem;line-height:1.35;margin-top:8px;text-wrap:balance}
 .h-fest{font-size:.85rem;opacity:.8}
-.h-cap{align-self:center;text-align:center;font-family:var(--f-serif);font-weight:600;font-size:.95rem;line-height:1.5;text-wrap:balance}
+.h-cap{align-self:center;text-align:center;font-family:var(--f-serif);font-weight:600;font-size:.95rem;line-height:1.5;text-wrap:balance;margin-top:2px}
 .h-cap.mute{font-family:var(--f-body);font-weight:400;opacity:.75}
 .h-cap.new{animation:pop .6s ease-out 1.1s both}
-.h-foot{display:flex;flex-direction:column;gap:6px;font-size:.85rem;margin-top:4px}
+.h-foot{display:flex;flex-direction:column;gap:6px;font-size:.85rem;margin-top:6px}
 .h-foot b{font-family:var(--f-num);font-weight:400;font-size:1.15rem}
-.h-foot .bar{background:rgba(255,255,255,.6)}
+.h-foot .bar{background:var(--bar-bg)}
 .h-foot .bar i{background:currentColor;opacity:.7}
+/* the scene keeps the room's proportions, so the plant always stands on the sill */
+.h-scene{position:relative;margin:4px -20px 0;aspect-ratio:390/300}
+.h-scene .room{position:absolute;inset:0;width:100%;height:100%;display:block}
+.h-scene .plant{position:absolute;left:0;right:0;bottom:12.3%;margin:0}
+.h-scene .plant::after{display:none}
+.h-scene .cup{position:absolute;right:8%;bottom:11.4%;width:10.5%;height:auto;display:block}
+.steam{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;opacity:0;animation:steam 4s ease-in-out infinite}
+.steam.b{animation-delay:2s}
+@keyframes steam{0%{opacity:0;transform:translateY(5px)}35%{opacity:.5}100%{opacity:0;transform:translateY(-7px)}}
 .plant{position:relative;height:12.5rem;display:flex;justify-content:center;align-items:flex-end;margin-top:4px}
 .plant::after{content:"";position:absolute;left:4%;right:4%;bottom:0;height:1px;background:currentColor;opacity:.16}
 .plant svg{position:relative;height:100%;width:auto;max-width:100%;overflow:visible}
-.plant .disc{position:absolute;left:50%;bottom:13%;height:70%;max-height:10rem;aspect-ratio:1;border-radius:50%;transform:translateX(-50%);background:var(--t-deep);box-shadow:0 0 0 12px var(--t-bg),0 0 0 13px var(--t-deep)}
 .plant svg.grow{transform-origin:50% 100%;animation:grow 1s cubic-bezier(.3,1.7,.5,1) .55s both}
 .plant .drop{position:absolute;left:50%;top:0;width:26px;margin-left:-13px;animation:drop .75s ease-in forwards;z-index:3}
 .plant .drop path{fill:var(--water)}
 .sway{animation:sway 6s ease-in-out infinite}
 .bar{height:6px;border-radius:999px;background:var(--line);overflow:hidden}
 .bar i{display:block;height:100%;border-radius:999px;background:var(--accent);transition:width .8s}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .hero{background:var(--surface);background:color-mix(in oklab,var(--t-bg) 13%,var(--surface));color:var(--ink)}
-  :root:not([data-theme="light"]) .plant .disc{background:color-mix(in oklab,var(--t-deep) 22%,var(--surface));box-shadow:0 0 0 12px color-mix(in oklab,var(--t-bg) 13%,var(--surface)),0 0 0 13px color-mix(in oklab,var(--t-deep) 26%,var(--surface))}
-  :root:not([data-theme="light"]) .h-foot .bar{background:rgba(255,255,255,.12)}}
-:root[data-theme="dark"] .hero{background:var(--surface);background:color-mix(in oklab,var(--t-bg) 13%,var(--surface));color:var(--ink)}
-:root[data-theme="dark"] .plant .disc{background:color-mix(in oklab,var(--t-deep) 22%,var(--surface));box-shadow:0 0 0 12px color-mix(in oklab,var(--t-bg) 13%,var(--surface)),0 0 0 13px color-mix(in oklab,var(--t-deep) 26%,var(--surface))}
-:root[data-theme="dark"] .h-foot .bar{background:rgba(255,255,255,.12)}
 
 /* plant parts */
 .p-pot{fill:var(--pot)} .p-rim{fill:var(--pot);filter:brightness(1.08)} .p-soil{fill:var(--soil)} .p-band{stroke:var(--surface);stroke-width:4;opacity:.25;fill:none}
@@ -361,6 +363,9 @@ select{font:inherit;color:var(--ink);background:var(--surface);border:1.5px soli
 .task{display:flex;align-items:center;gap:14px;width:100%;min-height:3.6rem;padding:8px 18px;border:0;border-top:1px solid var(--line);background:none;text-align:left;font-weight:500;color:var(--ink)}
 .task .tk{flex:none;width:1.75rem;height:1.75rem;border-radius:50%;border:1.5px solid var(--muted);display:grid;place-items:center;color:transparent;transition:background .2s,border-color .2s}
 .task .tk svg{width:1rem;height:1rem;display:block}
+.task .ti{flex:none;width:1.45rem;height:1.45rem;color:var(--muted);margin-left:-4px}
+.task .ti svg{width:100%;height:100%;display:block}
+.task[aria-pressed="true"] .ti{color:var(--accent)}
 .task .tt{flex:1;min-width:0;line-height:1.45}
 .task .tp{flex:none;font-size:.8rem;font-weight:700;color:var(--gold)}
 .task[aria-pressed="true"] .tk{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
@@ -1227,6 +1232,13 @@ const PLAN_IC={
   skin:ic('<path d="M11 3.5l1.8 4.9 4.9 1.8-4.9 1.8L11 16.9l-1.8-4.9-4.9-1.8 4.9-1.8z"/><path d="M18 14.6l.8 2.1 2.1.8-2.1.8-.8 2.1-.8-2.1-2.1-.8 2.1-.8z"/>')
 };
 const PLAN_CI={base:'g',weight:'',skin:'y'};
+const TICON={
+  water:ic('<path d="M7 4h10l-1.3 15.3a2 2 0 0 1-2 1.7h-3.4a2 2 0 0 1-2-1.7z"/><path d="M7.7 10.5h8.6"/>'),
+  veg:ic('<path d="M3.5 12.5h17a8.5 8.5 0 0 1-17 0z"/><path d="M12 12.5c.3-4 2.3-6.6 6-7.6-.4 3.6-2.4 6.2-6 7.6z"/><path d="M11.5 12.5C10.4 9.4 8.4 7.8 5.6 7.4c.4 2.7 2.4 4.5 5.9 5.1"/>'),
+  move:ic('<path d="M8.4 3.5c1.5 0 2.3 1.5 2.1 3.4-.2 1.7-1 3.1-1.1 4.8H6.6c-.4-1.8-1.1-3.1-1.1-4.9 0-2 1.1-3.3 2.9-3.3z"/><path d="M6.8 14h2.7l-.2 1.7a1.2 1.2 0 0 1-2.4 0z"/><path d="M15.9 8.5c1.7 0 2.8 1.4 2.8 3.4 0 1.8-.7 3.1-1.1 4.9h-2.9c-.1-1.7-.9-3.1-1.1-4.8-.2-1.9.6-3.5 2.3-3.5z"/><path d="M14.6 19h2.7l-.2 1.7a1.2 1.2 0 0 1-2.4 0z"/>'),
+  meal:ic('<path d="M3.5 12.5h17a8.5 8.5 0 0 1-17 0z"/><path d="M13.5 3l-2.4 7.2M18.2 3.8L14.4 10"/>'),
+  am:ic('<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/>'),
+  pm:ic('<path d="M19.5 14.6A7.6 7.6 0 1 1 9.4 4.5a6.1 6.1 0 0 0 10.1 10.1z"/>')};
 const TICK=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
 const kgFmt=v=>(Math.round(v*10)/10).toFixed(1).replace(/\.0$/,'');
 let justTask='';
@@ -1235,7 +1247,57 @@ let justTask='';
 const IOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const CHEV=`<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>`;
 const dayTheme=()=>THEMES[hash(today())%THEMES.length];
-const heroStyle=()=>{const th=dayTheme();return `--t-bg:${th.bg};--t-deep:${th.deep};--t-ink:${th.ink}`};
+/* ---------- her windowsill: the view outside follows the time of day, the wall takes today's colour ---------- */
+const hx=h=>{h=h.replace('#','');if(h.length===3)h=h.replace(/./g,c=>c+c);return [0,2,4].map(i=>parseInt(h.substr(i,2),16))};
+const mixHex=(a,b,t)=>{const A=hx(a),B=hx(b);return '#'+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,'0')).join('')};
+const isDark=()=>{const d=document.documentElement.dataset.theme;return d==='dark'||(d!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches)};
+function scenePal(p){
+  const th=dayTheme(),dim=p==='night'||isDark(),base=p==='dusk'?mixHex(th.bg,'#F2CBB0',.32):th.bg;
+  const wall=dim?mixHex(base,'#1B2134',p==='night'?.8:.74):base;
+  return {wall,reveal:mixHex(wall,dim?'#0B0F1C':'#9C9183',dim?.28:.13),ink:dim?'#EEF0F5':th.ink,frame:dim?'#9DA3B8':'#FCFAF6',
+    sillT:dim?'#5B617A':'#F2EBE0',sillF:dim?'#464B62':'#DDD1BF',curtain:dim?mixHex(th.deep,'#1B2134',.55):th.deep,acc:th.acc,dim};
+}
+const heroStyle=p=>{const c=scenePal(p);return `--wall:${c.wall};--t-ink:${c.ink};--bar-bg:${c.dim?'rgba(255,255,255,.16)':'rgba(255,255,255,.62)'}`};
+const SKY={am:['#F4CDB8','#FAE2CD','#FDF1E2'],day:['#9FCCEB','#C9E4F4','#E8F4F7'],dusk:['#DE9185','#EDB79A','#F6DCBE'],night:['#151E3B','#232E57','#38436F']};
+const HILL={am:['#D5DFCB','#B7CCB1','#9EBB9A'],day:['#C2DBBB','#A1C79E','#84B384'],dusk:['#C9B0AA','#AF9898','#93818A'],night:['#313E5D','#293551','#212B44']};
+const BEAM={am:'#FFF1D2',day:'#FFFFFF',dusk:'#FFD3AE'};
+function roomSVG(p,c){
+  const sky=SKY[p],hill=HILL[p],u='rm'+(++UID)+'_',open='M100 262V118A95 95 0 0 1 290 118V262Z',rev='M88 262V118A107 107 0 0 1 302 118V262Z';
+  const fold=mixHex(c.curtain,'#FFFFFF',.08),lite=mixHex(c.curtain,'#FFFFFF',.5),rod=mixHex(c.frame,'#7C7062',.45);
+  let view=`<rect x="80" y="0" width="230" height="270" fill="url(#${u}sky)"/>`;
+  if(p==='night'){
+    view+=[[128,62],[160,40],[222,50],[272,132],[116,112],[206,96],[150,152],[256,170],[184,68],[134,186]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="${i%3?.9:1.4}" fill="#FFF7DC" opacity="${i%2?.55:.9}"/>`).join('');
+    view+=`<circle cx="248" cy="84" r="34" fill="#F4ECCB" opacity=".1"/><circle cx="248" cy="84" r="15" fill="#F4ECCB"/><circle cx="254" cy="79" r="13" fill="${sky[0]}"/>`;
+  }else{
+    const sun={am:[248,132,19,'#FFE1A8'],day:[262,72,14,'#FFF7DA'],dusk:[236,178,23,'#FFC48B']}[p],cc=p==='dusk'?'#FBE4DB':'#FFFFFF';
+    view+=`<circle cx="${sun[0]}" cy="${sun[1]}" r="${sun[2]*2.9}" fill="${sun[3]}" opacity=".3"/><circle cx="${sun[0]}" cy="${sun[1]}" r="${sun[2]}" fill="${sun[3]}"/>`+
+      `<g fill="${cc}" opacity="${p==='day'?.92:.72}"><ellipse cx="140" cy="90" rx="26" ry="7.5"/><ellipse cx="156" cy="84" rx="15" ry="7.5"/><ellipse cx="214" cy="152" rx="21" ry="5.5"/><ellipse cx="226" cy="148" rx="11" ry="5.5"/></g>`;
+    if(p!=='dusk')view+=`<path d="M126 128q4-4 8 0q4-4 8 0M150 116q3-3 6 0q3-3 6 0" fill="none" stroke="${c.ink}" stroke-width="1.1" opacity=".3" stroke-linecap="round"/>`;
+  }
+  view+=`<path d="M80 214C120 196 160 200 196 208C236 216 268 204 310 196V270H80Z" fill="${hill[0]}"/><path d="M80 232C116 222 150 226 188 233C230 241 270 230 310 224V270H80Z" fill="${hill[1]}"/>`+
+    `<g fill="${hill[2]}"><circle cx="124" cy="237" r="9"/><circle cx="135" cy="232" r="11.5"/><circle cx="263" cy="229" r="10.5"/><circle cx="275" cy="234" r="8"/></g><path d="M80 250C130 244 180 248 220 252C256 255 284 250 310 246V270H80Z" fill="${hill[2]}"/>`;
+  if(c.dim&&p!=='night')view+=`<rect x="80" y="0" width="230" height="270" fill="#0B0F1C" opacity=".38"/>`;
+  const glass=`<path d="M108 74L146 36L266 262H226Z" fill="#FFFFFF" opacity="${p==='night'?.05:.12}"/><path d="M160 30L172 26L290 250V262Z" fill="#FFFFFF" opacity="${p==='night'?.03:.07}"/>`;
+  const beams=p==='night'?'':`<g opacity="${c.dim?.35:p==='day'?.55:.9}"><path d="M196 122L288 122L184 300L68 300Z" fill="url(#${u}beam)"/><path d="M108 152L190 152L106 300L20 300Z" fill="url(#${u}beam)"/></g>`;
+  return `<svg class="room" viewBox="0 0 390 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs>
+    <linearGradient id="${u}sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset=".55" stop-color="${sky[1]}"/><stop offset="1" stop-color="${sky[2]}"/></linearGradient>
+    <radialGradient id="${u}glow" cx=".5" cy=".42" r=".55"><stop offset="0" stop-color="${p==='night'?'#AFC0FF':p==='dusk'?'#FFD9B8':'#FFFFFF'}" stop-opacity="${p==='night'?.1:c.dim?.08:.38}"/><stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/></radialGradient>
+    ${p==='night'?'':`<linearGradient id="${u}beam" x1=".7" y1="0" x2=".3" y2="1"><stop offset="0" stop-color="${BEAM[p]}" stop-opacity=".5"/><stop offset="1" stop-color="${BEAM[p]}" stop-opacity="0"/></linearGradient>`}
+    <linearGradient id="${u}cur" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${lite}"/><stop offset=".22" stop-color="${fold}"/><stop offset=".45" stop-color="${lite}"/><stop offset=".7" stop-color="${fold}"/><stop offset="1" stop-color="${lite}"/></linearGradient>
+    <linearGradient id="${u}sh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="${c.dim?.3:.12}"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+    <clipPath id="${u}win"><path d="${open}"/></clipPath></defs>
+    <ellipse cx="195" cy="150" rx="210" ry="175" fill="url(#${u}glow)"/>
+    <path d="${rev}" fill="${c.reveal}"/>
+    <g clip-path="url(#${u}win)">${view}${glass}</g>
+    <path d="${open}" fill="none" stroke="#000" stroke-opacity="${c.dim?.18:.05}" stroke-width="13"/>
+    <path d="${open}" fill="none" stroke="${c.frame}" stroke-width="7"/><path d="M195 24V262M100 150H290" stroke="${c.frame}" stroke-width="4.5"/>
+    <path d="M58 8H334" stroke="${rod}" stroke-width="2.4" stroke-linecap="round"/><circle cx="56" cy="8" r="3.4" fill="${rod}"/><circle cx="336" cy="8" r="3.4" fill="${rod}"/>
+    <path d="M60 9H130C126 64 138 118 130 170C124 208 134 240 126 260C112 263 96 257 82 261C72 263 64 259 58 260C62 236 54 206 60 170C64 118 56 64 60 9Z" fill="url(#${u}cur)" opacity="${c.dim?.7:.8}"/><path d="M78 12C80 80 74 150 80 258M104 12C100 90 110 170 104 258" fill="none" stroke="${fold}" stroke-width="2" opacity=".5"/>
+    <rect x="0" y="260" width="390" height="8" fill="${c.sillT}"/><rect x="0" y="268" width="390" height="13" fill="${c.sillF}"/><rect x="0" y="281" width="390" height="16" fill="url(#${u}sh)"/>
+    ${beams}</svg>`;
+}
+/* a cup of tea beside the pot; it steams in the morning and at midday */
+const cupSVG=(p,c)=>{const china=c.dim?'#C8CBD7':'#FCFAF6';return `<svg class="cup" viewBox="0 0 44 46" aria-hidden="true" style="color:${c.ink}">${p==='am'||p==='day'?'<path class="steam" d="M17 13c-3-3 3-5 0-9"/><path class="steam b" d="M24 13c-3-3 3-5 0-9"/>':''}<ellipse cx="21" cy="43" rx="17" ry="2.6" fill="${c.dim?'#3A3F55':'#E3D9CA'}"/><path d="M7 17h28v10a11 11 0 0 1-11 11h-6A11 11 0 0 1 7 27z" fill="${china}"/><path d="M35 20h3a4.5 4.5 0 0 1 0 9h-3" fill="none" stroke="${china}" stroke-width="2.6"/><rect x="7" y="21" width="28" height="2.4" fill="${c.acc}" opacity=".55"/></svg>`};
 function dateBlock(){const d=pd(today());return `<div class="h-date"><span class="h-num">${d.getDate()}</span><span class="h-md">${MONTHS[d.getMonth()]}<br>星期${'日一二三四五六'[d.getDay()]}</span></div>`}
 function phead(title,sub){return `<header class="phead"><h1>${title}</h1>${sub?`<p>${sub}</p>`:''}</header>`}
 function hero(){
@@ -1243,10 +1305,11 @@ function hero(){
   const pct=m?Math.round((n-base)/(m.n-base)*100):100,doneT=!!S.checks[today()]&&n>0,pc=costume();
   const cap=doneT?`<p class="h-cap${justChecked?' new':''}">${grow(n).label}</p>`:`<p class="h-cap mute">${n?'今天浇水后，花会有新的变化':'浇第一次水，种子就会发芽'}</p>`;
   const drop=justChecked&&!calm()?`<svg class="drop" viewBox="0 0 24 32" aria-hidden="true"><path d="M12 1S2 13.5 2 20.5a10 10 0 0 0 20 0C22 13.5 12 1 12 1z"/></svg>`:'';
-  return `<section class="hero" style="${heroStyle()}">
+  const p=period(),c=scenePal(p),deco=itemDeco(pc);
+  return `<section class="hero" style="${heroStyle(p)}">
     <div class="h-top">${dateBlock()}<div class="h-pts" id="pts" aria-label="积分 ${S.points}">积分<b>${S.points}</b></div></div>
     <h1 class="h-greet">${esc(S.name)}，${greetWord()}</h1>${pc.label?`<p class="h-fest">${esc(pc.label)}</p>`:''}
-    <div class="plant" id="plant" style="height:${f1((260-vbY0(grow(n)))/260*12.5)}rem"><span class="disc" aria-hidden="true"></span>${plantSVG(n,{cls:justChecked?'grow':'',hl:doneT})}${drop}${itemDeco(pc)}${S.hidePet?'':petMarkup(n,pc,doneT)}</div>
+    <div class="h-scene">${roomSVG(p,c)}<div class="plant" id="plant" style="height:${f1((260-vbY0(grow(n)))/260*76)}%">${plantSVG(n,{cls:justChecked?'grow':'',hl:doneT})}${drop}${deco}${S.hidePet?'':petMarkup(n,pc,doneT)}</div>${deco?'':cupSVG(p,c)}</div>
     ${cap}
     <div class="h-foot">${m?`<div class="row-b"><span>累计 <b>${n}</b> 天</span><span>再 <b>${m.n-n}</b> 天${m.stage}</span></div>
       <div class="bar" role="progressbar" aria-label="离下一份礼物" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${Math.max(pct,3)}%"></i></div>
@@ -1302,7 +1365,7 @@ function tasksCard(){
   const k=planOf(S),P=PLANS[k],got=(S.tasks&&S.tasks[today()])||[],n=P.tasks.filter(([id])=>got.includes(id)).length,all=n===P.tasks.length;
   return `<section class="card" id="tasks"><div class="row-b"><h3 class="ch"><span class="ci ${PLAN_CI[k]}">${PLAN_IC[k]}</span>今天的小任务</h3><span class="tag${all?' ok':''}">${n}/${P.tasks.length}</span></div>
     <p class="small muted" style="margin-top:-4px">${P.name}计划 · 做到一样，点一下</p>
-    <div class="tlist">${P.tasks.map(([id,txt])=>`<button class="task${justTask===id?' pop':''}" data-task="${id}" aria-pressed="${got.includes(id)}"><span class="tk">${TICK}</span><span class="tt">${esc(txt)}</span><span class="tp">+2</span></button>`).join('')}</div>
+    <div class="tlist">${P.tasks.map(([id,txt])=>`<button class="task${justTask===id?' pop':''}" data-task="${id}" aria-pressed="${got.includes(id)}"><span class="tk">${TICK}</span><span class="ti">${TICON[id]||''}</span><span class="tt">${esc(txt)}</span><span class="tp">+2</span></button>`).join('')}</div>
     ${all?'<p class="tdone">三样都做到了，今天好棒！</p>':''}</section>`;
 }
 function planPick(cur){return `<div class="plans" role="group" aria-label="选计划">${Object.keys(PLANS).map(k=>`<button class="plc" data-plan="${k}" aria-pressed="${cur===k}"><span class="ci ${PLAN_CI[k]}">${PLAN_IC[k]}</span><span style="min-width:0"><b>${PLANS[k].name}</b><span class="small muted">${PLANS[k].desc}</span></span></button>`).join('')}</div>`}
@@ -1432,8 +1495,9 @@ function viewFeel(){
 /* ---------- first visit ---------- */
 function viewOnboard(){
   const ok=draftName.trim()&&draftAnchor&&draftOk;
-  return `<section class="hero" style="${heroStyle()}"><div class="h-top">${dateBlock()}</div><h1 class="h-greet">欢迎你，一起养一盆健康花</h1>
-      <div class="plant" style="height:7.5rem"><span class="disc" aria-hidden="true"></span>${plantSVG(0)}</div>
+  const p=period(),c=scenePal(p);
+  return `<section class="hero" style="${heroStyle(p)}"><div class="h-top">${dateBlock()}</div><h1 class="h-greet">欢迎你，一起养一盆健康花</h1>
+      <div class="h-scene">${roomSVG(p,c)}<div class="plant" style="height:${f1((260-vbY0(grow(0)))/260*76)}%">${plantSVG(0)}</div>${cupSVG(p,c)}</div>
       <p class="h-cap mute"><span style="display:inline-block">每天吃完营养，点一下打卡，</span><span style="display:inline-block">种子就会慢慢长大开花。</span></p></section>`+
     (CLOUD&&!S.pcode&&!PCODE&&!PI.phone?`<div class="card" style="background:var(--gold-soft);border:0"><h3>还不知道你的伙伴是谁</h3><p>请用伙伴发给你的链接打开，或请伙伴给你扫二维码。这样你的奖励和问题才会送到伙伴那里。</p></div>`:'')+`<div class="card"><h3>1. 哪一种字看得最清楚？</h3>${fontPick()}</div>
     <div class="card"><label for="nm"><h3>2. 我们怎么称呼你？</h3></label><input type="text" id="nm" placeholder="例如：陈姐" value="${esc(draftName)}"></div>
