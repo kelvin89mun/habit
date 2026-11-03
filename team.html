@@ -215,7 +215,7 @@ const normPhone=v=>{let d=String(v||'').replace(/\D/g,'');if(d.startsWith('0'))d
 const wa=(phone,text)=>`https://wa.me/${normPhone(phone)}?text=${encodeURIComponent(text)}`;
 const ago=d=>{if(!d)return '还没打卡';const n=diff(d,today());return n<=0?'今天':n===1?'昨天':n+' 天前'};
 const FACE=['','😣','🙁','😐','🙂','😄'];
-let ME=null,CUS=[],NOTES={},GLOG={},PARTNERS=[],TAB='today',TEAMTAB='overview',QUERY='',PF='',LINKPLAN='base',RSPICK='',LOADED=0,AUTH='login';
+let CHEERS=null,ME=null,CUS=[],NOTES={},GLOG={},PARTNERS=[],TAB='today',TEAMTAB='overview',QUERY='',PF='',LINKPLAN='base',RSPICK='',LOADED=0,AUTH='login';
 
 function toast(t){const el=$('#toast');el.textContent=t;el.className='show';clearTimeout(el._t);el._t=setTimeout(()=>el.className='',2600)}
 function errText(e){const m=String(e&&e.message||e||'');
@@ -346,6 +346,7 @@ async function loadAll(){
     SB.req('/rest/v1/gift_log?select=customer_id,gift_key,delivered_at')]);
   CUS=cus||[];NOTES={};(notes||[]).forEach(n=>NOTES[n.customer_id]=n);GLOG={};(glog||[]).forEach(g=>(GLOG[g.customer_id]=GLOG[g.customer_id]||new Set()).add(g.gift_key));
   PARTNERS=ME.is_leader?(await SB.req('/rest/v1/partners?select=user_id,name,phone,code,status,is_leader,created_at&order=created_at'))||[]:[ME];
+  try{const ch=await SB.req('/rest/v1/cheers?select=customer_id,sent_by,from_name&day=eq.'+today());CHEERS={};(ch||[]).forEach(r=>(CHEERS[r.customer_id]=CHEERS[r.customer_id]||[]).push(r))}catch(e){CHEERS=null}
   LOADED=Date.now();
 }
 async function boot(){
@@ -422,7 +423,25 @@ function viewToday(M){
     `<section class="card"><h3>这星期要补货 <span class="tag y">${rsL.length}</span></h3><p class="small muted">按每 30 天吃完一份来算。补了货按「已补货」，下次从那天重新算。</p>${rsL.length?rsL.map(rsItem).join(''):'<p class="empty">这星期没有</p>'}</section>`+
     (mrL.length?`<section class="card"><h3>可以发「这个月的你」 <span class="tag b">${mrL.length}</span></h3><p class="small muted">这些客人刚满一个月，发小结给她，看看自己这 30 天的变化。</p>${mrL.map(mrItem).join('')}</section>`:'')+
     `<section class="card"><h3>要送的礼物 <span class="tag g">${gl.length}</span></h3>${gl.length?gl.map(([x,g])=>giftItem(x,g)).join(''):'<p class="empty">暂时没有</p>'}</section>`+
+    cheerCard(M)+
     `<section class="card"><h3>今天还没打卡 <span class="tag y">${not.length}</span></h3>${not.length?not.map(x=>`<div class="item"><div class="top"><div><span class="nm">${esc(x.name)}</span><p class="small muted">最后打卡：${ago(x.last)}</p></div><a class="btn wa sm" href="${wa(x.phone,remind(x))}" target="_blank" rel="noopener">提醒</a></div></div>`).join(''):'<p class="empty">全部都打卡了 🎉</p>'}</section>`}
+/* ---------- flowers: one tap, and the customer finds a flower and your words on her windowsill ---------- */
+const CHEER_MSG=['坚持得真好！','今天也很棒，继续加油！','为你的坚持骄傲！','看到你打卡，我很开心','你真有恒心，明天见！'];
+const sentBy=(id,uid)=>!!(CHEERS&&(CHEERS[id]||[]).some(r=>r.sent_by===uid));
+function cheerCard(M){
+  const L=M.filter(x=>x.today&&x.S.onboarded);if(!L.length)return '';
+  if(!CHEERS)return ME.is_leader?`<section class="card"><h3>今天打卡了 <span class="tag g">${L.length}</span></h3><p class="small muted">「送花」功能还没打开：请在 Supabase 的 SQL Editor 执行一次 update-2-flowers.sql，重新整理就可以用了。</p></section>`:'';
+  const left=L.filter(x=>!sentBy(x.c.id,ME.user_id));
+  return `<section class="card"><div class="top"><h3>今天打卡了 <span class="tag g">${L.length}</span></h3>${left.length>1?`<button class="btn green sm" data-act="cheerall">全部送花（${left.length}）</button>`:''}</div>
+    <p class="small muted">点「送花」，她下次打开网页，窗台上就会多一朵花，还看得到你的一句话。</p>
+    ${L.map(x=>`<div class="item"><div class="top"><div><span class="nm">${esc(x.name)}</span><p class="small muted">累计 ${x.n} 天</p></div>${sentBy(x.c.id,ME.user_id)?'<span class="small muted">已送花 🌸</span>':`<button class="btn sm" data-act="cheer" data-id="${x.c.id}">送花 🌸</button>`}</div></div>`).join('')}</section>`;
+}
+async function cheer(ids,msg){
+  ids=ids.filter(id=>!sentBy(id,ME.user_id));if(!ids.length)return 0;
+  const body=ids.map(id=>({customer_id:id,msg:(msg||CHEER_MSG[parseInt(hash(id+today()),36)%CHEER_MSG.length]).slice(0,60)}));
+  await SB.req('/rest/v1/cheers?on_conflict=customer_id,sent_by,day',{method:'POST',body,headers:{Prefer:'resolution=ignore-duplicates,return=minimal'}});
+  ids.forEach(id=>(CHEERS[id]=CHEERS[id]||[]).push({customer_id:id,sent_by:ME.user_id,from_name:ME.name}));return ids.length;
+}
 function cusRow(x,who){return `<button class="cus" data-act="cus" data-id="${x.c.id}"><span><span class="nm">${esc(x.name)}</span> ${planTag(x.plan)}${who?` <span class="small muted">· ${esc(who)}</span>`:''}<br><span class="small muted">第 ${x.dn} 天 · 累计 ${x.n} 天 · ${STAGE[x.stage]}</span></span>
   <span class="r small">${x.needs.length?'<span class="tag">要跟进</span><br>':''}${ago(x.last)}<br><span class="muted">${x.next?`再 ${x.next.n-x.n} 天：${esc(x.next.name)}`:'已毕业'}</span></span></button>`}
 function viewCustomers(M){
@@ -491,6 +510,9 @@ function openCus(id){
       <div class="row" style="margin-top:4px"><a class="btn wa sm" data-mr="${m.k}" data-id="${c.id}" href="${wa(x.phone,monthMsg(x,m))}" target="_blank" rel="noopener">WhatsApp 发给她</a></div></div>`}).join('')}</div>`:''}
     <div class="card"><h3>礼物</h3>${reached.length?reached.map(m=>`<div class="item"><div class="top"><div><span class="tag g">${esc(m.name)}</span><span class="small">${esc(m.gift)}</span></div>${done.has(m.id)?'<span class="small muted">已送出 ✅</span>':`<button class="btn green sm" data-act="gift" data-id="${c.id}" data-key="${m.id}">已送出</button>`}</div></div>`).join(''):'<p class="empty">还没达到礼物天数</p>'}
       ${x.next?`<p class="small muted" style="margin-top:6px">下一份：再 ${x.next.n-x.n} 天，${esc(x.next.name)} · ${esc(x.next.gift)}</p>`:''}</div>
+    ${CHEERS?`<div class="card"><h3>送她一朵花</h3>${sentBy(c.id,ME.user_id)?'<p class="small muted">今天已经送过花了 🌸 明天可以再送。</p>':`<p class="small muted">她下次打开网页，窗台上会多一朵花，还看得到你写的话。</p>
+      <label for="ch_msg">想对她说的话（可以不写）</label><input id="ch_msg" maxlength="40" placeholder="${esc(CHEER_MSG[0])}">
+      <div class="row" style="margin-top:8px"><button class="btn green" data-act="cheer1" data-id="${c.id}">送花 🌸</button></div>`}${(CHEERS[c.id]||[]).filter(r=>r.sent_by!==ME.user_id).map(r=>`<p class="small muted">今天 ${esc(r.from_name||'领导')} 也送了花</p>`).join('')}</div>`:''}
     <div class="card"><h3>备注（只有伙伴和领导看得到）</h3>
       <label for="n_phone">她的 WhatsApp 号码</label><input id="n_phone" inputmode="tel" value="${esc(x.phone)}" placeholder="例如：0123456789">
       <label for="n_note">备注</label><textarea id="n_note" maxlength="500">${esc(x.note)}</textarea>
@@ -542,6 +564,9 @@ document.addEventListener('click',async e=>{
       $('#rlink').innerHTML=`<div class="link" style="margin:6px 0">${esc(link)}</div><div class="row"><a class="btn wa" href="${wa(x.phone,`${x.name} 你好，这是你的小花恢复链接，用新手机打开就能接回原来的记录（3 天内有效）：\n${link}`)}" target="_blank" rel="noopener">用 WhatsApp 发给她</a><button class="btn" data-act="copy" data-text="${esc(link)}">复制</button></div>`;return}
     if(a==='pstatus'){b.disabled=true;await SB.req('/rest/v1/partners?user_id=eq.'+b.dataset.uid,{method:'PATCH',body:{status:b.dataset.v},headers:{Prefer:'return=minimal'}});await loadAll();render();toast(b.dataset.v==='active'?'已批准':'已更新');return}
     if(a==='pleader'){b.disabled=true;await SB.req('/rest/v1/partners?user_id=eq.'+b.dataset.uid,{method:'PATCH',body:{is_leader:b.dataset.v==='1'},headers:{Prefer:'return=minimal'}});await loadAll();render();toast('已更新');return}
+    if(a==='cheer'){b.disabled=true;await cheer([id]);toast('花送出了 🌸 她下次打开就会看到');render();return}
+    if(a==='cheer1'){b.disabled=true;const m=($('#ch_msg')||{}).value||'';await cheer([id],m.trim());toast('花送出了 🌸 她下次打开就会看到');openCus(id);render();return}
+    if(a==='cheerall'){b.disabled=true;const n=await cheer(mine().filter(x=>x.today&&x.S.onboarded).map(x=>x.c.id));toast(`送出 ${n} 朵花 🌸`);render();return}
     if(a==='rspick'){RSPICK=id||'';render();return}
     if(a==='restock'){b.disabled=true;const n=Math.min(3,Math.max(1,+b.dataset.m||1));await mark(id,[`rs:${today()}:${n*30}`]);RSPICK='';toast(`已记录：补货 ${n} 个月`);if(!$('#modal').hidden)openCus(id);render();return}
     if(a==='snooze'){b.disabled=true;await mark(id,[`rz:${today()}`]);toast('好的，7 天后再提醒你');render();return}

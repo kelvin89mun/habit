@@ -428,6 +428,92 @@ details.rows summary{cursor:pointer;color:var(--accent);font-weight:700;font-siz
 .rowi.locked .ri{color:var(--muted)}
 .rtab .fc{width:1.2rem;height:1.2rem;display:inline-block;vertical-align:-3px;margin-right:2px}
 </style>
+<style>
+/* ---------- play: watering, the pet and the plant that answer when touched, the surprise card, flowers from the partner ---------- */
+.ptap{display:block;height:100%;padding:0;margin:0;border:0;background:none;color:inherit;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.plant .ptap{position:relative}
+.pet .ptap{width:100%;height:auto;pointer-events:auto}
+.plant svg.wig{transform-origin:50% 96%;animation:wig .9s ease-in-out}
+@keyframes wig{0%,100%{transform:rotate(0)}20%{transform:rotate(-3.2deg)}45%{transform:rotate(2.6deg)}70%{transform:rotate(-1.4deg)}}
+.pet-j.jump.now{animation-delay:0s}
+.pet-j.nudge{transform-origin:50% 100%;animation:nudge .6s ease-in-out}
+@keyframes nudge{0%,100%{transform:rotate(0)}30%{transform:rotate(-4deg)}65%{transform:rotate(3deg)}}
+/* the speech bubble */
+.say{position:absolute;z-index:4;width:max-content;max-width:min(17em,80%);padding:8px 13px 9px;border-radius:16px;background:var(--surface);color:var(--ink);border:1px solid var(--line);
+  box-shadow:0 6px 18px rgba(31,43,36,.14);font-size:.86rem;line-height:1.5;font-weight:500;text-align:center;word-break:keep-all;overflow-wrap:anywhere;text-wrap:balance;
+  opacity:0;transform:translateY(6px) scale(.94);transform-origin:var(--tx) 100%;transition:opacity .22s,transform .26s cubic-bezier(.3,1.4,.5,1);pointer-events:none}
+.say.on{opacity:1;transform:none}
+.say small{display:block;font-size:.78rem;color:var(--muted);font-weight:400;margin-top:1px}
+.say::after{content:"";position:absolute;left:var(--tx);bottom:-6px;width:11px;height:11px;margin-left:-6px;background:var(--surface);border-right:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
+/* hearts and sparkles */
+.fl{position:absolute;z-index:4;width:15px;height:14px;margin:-7px 0 0 -7px;pointer-events:none;animation:flt 1.5s ease-out both}
+.fl svg{width:100%;height:100%;display:block}
+.fl.hrt svg{fill:#EE8FA4}
+@keyframes flt{0%{transform:translate(0,4px) scale(.4);opacity:0}15%{opacity:1;transform:translate(calc(var(--dx)*.2),-6px) scale(1)}100%{transform:translate(var(--dx),-54px) scale(.85);opacity:0}}
+.spk{position:absolute;z-index:4;width:12px;height:12px;margin:-6px 0 0 -6px;pointer-events:none;animation:spk .8s ease-out both}
+.spk svg{width:100%;height:100%;display:block;fill:var(--gold-bright)}
+.spk.w svg{fill:#FFF7DE}
+@keyframes spk{0%{transform:scale(0) rotate(0);opacity:0}40%{transform:scale(1.15) rotate(30deg);opacity:1}100%{transform:scale(.2) rotate(70deg);opacity:0}}
+.hero .plus{position:absolute;z-index:3;font-family:var(--f-num);font-size:1.05rem;color:var(--gold);pointer-events:none;animation:plus 1.3s ease-out both}
+@keyframes plus{0%{transform:translateY(10px);opacity:0}25%{opacity:1}100%{transform:translateY(-22px);opacity:0}}
+/* watering: a brass can over the pot, drops, ripples on the soil */
+.wlayer{position:absolute;z-index:6;pointer-events:none;overflow:visible}
+.wcan{position:absolute;animation:wcan 1.6s cubic-bezier(.4,0,.3,1) both;filter:drop-shadow(0 3px 4px rgba(60,40,10,.18))}
+.wcan svg{width:100%;height:auto;display:block}
+@keyframes wcan{0%{opacity:0;transform:translate(-14px,-12px) rotate(-10deg)}16%{opacity:1;transform:none}28%{transform:rotate(35deg)}76%{opacity:1;transform:rotate(35deg)}90%{opacity:1;transform:translate(-6px,-6px) rotate(0)}100%{opacity:0;transform:translate(-10px,-10px) rotate(-6deg)}}
+.wd{position:absolute;width:7px;height:9px;margin:-4px 0 0 -3px;animation:wdx .46s linear both}
+.wd i{display:block;width:100%;height:100%;color:var(--water);animation:wdy .46s cubic-bezier(.45,0,.9,.6) both}
+.wd svg{width:100%;height:100%;display:block;opacity:.9}
+@keyframes wdx{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
+@keyframes wdy{0%{transform:translateY(0) scale(.7);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateY(var(--dy)) scale(1);opacity:0}}
+.wr{position:absolute;border:1.5px solid var(--water);border-radius:50%;opacity:0;animation:wr .7s ease-out both}
+@keyframes wr{0%{transform:scale(.3);opacity:.8}100%{transform:scale(1.25);opacity:0}}
+.checkin.busy{cursor:default}
+.checkin.busy .ic{animation:pulse .7s ease-in-out infinite alternate}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(.84)}}
+.plant svg.grow.now{animation-delay:.05s}
+.h-cap.new.now{animation-delay:.45s}
+.h-foot b.roll{display:inline-block;animation:roll .55s cubic-bezier(.3,1.5,.5,1) .35s both}
+@keyframes roll{from{transform:translateY(.6em);opacity:0}to{transform:none;opacity:1}}
+.tip{display:flex;gap:8px;align-items:flex-start;color:var(--muted);margin-top:-2px}
+.tip .ri{flex:none;width:1.05rem;height:1.05rem;color:var(--pk1);margin-top:.2em}
+.tip .ri svg{width:100%;height:100%;display:block;fill:currentColor}
+/* the surprise card lies face down until she turns it over */
+.fcard,.f3-back{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:100%;min-height:7.4rem;padding:16px;border-radius:24px;
+  border:1.5px solid rgba(201,166,89,.5);background-color:var(--gold-soft);background-image:radial-gradient(rgba(201,166,89,.3) 1.1px,transparent 1.5px);background-size:14px 14px;
+  color:var(--ink);overflow:hidden;text-align:center;-webkit-tap-highlight-color:transparent}
+.fc-ic{width:2.7rem;height:2.7rem;border-radius:50%;background:var(--surface);color:var(--gold);display:grid;place-items:center;box-shadow:0 2px 8px rgba(134,104,42,.15);margin-bottom:4px}
+.fc-ic svg{width:1.35rem;height:1.35rem;display:block}
+.fc-t{font-family:var(--f-serif);font-weight:600;font-size:1.1rem;line-height:1.35}
+.fc-s{font-size:.82rem;color:var(--muted)}
+.fcard::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.5) 50%,transparent 62%);transform:translateX(-110%);animation:shine 5s ease-in-out 1.2s infinite;pointer-events:none}
+@keyframes shine{0%,72%{transform:translateX(-110%)}100%{transform:translateX(110%)}}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .fcard::after{opacity:.2}}
+:root[data-theme="dark"] .fcard::after{opacity:.2}
+.flip3d{perspective:1100px}
+.f3{display:grid;transform-style:preserve-3d;animation:f3 .8s cubic-bezier(.45,.05,.25,1) both}
+.f3>*{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.f3>.prize{transform:rotateY(180deg);animation:none}
+@keyframes f3{0%{transform:rotateY(0)}100%{transform:rotateY(180deg)}}
+/* flowers from the partner: a vase on the sill, the flower drifting in, the note under the day-card */
+.h-scene .vase{position:absolute;right:5.5%;bottom:11.6%;width:11%;padding:0;border:0;background:none;z-index:1;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.h-scene.has-vase .deco{left:calc(50% + 2rem);width:min(3.1rem,16vw)} /* festival things make room for the vase */
+.vase svg{width:100%;height:auto;display:block;overflow:visible}
+.vase.got{animation:got .6s cubic-bezier(.3,1.6,.5,1)}
+@keyframes got{0%{transform:scale(.82)}60%{transform:scale(1.12)}100%{transform:none}}
+.fdrift{position:absolute;z-index:4;width:24px;height:24px;pointer-events:none;animation:fdrift 1.9s cubic-bezier(.45,.1,.55,1) both}
+.fdrift svg{width:100%;height:100%;display:block;overflow:visible}
+@keyframes fdrift{0%{transform:translate(0,0) rotate(0) scale(.6);opacity:0}12%{opacity:1}35%{transform:translate(calc(var(--dx)*.25 - 14px),calc(var(--dy)*.3)) rotate(-40deg) scale(1)}
+  65%{transform:translate(calc(var(--dx)*.62 + 10px),calc(var(--dy)*.66)) rotate(30deg) scale(1)}100%{transform:translate(var(--dx),var(--dy)) rotate(0) scale(.7);opacity:.2}}
+.flwc{gap:12px;border:1.5px solid rgba(217,103,127,.35)}
+.flw-ic{flex:none;width:2.8rem;height:2.8rem;border-radius:50%;background:var(--accent-soft);display:grid;place-items:center;overflow:hidden}
+.flw-ic svg{width:60%;height:auto;margin-top:8%}
+.flwc .row .btn{flex:1 1 auto}
+.h-foot>span{word-break:keep-all;overflow-wrap:anywhere}
+.team{display:flex;align-items:center;gap:8px;color:var(--muted);margin-top:-4px}
+.team .ri{flex:none;width:.85rem;height:1.1rem;color:var(--water)}
+.team .ri svg{width:100%;height:100%;display:block}
+</style>
 <script>
 /* demo: the claude.ai preview, or ?demo on the real site (kept apart from real data) */
 const DEMO=window.APP_MODE==='demo'||/[?&]demo\b/.test(location.search);
@@ -1192,6 +1278,13 @@ async function cloudPartner(){
     const ch=S.pcode!==code||S.partner!==p.name||S.pphone!==p.phone;S.pcode=code;S.partner=p.name;S.pphone=p.phone;
     if(ch){save();if($('#overlay').hidden)render()}}catch(e){}
 }
+/* flowers her partner sent from the dashboard (quietly does nothing until the database has them) */
+async function cloudFlowers(){
+  if(!S.onboarded||moved())return;
+  try{await SB.anon();const r=await SB.req('/rest/v1/cheers?select=id,from_name,msg,day&order=id.desc&limit=20');if(!Array.isArray(r))return;
+    const L=r.map(x=>({id:+x.id||0,f:String(x.from_name||'').slice(0,40),m:String(x.msg||'').slice(0,60),d:String(x.day||'').slice(0,10)})).filter(x=>x.id&&/^\d{4}-\d{2}-\d{2}$/.test(x.d));
+    if(JSON.stringify(L)===JSON.stringify(S.flw||[]))return;S.flw=L;save();if(tab==='today'&&$('#overlay').hidden)render()}catch(e){}
+}
 /* a restore link from the partner moves her record onto this phone */
 async function cloudRestore(){
   const code=(QS.get('restore')||'').toLowerCase().replace(/[^0-9a-f]/g,'');if(!code)return false;
@@ -1234,7 +1327,7 @@ async function cloudInit(){
   if(await cloudRestore())return;
   if(await cloudMoveIn())return;
   if(!STANDALONE&&MOVE&&!S.onboarded)setURL(null);
-  cloudPartner();
+  cloudPartner();cloudFlowers();
   if(S.onboarded&&!moved()&&syncFlag()!=='ok')cloudSave(true);
   else{cloudMoveCode();cloudCheckMoved()}
 }
@@ -1332,15 +1425,16 @@ function phead(title,sub){return `<header class="phead"><h1>${title}</h1>${sub?`
 function hero(act){
   const n=count(),m=nextMile(),prev=[...MILES].reverse().find(x=>n>=x.n),base=prev?prev.n:0;
   const pct=m?Math.round((n-base)/(m.n-base)*100):100,doneT=!!S.checks[today()]&&n>0,pc=costume();
-  const cap=doneT?`<p class="h-cap${justChecked?' new':''}">${grow(n).label}</p>`:`<p class="h-cap mute${act?' pre':''}">${n?'今天浇水后，花会有新的变化':'浇第一次水，种子就会发芽'}</p>`;
-  const drop=justChecked&&!calm()?`<svg class="drop" viewBox="0 0 24 32" aria-hidden="true"><path d="M12 1S2 13.5 2 20.5a10 10 0 0 0 20 0C22 13.5 12 1 12 1z"/></svg>`:'';
-  const p=period(),c=scenePal(p),deco=itemDeco(pc);
+  const now=RIT?' now':'',cap=doneT?`<p class="h-cap${justChecked?' new'+now:''}">${grow(n).label}</p>`:`<p class="h-cap mute${act?' pre':''}">${n?'今天浇水后，花会有新的变化':'浇第一次水，种子就会发芽'}</p>`;
+  const drop=justChecked&&!RIT&&!calm()?`<svg class="drop" viewBox="0 0 24 32" aria-hidden="true"><path d="M12 1S2 13.5 2 20.5a10 10 0 0 0 20 0C22 13.5 12 1 12 1z"/></svg>`:'';
+  const p=period(),c=scenePal(p),deco=itemDeco(pc),vase=vaseMarkup(c);
+  /* the plant and the pet are buttons: touched, they answer */
   return `<section class="hero" style="${heroStyle(p)}">
     <div class="h-top">${dateBlock()}<div class="h-pts" id="pts" aria-label="积分 ${S.points}">积分<b>${S.points}</b></div></div>
     <h1 class="h-greet">${esc(S.name)}，${greetWord()}</h1>${pc.label?`<p class="h-fest">${esc(pc.label)}</p>`:''}
-    <div class="h-scene">${roomSVG(p,c)}<div class="plant" id="plant" style="height:${f1((260-vbY0(grow(n)))/260*76)}%">${plantSVG(n,{cls:justChecked?'grow':'',hl:doneT})}${drop}${deco}${S.hidePet?'':petMarkup(n,pc,doneT)}</div>${deco?'':cupSVG(p,c)}</div>
+    <div class="h-scene${vase?' has-vase':''}">${roomSVG(p,c)}<div class="plant" id="plant" style="height:${f1((260-vbY0(grow(n)))/260*76)}%"><button class="ptap" data-act="plantpat" aria-label="看看我的花">${plantSVG(n,{cls:justChecked?'grow'+now:'',hl:doneT})}</button>${drop}${deco}${S.hidePet?'':petMarkup(n,pc,doneT)}</div>${deco||vase?'':cupSVG(p,c)}${vase}</div>
     ${cap}${act||''}
-    <div class="h-foot">${m?`<div class="row-b"><span>累计 <b>${n}</b> 天</span><span>再 <b>${m.n-n}</b> 天${m.stage}</span></div>
+    <div class="h-foot">${m?`<div class="row-b"><span>累计 <b${justChecked&&!calm()?' class="roll"':''}>${n}</b> 天</span><span>再 <b>${m.n-n}</b> 天${m.stage}</span></div>
       <div class="bar" role="progressbar" aria-label="离下一份礼物" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100"><i style="width:${Math.max(pct,3)}%"></i></div>
       <span>下一份礼物：${m.gift}</span>`:`<div class="row-b"><span>累计 <b>${n}</b> 天</span><span>90 天毕业了，好习惯已经养成</span></div>`}</div>
   </section>`;
@@ -1348,18 +1442,20 @@ function hero(act){
 function furPick(kind,cur){return `<div class="furpick">${FUR[kind].map(f=>`<button class="fp" data-fur="${f.k}" aria-pressed="${cur===f.k}">${petThumb(kind,f.k)}<span>${f.n}</span></button>`).join('')}</div>`}
 function petMarkup(n,pc,awake){
   const st=petStage(n);
-  return `<div class="pet" id="petw" data-mode="${awake?'awake':'sleep'}" data-stage="${st}" data-cos="${pc.cos}" style="--ps:${petScale(st)}"><div class="pet-j${justChecked&&!calm()?' jump':''}"><div class="pet-in" id="petin">${petSVG(S.pet,st,pc.cos,awake?'sit':'sleep',S.fur)}</div></div></div>`;
+  return `<div class="pet" id="petw" data-mode="${awake?'awake':'sleep'}" data-stage="${st}" data-cos="${pc.cos}" style="--ps:${petScale(st)}"><button class="ptap" data-act="pat" aria-label="摸摸${esc(S.petName)}"><div class="pet-j${justChecked&&!calm()?' jump':''}"><div class="pet-in" id="petin">${petSVG(S.pet,st,pc.cos,awake?'sit':'sleep',S.fur)}</div></div></button></div>`;
 }
 /* after the check-in: one quiet card with the partner's words, and her question when there is one */
 function doneCard(makeup){
   const r=fill(REPLIES[hash(today())%REPLIES.length]);
   return `<section class="card donec" id="done"><div class="d-head"><span class="d-check${justChecked?' new':''}">${TICK}</span>
     <div style="min-width:0;flex:1"><h2 class="done-t">今天打卡完成</h2><p class="small muted" style="text-wrap:balance">${S.hidePet?'花浇好了，继续保持':'花浇好了，'+esc(S.petName)+'吃饱了'}</p></div><span class="d-pts">+10<small>积分</small></span></div>
-    <div class="reply"><div class="avatar">${esc(S.partner[0])}</div><p class="small" style="min-width:0"><b>${esc(S.partner)}：</b>${esc(r)}</p></div>
+    <div class="reply"><div class="avatar">${esc(S.partner[0])}</div><p class="small" style="min-width:0"><b>${esc(S.partner)}：</b>${esc(r)}</p></div>${teamLine()}
+    ${S.played?'':`<p class="small tip"><span class="ri">${HEART}</span><span>${S.hidePet?'点一下小花，看看它今天的变化':'点一下'+esc(S.petName)+'或小花，它们会跟你说话'}</span></p>`}
     ${dayNum()<=3?`<p class="small muted">以后每天早上，${esc(S.partner)} 会在 WhatsApp 发链接给你，点开就能打卡。</p>`:''}${careBlock()}${makeup}</section>`;
 }
-/* the surprise card: a quiet row until she opens it */
-const flipRow=()=>`<button class="rowi flip" data-act="flip"><span class="ri">${GIFT}</span><span class="rt">翻开今天的惊喜卡</span>${CHEV}</button>`;
+/* the surprise card lies face down; touched, it turns over */
+const cardBack=()=>`<span class="fc-ic">${GIFT}</span><span class="fc-t">今天的惊喜卡</span><span class="fc-s">点一下，翻开看看</span>`;
+const flipCard=()=>`<button class="fcard" data-act="flip">${cardBack()}</button>`;
 /* today's picture is a small row; it opens on request (many customers forward it to their family groups) */
 const mornIcon=()=>period()==='night'?TICON.pm:I.sun;
 const mornRow=()=>`<button class="rowi morn" data-act="mimg"><span class="ri">${mornIcon()}</span><span class="rt">今天的${imgWord()}图<small>保存下来，转发给家人朋友</small></span>${CHEV}</button>`;
@@ -1374,6 +1470,11 @@ async function showMorning(){
   catch(e){const l=$('#mload');if(l)l.textContent='图片暂时做不出来，请稍后再打开'}
 }
 function flipBlock(){
+  const h=prizeBlock();
+  /* right after she taps: the same card back turns over to show the front */
+  return h&&justFlip&&!calm()?`<div class="flip3d"><div class="f3"><div class="f3-back" aria-hidden="true">${cardBack()}</div>${h}</div></div>`:h;
+}
+function prizeBlock(){
   const f=S.flips[today()];
   if(!f)return '';
   if(f.type==='gift')return `<div class="prize"><div class="p-big">中奖了！小礼物一份</div><p>告诉 ${esc(S.partner)}，下次见面领取。</p><a class="btn solid" style="margin-top:8px" href="${waLink(`${S.partner} 你好，我是${S.name}，今天翻惊喜卡中了一份小礼物！`)}" target="_blank" rel="noopener">用 WhatsApp 告诉 ${esc(S.partner)}</a></div>`;
@@ -1408,11 +1509,12 @@ function viewToday(){
   const t=today(),done=!!S.checks[t],y=add(t,-1),canMakeup=y>=S.start&&!S.checks[y],stg=stageOf(count());
   if(moved())return hero()+`<section class="card"><h3 class="ch"><span class="ci">${I.phone}</span>你的小花已经搬家了</h3><p>你的记录已经搬到手机桌面的图标（或新手机）。请从那里打开打卡，${/^[\x20-\x7E]+$/.test(S.partner)?esc(S.partner)+' ':esc(S.partner)}才看得到你的记录。</p></section>`+footer();
   const rows=(done?'':mornLocked())+(stg===3?newsRow():'')+(stg<3?newsRow():'')+(S.a2hs||IOS||STANDALONE?'':homeRow());
-  const gifts=done?`<section class="card list">${mornRow()}${S.flips[t]?'':flipRow()}</section>`+flipBlock():'';
+  if(done)teamFetch();
+  const gifts=done?`<section class="card list">${mornRow()}</section>`+(S.flips[t]?flipBlock():flipCard()):'';
   const mk=canMakeup?`<button class="link-btn" data-act="makeup">昨天忘了打卡？点这里补上</button>`:'',mn=monthNew();
   /* the one action sits right under the plant, so it is on the first screen even on a small phone with big text */
   const btn=`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>我今天吃了营养<span class="sub">点一下，给花浇水</span></span></button>`;
-  return hero(done?'':btn+mk)+
+  return hero(done?'':btn+mk)+flwNote()+
     (done?doneCard(mk):'')+(mn?monthCard(mn):'')+
     gifts+tasksCard()+changeCard()+
     (rows?`<section class="card list">${rows}</section>`:'')+demoTools()+footer();
@@ -1559,11 +1661,229 @@ function demoTools(){
     <button class="btn" data-act="jump">直接到下一个礼物日</button><button class="btn" data-act="fast">连续打卡 7 天</button>
     <button class="btn" data-act="new">看新客人第一天</button><button class="btn" data-act="sample">恢复示例</button></div>
     ${S.onboarded?`<div class="row" style="padding-bottom:8px">${Object.keys(PLANS).map(k=>`<button class="btn" data-plan="${k}" aria-pressed="${planOf(S)===k}">看${PLANS[k].name}</button>`).join('')}</div>`:''}
-    <div class="row" style="padding-bottom:8px"><button class="btn" data-act="newsdemo">看本周信息弹窗</button><button class="btn" data-act="month1">看第一个月小结</button><button class="btn" data-act="cos">看节日装扮${demoCos>=0?`（${demoCos+1}/${DEMO_COS.length}）`:''}</button>${demoCos>=0?'<button class="btn" data-act="cosoff">看平常样子</button>':''}</div>
+    <div class="row" style="padding-bottom:8px"><button class="btn" data-act="flwdemo">看伙伴送花</button><button class="btn" data-act="newsdemo">看本周信息弹窗</button><button class="btn" data-act="month1">看第一个月小结</button><button class="btn" data-act="cos">看节日装扮${demoCos>=0?`（${demoCos+1}/${DEMO_COS.length}）`:''}</button>${demoCos>=0?'<button class="btn" data-act="cosoff">看平常样子</button>':''}</div>
     <div class="row" style="padding-bottom:8px">${[['am','看早上'],['day','看中午'],['dusk','看傍晚'],['night','看晚上'],['','跟随时间']].map(([k,l])=>`<button class="btn" data-period="${k}" aria-pressed="${demoP===k}">${l}</button>`).join('')}</div>
     <p>${S.sample?'现在显示的是示例客人「陈姐」的资料。':''}想看花每天的变化：先点「跳到明天」，再点打卡。试用版的资料只存在这部手机里。</p></details>`;
 }
 function footer(){return `<footer class="fine">本工具只记录生活习惯，不提供医疗建议。<br>Independent Distributor 自制工具</footer>`}
+
+/* ---------- play: the windowsill answers back. Watering is a little moment, the pet and the plant talk when touched,
+   and flowers from the partner land in a vase on the sill ---------- */
+const HEART=`<svg viewBox="0 0 24 22" aria-hidden="true"><path d="M12 21C5 16.4 1.5 12.2 1.5 7.9 1.5 4.8 3.9 2.5 6.9 2.5c2.1 0 3.9 1.1 5.1 2.9 1.2-1.8 3-2.9 5.1-2.9 3 0 5.4 2.3 5.4 5.4 0 4.3-3.5 8.5-10.5 13.1z"/></svg>`;
+const STAR=`<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0c.9 6.2 3.8 9.1 10 10-6.2.9-9.1 3.8-10 10-.9-6.2-3.8-9.1-10-10C6.2 9.1 9.1 6.2 10 0z"/></svg>`;
+/* a small brass watering can; it tilts about the middle of its body */
+const CAN=`<svg viewBox="0 0 84 60" aria-hidden="true"><defs><linearGradient id="wcg" x1="0" x2="1"><stop offset="0" stop-color="#E2C783"/><stop offset=".55" stop-color="#C9A659"/><stop offset="1" stop-color="#A9883F"/></linearGradient></defs>
+  <path d="M21 20C22 7 40 7 41 20" fill="none" stroke="#A9883F" stroke-width="3.4" stroke-linecap="round"/>
+  <path d="M16 27C6 27 5 46 17 46" fill="none" stroke="#A9883F" stroke-width="3.4" stroke-linecap="round"/>
+  <path d="M45 37.5L71.6 17.6L74.6 21L45.6 47Z" fill="url(#wcg)"/>
+  <ellipse cx="76.4" cy="18.4" rx="3.6" ry="6.4" transform="rotate(-40 76.4 18.4)" fill="#B8954A"/>
+  <g fill="#7E642B" opacity=".7"><circle cx="76" cy="16.6" r=".9"/><circle cx="77.8" cy="18.2" r=".9"/><circle cx="75.2" cy="19.4" r=".9"/></g>
+  <path d="M15 24Q15 20 19 20H43Q47 20 47 24L45 51Q44.6 55 40.5 55H21.5Q17.4 55 17 51Z" fill="url(#wcg)"/>
+  <path d="M15.6 30H46.4" stroke="#A9883F" stroke-width="1.6" opacity=".55"/>
+  <path d="M21 25L22.4 50" stroke="#FFF7E2" stroke-width="2.2" stroke-linecap="round" opacity=".45"/></svg>`;
+const buzz=ms=>{try{if(navigator.vibrate)navigator.vibrate(ms)}catch(e){}};
+const spc=s=>/^[\x20-\x7E]+$/.test(s)?s+' ':s;
+const lineFill=s=>s.replace(/\{n\}/g,S.name).replace(/\{p\}/g,spc(S.partner)).replace(/\{c\}/g,count()).replace(/\{pn\}/g,S.petName);
+let RIT=false,justFlip=false,autoT=0;
+
+/* ---------- the speech bubble: one at a time, above whatever is talking ---------- */
+let sayT=0;
+function say(a,line,sub,ms){
+  const sc=$('.h-scene');if(!sc||!a)return;
+  sc.querySelectorAll('.say').forEach(e=>e.remove());clearTimeout(sayT);
+  const b=document.createElement('div');b.className='say';b.setAttribute('role','status');
+  const nb=t=>String(t).replace(/ (\d+) /g,'\u00A0$1\u00A0'); /* keep 「3 样」「10 片」 on one line */
+  b.innerHTML=`<span>${esc(nb(line))}</span>${sub?`<small>${esc(nb(sub))}</small>`:''}`;sc.appendChild(b);
+  const r=sc.getBoundingClientRect(),hero=sc.closest('.hero'),hr=hero?hero.getBoundingClientRect():r;
+  const cx=(a.left+a.right)/2-r.left,w=b.offsetWidth,h=b.offsetHeight,pad=12;
+  const left=Math.max(pad,Math.min(r.width-w-pad,cx-w/2));
+  b.style.left=Math.round(left)+'px';b.style.top=Math.round(Math.max(hr.top-r.top+8,a.top-r.top-h-12))+'px';
+  b.style.setProperty('--tx',Math.round(Math.max(18,Math.min(w-18,cx-left)))+'px');
+  requestAnimationFrame(()=>b.classList.add('on'));
+  ms=ms||Math.min(5200,2600+(line.length+(sub||'').length)*70);
+  sayT=setTimeout(()=>{b.classList.remove('on');setTimeout(()=>b.remove(),320)},ms);
+  return ms;
+}
+/* little things that float up from a point in the scene: hearts from the pet, stars from the plant */
+function floaters(x,y,svg,cls,k){
+  const sc=$('.h-scene');if(!sc||calm())return;const r=sc.getBoundingClientRect();
+  for(let i=0;i<k;i++){const e=document.createElement('i');e.className='fl '+cls;e.innerHTML=svg;
+    e.style.left=Math.round(x-r.left+(Math.random()-.5)*26)+'px';e.style.top=Math.round(y-r.top+(Math.random()-.5)*10)+'px';
+    e.style.setProperty('--dx',Math.round((Math.random()-.5)*36)+'px');e.style.animationDelay=(i*.13)+'s';
+    sc.appendChild(e);setTimeout(()=>e.remove(),1700+i*130)}
+}
+function sparkleAt(cx,cy,rad,k){
+  const sc=$('.h-scene');if(!sc||calm())return;const r=sc.getBoundingClientRect();
+  for(let i=0;i<k;i++){const a=Math.random()*6.28,d=rad*(.55+Math.random()*.6),e=document.createElement('i');
+    e.className='spk'+(i%3?'':' w');e.innerHTML=STAR;e.style.left=Math.round(cx-r.left+Math.cos(a)*d)+'px';e.style.top=Math.round(cy-r.top+Math.sin(a)*d)+'px';
+    e.style.animationDelay=(i*.07)+'s';sc.appendChild(e);setTimeout(()=>e.remove(),1100+i*70)}
+}
+
+/* ---------- what the pet says ---------- */
+const SLEEP_L=['呼……（今天的营养吃了吗？）','（揉揉眼睛）浇完水，我就起床陪你','等你来浇水，我再起来玩'];
+const CHECK_L=['谢谢你，今天也照顾好自己了','花喝饱水了，我也吃饱了','{n}真棒，明天也要来看我们哦','今天的花，因为你又长大了一点','有你在，窗台每天都很热闹'];
+const PAT_L=['{n}，今天也谢谢你照顾好自己','我会一直在窗台陪着你','慢慢来，每天一点点就很好','嘘——花在偷偷长大','今天有没有好好喝水呀？','累了就休息一下，我陪你','每天照顾自己，真了不起','{p}也在为你加油哦','这是你照顾自己的第 {c} 天','看到你来，我就很开心'];
+const PAT_T={am:['早安！今天也是好天气','早餐要吃好，一天才有精神'],day:['中午记得休息一下哦','下午喝杯水，精神会好一点'],dusk:['今天辛苦了，晚餐吃清淡一点','傍晚的风好舒服'],night:['夜深了，早点休息吧','今天也辛苦了，好好睡一觉']};
+const PAT_P={base:'营养跟着三餐吃，比较不会忘记',weight:'晚餐七分饱，身体会轻松一点',skin:'出门记得防晒哦'};
+const PAT_SEEN={};
+function feelDue(){const L=S.feel||[],last=L[L.length-1];return dayNum()>=3&&(!last||diff(last.d,today())>=7)}
+function checkLine(){return count()===1?'种子发芽了！以后我陪你一起照顾它':lineFill(CHECK_L[count()%CHECK_L.length])}
+function patLine(){
+  const t=today(),n=count(),m=nextMile(),pc=costume(),pk=planOf(S),sp=[];
+  if(pc.cos==='bday')sp.push(['bday','生日快乐！今天要开开心心的']);
+  else if(pc.label==='星期五装扮日')sp.push(['fri','今天是星期五装扮日，我好看吗？']);
+  else if(pc.label)sp.push(['fest',pc.label+'！']);
+  const fl=(S.flw||[]).find(f=>f.d===t&&f.f);if(fl)sp.push(['flw',spc(fl.f)+'送的花，好香']);
+  if(m&&m.n-n<=3)sp.push(['gift',`再 ${m.n-n} 天，就可以领「${m.gift}」了！`]);
+  const got=(S.tasks&&S.tasks[t])||[],left=PLANS[pk].tasks.filter(([k])=>!got.includes(k)).length;
+  if(!left)sp.push(['tasks','三样小任务都做到了，好厉害！']);
+  else if(period()==='dusk'||period()==='night')sp.push(['tasks',`今天的小任务还差 ${left} 样，做完记得打勾哦`]);
+  if(feelDue())sp.push(['feel','这星期的感觉还没记录，去「感觉」页点一点吧']);
+  for(const [k,l] of sp)if(PAT_SEEN[k]!==t){PAT_SEEN[k]=t;return l}
+  /* otherwise take turns through the everyday lines, so she seldom hears the same one twice */
+  const L=PAT_L.concat(PAT_T[period()],[PAT_P[pk]]),i=+(flag('_pat')||0)||0;flag('_pat',String(i+1));
+  return lineFill(L[i%L.length]);
+}
+
+/* ---------- the pet: stop, look up, talk, then carry on ---------- */
+function petRect(){const p=$('#petin');if(!p)return null;const r=p.getBoundingClientRect();return {left:r.left+r.width*.22,right:r.right-r.width*.22,top:r.top+r.height*.1}}
+function hop(el){const j=el.querySelector('.pet-j');if(!j||calm())return;j.classList.remove('jump','now','nudge');void j.offsetWidth;j.classList.add('jump','now')}
+function petSay(line,pose,ms){
+  const el=$('#petw');if(!el)return;clearTimeout(PET.t);
+  if(pose)petPose(pose,'');
+  const d=say(petRect(),line,'',ms);
+  PET.t=setTimeout(()=>{if(document.body.contains(el)&&el.dataset.mode==='awake')petStart()},(d||3000)+250);
+}
+function patPet(){
+  const el=$('#petw');if(!el)return;
+  const now=Date.now();PET.taps=now-(PET.tapAt||0)<2000?(PET.taps||0)+1:1;PET.tapAt=now;played(); /* quick taps in a row count up */
+  buzz(8);const r=petRect();if(r)floaters((r.left+r.right)/2,r.top+6,HEART,'hrt',PET.taps>=3?3:2);
+  if(el.dataset.mode!=='awake'){const j=el.querySelector('.pet-j');if(j&&!calm()){j.classList.remove('jump','now','nudge');void j.offsetWidth;j.classList.add('nudge')}
+    say(r,SLEEP_L[(PET.taps-1)%SLEEP_L.length]);return}
+  const k=PET.taps,st=+el.dataset.stage;
+  if(k===3)return petSay('好痒，好痒～','groom',2600);
+  if(k===5)return petSay('再摸，我就要打滚啦','lie',3000);
+  if(k>=7){PET.taps=0;return petSay('嘿嘿，最喜欢你了',st>=4?'wave':'sit',2800)}
+  hop(el);petSay(patLine(),st>=4&&k===1?'wave':'look');
+}
+/* ---------- the plant: a little shake, and what changed today ---------- */
+function plantTop(){
+  const sv=$('#plant svg');if(!sv)return null;const n=count(),P=grow(n),y0=vbY0(P),r=sv.getBoundingClientRect(),k=r.height/(260-y0);
+  const top=P.cot?196-plantH(P):182;return {left:r.left+r.width*.42,right:r.right-r.width*.42,top:r.top+(top-y0)*k,cy:r.top+(top-y0+16)*k}
+}
+function patPlant(){
+  const sv=$('#plant svg');if(!sv)return;played();buzz(8);
+  if(!calm()){sv.classList.remove('wig','grow');void sv.getBoundingClientRect();sv.classList.add('wig')}
+  const a=plantTop(),n=count(),nx=n<90?grow(n+1).label:'';
+  sparkleAt((a.left+a.right)/2,a.cy,24,4);
+  if(!n)return say(a,'我是一颗种子，浇第一次水，我就会发芽');
+  /* what the next watering will bring: a reason to come back */
+  if(!S.checks[today()])return say(a,'有点渴了……吃完营养，就来给我浇水吧',nx?'浇水后：'+nx:'');
+  const i=+(flag('_plant')||0)||0;flag('_plant',String(i+1));
+  say(a,PLANT_L[i%PLANT_L.length],nx?'下次浇水：'+nx:`累计 ${n} 天，好习惯已经养成`);
+}
+const PLANT_L=['谢谢你的水，我会努力长大','我今天又长大了一点','有你照顾，我长得特别好','阳光真好，我在偷偷长大','摸摸我的叶子，很舒服吧'];
+function played(){if(!S.played){S.played=1;save()}}
+
+/* ---------- watering: the can tips over the pot, the plant drinks, then grows ---------- */
+function water(){
+  const t=today();S.checks[t]=1;S.points+=10;save();
+  const sc=$('.h-scene'),sv=$('#plant svg'),btn=$('.hero .checkin');
+  if(calm()||!sc||!sv){PET.woke=true;justChecked=true;afterWater(true);return}
+  if(btn){btn.classList.add('busy');btn.setAttribute('aria-disabled','true');const s=btn.querySelector('.sub');if(s)s.textContent='正在浇水…'}
+  buzz(15);
+  const r=sc.getBoundingClientRect(),v=sv.getBoundingClientRect(),vb=sv.viewBox.baseVal,k=v.width/200;
+  const sx=v.left+100*k-r.left,sy=v.top+(194.5-vb.y)*k-r.top,pw=82*k;
+  const L=document.createElement('div');L.className='wlayer';L.setAttribute('aria-hidden','true');
+  L.style.cssText=`left:${r.left+scrollX}px;top:${r.top+scrollY}px;width:${r.width}px;height:${r.height}px`;
+  /* the spout's rose ends up a little above and to the left of the soil */
+  const cw=Math.max(60,pw*1.25),s=cw/84,th=35*Math.PI/180,rx=46*Math.cos(th)+21.5*Math.sin(th),ry=46*Math.sin(th)-21.5*Math.cos(th);
+  const rose=[sx-pw*.14,sy-pw*.86],pv=[rose[0]-rx*s,rose[1]-ry*s];
+  const can=document.createElement('div');can.className='wcan';can.innerHTML=CAN;
+  can.style.cssText=`left:${pv[0]-31*s}px;top:${pv[1]-38*s}px;width:${cw}px;transform-origin:${31*s}px ${38*s}px`;L.appendChild(can);
+  for(let i=0;i<13;i++){const d=document.createElement('div');d.className='wd';
+    const lx=sx+(Math.random()*.5-.32)*pw,ly=sy-2-Math.random()*pw*.05;
+    d.style.cssText=`left:${rose[0]}px;top:${rose[1]}px;--dx:${lx-rose[0]}px;--dy:${ly-rose[1]}px;animation-delay:${330+i*48}ms`;
+    d.innerHTML=`<i style="animation-delay:${330+i*48}ms">${DROP}</i>`;L.appendChild(d)}
+  [0,1,2].forEach(i=>{const w=document.createElement('div');w.className='wr';w.style.cssText=`left:${sx-pw*.3}px;top:${sy-pw*.07}px;width:${pw*.6}px;height:${pw*.14}px;animation-delay:${640+i*170}ms`;L.appendChild(w)});
+  document.body.appendChild(L);
+  setTimeout(()=>{RIT=true;justChecked=true;afterWater(true)},980);
+  setTimeout(()=>L.remove(),1650);
+}
+/* after the plant has re-drawn: sparkles where it grew, +10 by the points, the pet wakes and thanks her */
+function revealFx(){
+  buzz(10);
+  setTimeout(()=>{
+    const hl=[...document.querySelectorAll('#plant svg .hl')].slice(0,4);
+    if(hl.length)hl.forEach(c=>{const q=c.getBoundingClientRect();sparkleAt((q.left+q.right)/2,(q.top+q.bottom)/2,Math.max(10,q.width*.36),3)});
+    else{const a=plantTop();if(a)sparkleAt((a.left+a.right)/2,a.cy,24,5)}
+    const p=$('#pts'),h=$('.hero');if(p&&h&&!calm()){const e=document.createElement('span');e.className='plus';e.textContent='+10';const pr=p.getBoundingClientRect(),hr=h.getBoundingClientRect();
+      e.style.right=Math.round(hr.right-pr.right)+'px';e.style.top=Math.round(pr.top-hr.top)+'px';h.appendChild(e);setTimeout(()=>e.remove(),1400)}
+  },140);
+  const el=$('#petw');if(!el)return;
+  setTimeout(()=>{if(document.body.contains(el)){clearTimeout(PET.t);petPose('stretch','')}},320);
+  setTimeout(()=>{if(document.body.contains(el))petSay(checkLine(),'sit',3800)},1500);
+}
+/* a gentle scroll down to the partner's words, unless she is already touching the page */
+function later(ms,go,skip){
+  clearTimeout(autoT);const ev=['touchstart','wheel','keydown','mousedown'];
+  const off=()=>ev.forEach(e=>removeEventListener(e,stop,true));
+  function stop(){clearTimeout(autoT);off();if(skip)skip()}
+  ev.forEach(e=>addEventListener(e,stop,{capture:true,passive:true}));
+  autoT=setTimeout(()=>{off();go()},ms);
+}
+
+/* ---------- flowers from the partner ---------- */
+const recentFlw=()=>(S.flw||[]).filter(f=>f&&f.d&&diff(f.d,today())<7);
+function vaseSVG(k,c){
+  const u='vs'+(++UID)+'_',heads=[[22,6,4.8],[11.5,13,4.2],[32.5,11,4.4],[16,3.5,3.8],[29,2.5,3.8]].slice(0,Math.max(1,Math.min(5,k)));
+  const glaze=c.dim?['#8B9B94','#6E7D77']:['#D3E2D8','#A9C2B2'];
+  let g='';heads.forEach(([x,y,r],i)=>{g+=`<path d="M22 37Q${x<22?20:24} ${(y+37)/2} ${x} ${y+3}" fill="none" stroke="var(--leaf-a)" stroke-width="1.3"/>`});
+  g+=leaf(21,28,7,-160,u)+leaf(23,24,6.5,-25,u);
+  heads.forEach(([x,y,r],i)=>{g+=flower(x,y,r,i===0?2:1,i%2,u)});
+  return `<svg viewBox="0 0 44 70" aria-hidden="true">${defs(u)}<linearGradient id="${u}vz" x1="0" x2="1"><stop offset="0" stop-color="${glaze[0]}"/><stop offset="1" stop-color="${glaze[1]}"/></linearGradient>
+    <ellipse cx="22" cy="68" rx="11" ry="1.8" fill="#000" opacity="${c.dim?.25:.08}"/>${g}
+    <path d="M18 35.5h8v5c0 2.2 8.5 5 8.5 14.2 0 8.2-5.2 12.8-12.5 12.8S9.5 62.9 9.5 54.7C9.5 45.5 18 42.7 18 40.5z" fill="url(#${u}vz)"/>
+    <path d="M17 35.5h10" stroke="${glaze[1]}" stroke-width="2.2" stroke-linecap="round"/><path d="M14 49q-1.6 6 1 11" stroke="#fff" stroke-width="1.6" fill="none" opacity=".5" stroke-linecap="round"/></svg>`;
+}
+const vaseMarkup=c=>{const L=recentFlw();return L.length?`<button class="vase" data-act="vase" aria-label="这星期收到 ${L.length} 朵花">${vaseSVG(L.length,c)}</button>`:''};
+function vaseSay(){
+  const L=recentFlw(),v=$('.vase');if(!v||!L.length)return;played();buzz(8);
+  const r=v.getBoundingClientRect(),names=[...new Set(L.map(f=>f.f).filter(Boolean))];
+  say({left:r.left,right:r.right,top:r.top},`这星期收到 ${L.length} 朵花`,names.length?'来自 '+names.join('、'):'');
+}
+/* the note under the day-card: who sent it and their words, with a WhatsApp thank-you */
+function flwNote(){
+  const t=today();if(S.flwHide===t)return '';
+  const L=(S.flw||[]).filter(f=>f&&f.d&&diff(f.d,t)<=1).slice(0,3);if(!L.length)return '';
+  const mine=L.some(f=>f.f===S.partner),one=L.length===1;
+  const head=one?`${esc(spc(L[0].f||'你的伙伴'))}送你一朵花`:`收到 ${L.length} 朵花`;
+  const lines=L.map(f=>`<div class="reply"><div class="avatar">${esc((f.f||'伙')[0])}</div><div class="bubble"><b>${esc(f.f||'你的伙伴')}</b>${esc(f.m||'送你一朵花，继续加油！')}</div></div>`).join('');
+  return `<section class="card flwc" id="flw"><div class="d-head"><span class="flw-ic">${vaseSVG(L.length,scenePal(period()))}</span><div style="min-width:0;flex:1"><h2 class="done-t">${head}</h2><p class="small muted">已经放在你的窗台上了</p></div></div>${lines}
+    <div class="row"><a class="btn solid sm" href="${waLink(mine?`${S.partner} 你好，我收到你送的花了，谢谢你！`:`你好，我是${S.name}，我收到你们送的花了，谢谢！`)}" target="_blank" rel="noopener">用 WhatsApp 说谢谢</a><button class="btn sm" data-act="flwok">收下了</button></div></section>`;
+}
+/* new flowers drift in through the window and settle in the vase */
+function flwArrive(){
+  const L=S.flw||[],top=L.reduce((m,f)=>Math.max(m,+f.id||0),0);if(!top||top<=(S.flwSeen||0))return;
+  const v=$('.vase'),sc=$('.h-scene');S.flwSeen=top;save();if(!v||!sc)return;
+  const f=L.find(x=>+x.id===top)||L[0],r=sc.getBoundingClientRect(),q=v.getBoundingClientRect();
+  const done=()=>{v.classList.add('got');say({left:q.left,right:q.right,top:q.top},spc(f.f||'你的伙伴')+'送你一朵花',f.m?`「${f.m}」`:'',4600)};
+  if(calm())return done();
+  const e=document.createElement('i');e.className='fdrift';e.innerHTML=`<svg viewBox="-12 -12 24 24" aria-hidden="true">${defs('fd_')}${flower(0,0,9,2,0,'fd_')}</svg>`;
+  e.style.left=Math.round(r.width*.46)+'px';e.style.top=Math.round(r.height*.06)+'px';
+  e.style.setProperty('--dx',Math.round(q.left-r.left+q.width/2-r.width*.46-12)+'px');e.style.setProperty('--dy',Math.round(q.top-r.top-r.height*.06+4)+'px');
+  v.classList.add('wait');sc.appendChild(e);
+  setTimeout(()=>{e.remove();v.classList.remove('wait');done()},1900);
+}
+/* how many others have watered today (a number only) */
+let TEAM={d:'',n:0};
+function teamLine(){return TEAM.d===today()&&TEAM.n>0?`<p class="small team" id="team"><span class="ri">${DROP}</span>今天还有 ${TEAM.n} 位朋友也浇了水</p>`:''}
+async function teamFetch(){
+  const t=today();if(TEAM.d===t||TEAM.busy||!S.onboarded||!S.checks[t])return;
+  if(!CLOUD){TEAM={d:t,n:6+hash(t)%9};return}
+  TEAM.busy=true;
+  try{const n=await SB.rpc('team_today');TEAM={d:t,n:+n||0};const el=$('#done');if(el&&!$('#team')&&TEAM.n>0){const r=el.querySelector('.reply');if(r)r.insertAdjacentHTML('afterend',teamLine())}}catch(e){TEAM={d:t,n:0}}
+}
 
 /* ---------- render, effects, events ---------- */
 const calm=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1575,19 +1895,21 @@ function render(){
   $('#nav').hidden=false;
   app.innerHTML=tab==='today'?viewToday():tab==='log'?viewLog():viewFeel();
   document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===tab?'page':'false'));
-  if(tab==='today'){setTimeout(petStart,0);if(S.checks[today()])morningURL().catch(()=>{})}
+  if(tab==='today'){setTimeout(petStart,0);if(S.checks[today()])morningURL().catch(()=>{});
+    if((S.flw||[]).some(f=>+f.id>(S.flwSeen||0)))setTimeout(()=>{if(tab==='today'&&$('#overlay').hidden)flwArrive()},700)}
 }
 let lastW=innerWidth;addEventListener('resize',()=>{if(innerWidth===lastW)return;lastW=innerWidth;if(tab==='today')petStart()});
 function bumpPts(){const p=$('#pts');if(p){p.classList.remove('bump');void p.offsetWidth;p.classList.add('bump')}}
 function toDone(){const el=$('#done');if(el)el.scrollIntoView({behavior:calm()?'auto':'smooth',block:'start'})}
 /* a few soft petals drift down, only for gifts and milestones */
+let FXN=0;
 function confetti(){
-  if(calm())return;
+  if(calm())return;const run=++FXN; /* a newer shower replaces one still falling */
   const c=$('#fx'),x=c.getContext('2d'),dpr=Math.min(devicePixelRatio||1,2),W=innerWidth,H=innerHeight;
   c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);c.hidden=false;
   const cs=getComputedStyle(document.documentElement),cols=['--pk2','--pk1','--cr2','--pk3','--leaf-b'].map(v=>cs.getPropertyValue(v).trim()||'#EE9EAF');
   const P=Array.from({length:28},()=>({x:Math.random()*W,y:-20-Math.random()*H*.5,vy:1.2+Math.random()*1.4,sw:Math.random()*6.28,r:5+Math.random()*5,c:cols[Math.random()*cols.length|0],a:Math.random()*6.28,va:(Math.random()-.5)*.06}));
-  let f=0;(function step(){x.clearRect(0,0,W,H);
+  let f=0;(function step(){if(run!==FXN)return;x.clearRect(0,0,W,H);
     P.forEach(p=>{p.y+=p.vy;p.sw+=.03;p.a+=p.va;x.save();x.translate(p.x+Math.sin(p.sw)*18,p.y);x.rotate(p.a);x.globalAlpha=.9;x.fillStyle=p.c;
       x.beginPath();x.ellipse(0,0,p.r,p.r*.55,0,0,Math.PI*2);x.fill();x.restore()});
     if(++f<230)requestAnimationFrame(step);else{x.clearRect(0,0,W,H);c.hidden=true}})();
@@ -1606,9 +1928,12 @@ function checkMile(){
 }
 function keepName(){const el=$('#nm');if(el)draftName=el.value}
 function afterWater(scroll){
-  render();justChecked=false;bumpPts();
+  const rit=RIT;render();RIT=false;justChecked=false;bumpPts();
   setTimeout(()=>document.querySelectorAll('.drop').forEach(el=>el.remove()),1200);
-  setTimeout(()=>{if(!checkMile()){if(scroll)toDone();setTimeout(maybeNews,1900)}},1700);
+  if(rit)revealFx();
+  /* after the watering moment she gets a few seconds with the plant and the pet before the page moves down */
+  setTimeout(()=>{if(checkMile())return;const go=()=>{if(scroll)toDone();setTimeout(maybeNews,1900)};
+    if(rit&&scroll)later(2700,go,()=>setTimeout(maybeNews,5000));else go()},rit?1300:1700);
 }
 
 document.addEventListener('click',e=>{
@@ -1635,7 +1960,14 @@ document.addEventListener('click',e=>{
     const all=PLANS[planOf(S)].tasks.every(([k])=>L.includes(k));save();render();justTask='';bumpPts();return}
   if(b.dataset.anchor){keepName();draftAnchor=b.dataset.anchor;render();return}
   switch(a){
-    case 'check':S.checks[t]=1;S.points+=10;justChecked=true;PET.woke=true;save();afterWater(true);break;
+    case 'check':if(!S.checks[t])water();break;
+    case 'pat':patPet();break;
+    case 'plantpat':patPlant();break;
+    case 'vase':vaseSay();break;
+    case 'flwok':S.flwHide=t;save();render();break;
+    case 'flwdemo':{const id=Math.max(0,...(S.flw||[]).map(f=>+f.id||0))+1,M=['坚持得真好！','今天也很棒，继续加油！','为你的坚持骄傲！'];
+      S.flw=[{id,f:S.partner,m:(S.name?S.name+'，':'')+M[id%M.length],d:t}].concat(S.flw||[]).slice(0,20);S.flwHide='';
+      tab='today';save();render();scrollTo(0,0);break}
     case 'makeup':S.checks[add(t,-1)]=1;S.points+=5;justChecked=true;save();afterWater(false);break;
     case 'fast':{if(S.checks[t])S.offset=(S.offset||0)+1;
       for(let i=0;i<7;i++){S.checks[today()]=1;S.points+=10;if(i<6)S.offset=(S.offset||0)+1}
@@ -1655,7 +1987,8 @@ document.addEventListener('click',e=>{
       else{const pk=planOf(S),pt=PLAN_TXT[pk];
         if(pt&&((S.quizN||0)+(S.pquizN||0))%2){f={type:'quiz',p:pk,i:(S.pquizN||0)%pt.quiz.length,ans:null};S.pquizN=(S.pquizN||0)+1}
         else{f={type:'quiz',i:(S.quizN||0)%QUIZ.length,ans:null};S.quizN=(S.quizN||0)+1}}
-      S.flips[t]=f;save();render();if(f.type==='gift'||f.type==='pts')bumpPts();if(f.type==='gift')confetti();break}
+      S.flips[t]=f;save();justFlip=true;render();justFlip=false;buzz(10);
+      const w=calm()?0:650;setTimeout(()=>{if(f.type==='gift'||f.type==='pts')bumpPts();if(f.type==='gift')confetti()},w);break}
     case 'feel':{if(!feelReady())return;const pk=planOf(S),rec={d:t,day:dayNum(),e:draft.e,s:draft.s,g:draft.g};
       if(pk==='skin')rec.sk=draft.sk;
       if(pk==='weight'){const raw=String(draft.kg||'').trim().replace(/[,，。]/g,'.');
