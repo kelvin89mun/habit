@@ -38,6 +38,9 @@ h3{font-size:1.06rem;margin:0 0 8px;display:flex;align-items:center;gap:8px}
 p{margin:0 0 8px}
 .muted{color:var(--muted)}.small{font-size:.88rem}
 .card{background:var(--surface);border-radius:20px;padding:16px;margin:12px 0;box-shadow:var(--shadow);border:1px solid var(--line)}
+.card.chal{background:var(--gold-soft);border-color:rgba(201,166,89,.5)}
+.card.chal h4{font-size:.98rem;margin:14px 0 4px;display:flex;align-items:center;gap:8px}
+.card.chal .chip{background:var(--surface)}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .top>.btn{flex:none;white-space:nowrap}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
@@ -169,8 +172,48 @@ function monthStats(st,k,t){
 }
 /* every finished month so far, oldest first */
 function monthsOf(st,t){const L=[];for(let k=1;k<=24;k++){const m=monthStats(st,k,t);if(!m)break;L.push(m)}return L}
-const monthLine=m=>m.days>=25?'这个月几乎每天都没忘记，太厉害了！':m.days>=18?'大部分日子都记得吃，继续保持！':m.days>=10?'有几天忘了没关系，下个月我们一起把天数拉高。':'这个月比较忙吧？下个月我每天早上提醒你。';
+const monthLine=(m,nu)=>m.days>=25?'这个月几乎每天都没忘记，太厉害了！':m.days>=18?(nu?'大部分日子都记得打卡，继续保持！':'大部分日子都记得吃，继续保持！'):m.days>=10?'有几天忘了没关系，下个月我们一起把天数拉高。':'这个月比较忙吧？下个月我每天早上提醒你。';
 /*END-MONTH*/
+/*SHARE-CHAL*/
+/* ---------- the 30-day challenge: everyone starts on the same Monday. She finishes with 25 check-ins inside the 30 days,
+   so a missed day or two never ends it. codes: the partner codes taking part ([] = the whole team) ---------- */
+const CHAL={name:'30天健康好习惯挑战',open:'2026-11-16',start:'2026-11-23',days:30,pass:25,ref:7,codes:[],
+  tasks:[['water','喝够 8 杯水'],['move','走路或运动 20 分钟']]};
+/* a friend who joined without taking nutrition yet */
+const isNu=st=>!!st&&st.nut===false;
+/* where she stands on day t: sign-up week, the 30 days, two weeks of results, otherwise nothing */
+function chalOf(st,t){
+  const D=s=>{const[a,b,c]=String(s).split('-').map(Number);return new Date(a,b-1,c)},
+    Y=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),
+    A=(s,n)=>{const d=D(s);d.setDate(d.getDate()+n);return Y(d)},F=(a,b)=>Math.round((D(b)-D(a))/864e5);
+  const end=A(CHAL.start,CHAL.days-1);
+  if(CHAL.codes.length&&!(st&&CHAL.codes.includes(st.pcode)))return null;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(t||'')||t<CHAL.open||F(end,t)>14)return null;
+  const ck=st&&st.checks&&typeof st.checks==='object'?st.checks:{},inW=Object.keys(ck).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&d>=CHAL.start&&d<=end).sort();
+  const got=inW.length,phase=t<CHAL.start?'pre':t<=end?'on':'post',day=phase==='on'?F(CHAL.start,t)+1:0;
+  /* check-ins still possible: the days left, today too unless it is already done */
+  const left=phase==='pre'?CHAL.days:phase==='on'?CHAL.days-day+(ck[t]?0:1):0,passed=got>=CHAL.pass;
+  return {phase,day,got,left,end,passed,passD:passed?inW[CHAL.pass-1]:'',can:passed||got+left>=CHAL.pass,toGo:Math.max(0,CHAL.pass-got),soon:phase==='pre'?F(t,CHAL.start):0};
+}
+/* during the sign-up week and the 30 days, everyone's small tasks are the challenge's two */
+const tasksOf=(st,t)=>{const c=chalOf(st,t);return c&&c.phase!=='post'?CHAL.tasks:PLANS[st&&typeof st.plan==='string'&&Object.prototype.hasOwnProperty.call(PLANS,st.plan)?st.plan:'base'].tasks};
+/* her first questions when she isn't taking nutrition yet; the other days share the usual ones */
+const CARE_F={
+  1:{t:'第 1 天 · 伙伴关心',q:'欢迎你！每天什么时候打卡，你比较方便？',o:['早上起床后','午餐后','晚上睡前'],
+     r:a=>'好的！以后每天'+a+'，打开这里点一下就好。'},
+  3:{t:'第 3 天 · 伙伴关心',q:'三天了！喝够水和走路，哪一样比较难做到？',o:['喝够水比较难','走路比较难','两样都还好','有问题想问伙伴'],
+     r:a=>({'喝够水比较难':'小方法：准备一个水瓶，放在看得到的地方，看到就喝几口。','走路比较难':'小方法：饭后走 10 分钟，一天走两次也算。','两样都还好':'太好了，继续保持！'})[a]||'点下面的按钮告诉 {p}，很快就会联系你。'},
+  7:{t:'第 7 天 · 伙伴关心',q:'一个星期了！你最想照顾好哪一方面？',o:['睡眠','精神体力','体重身形','肠胃','皮肤气色'],
+     r:a=>'谢谢你告诉我们！想听听 {p} 的生活小建议，点下面告诉 {p}。'},
+  28:{t:'第 28 天 · 伙伴关心',q:'快一个月了！想不想听听伙伴给你的营养建议？',o:['好，请伙伴联系我','暂时不用'],
+     r:a=>a==='暂时不用'?'好的，我们继续一起养好习惯！':'好的，{p} 会联系你。'}
+};
+const NEED_F={3:['有问题想问伙伴'],7:['睡眠','精神体力','体重身形','肠胃','皮肤气色'],28:['好，请伙伴联系我']};
+/* the question she saw on day d: an answer keeps which set it came from, otherwise her current choice decides */
+const careNu=(st,d)=>{const r=st&&st.answers&&st.answers[d];return !!CARE_F[d]&&(r&&r.a?!!r.nu:isNu(st))};
+const careFor=(st,d)=>careNu(st,d)?CARE_F[d]:CARE[d];
+const needFor=(st,d)=>(careNu(st,d)?NEED_F[d]:NEED[d])||[];
+/*END-CHAL*/
 /* ---------- a small Supabase client: anonymous sign-in for customers, email sign-in for partners ---------- */
 const SB_URL='https://mlgrkrmfxfevzdouarmn.supabase.co',SB_KEY='sb_publishable_trymvh1krw3JgyhCZQwwiw_QA-pYJYr';
 const SB={url:SB_URL,key:SB_KEY,sess:null,k:'sb_auth',
@@ -215,7 +258,7 @@ const normPhone=v=>{let d=String(v||'').replace(/\D/g,'');if(d.startsWith('0'))d
 const wa=(phone,text)=>`https://wa.me/${normPhone(phone)}?text=${encodeURIComponent(text)}`;
 const ago=d=>{if(!d)return '还没打卡';const n=diff(d,today());return n<=0?'今天':n===1?'昨天':n+' 天前'};
 const FACE=['','😣','🙁','😐','🙂','😄'];
-let CHEERS=null,ME=null,CUS=[],NOTES={},GLOG={},PARTNERS=[],TAB='today',TEAMTAB='overview',QUERY='',PF='',LINKPLAN='base',RSPICK='',LOADED=0,AUTH='login';
+let RCMAP=Object.create(null),KIDS={},CHEERS=null,ME=null,CUS=[],NOTES={},GLOG={},PARTNERS=[],TAB='today',TEAMTAB='overview',QUERY='',PF='',LINKPLAN='base',RSPICK='',LOADED=0,AUTH='login';
 
 function toast(t){const el=$('#toast');el.textContent=t;el.className='show';clearTimeout(el._t);el._t=setTimeout(()=>el.className='',2600)}
 function errText(e){const m=String(e&&e.message||e||'');
@@ -232,23 +275,28 @@ function info(c){
   const days=Object.keys(ck).filter(k=>/^\d{4}-\d{2}-\d{2}$/.test(k)).sort(),n=days.length,last=days[n-1]||null,since=last?diff(last,t):null;
   const start=/^\d{4}-\d{2}-\d{2}$/.test(S.start||'')?S.start:null,done=GLOG[c.id]||new Set(),note=NOTES[c.id]||{};
   const plan=typeof S.plan==='string'&&own(PLANS,S.plan)?S.plan:'base',tk=S.tasks&&typeof S.tasks==='object'?S.tasks:{},wk=Array.from({length:7},(_,i)=>add(t,i-6));
-  const tk7=PLANS[plan].tasks.map(([k,l])=>({k,l,days:wk.map(d=>own(tk,d)&&Array.isArray(tk[d])&&tk[d].includes(k))}));
+  const tk7=tasksOf(S,t).map(([k,l])=>({k,l,days:wk.map(d=>own(tk,d)&&Array.isArray(tk[d])&&tk[d].includes(k))}));
+  const nu=isNu(S),ch=S.onboarded?chalOf({pcode:c.partner_code,checks:ck},t):null,ref=typeof S.ref==='string'?RCMAP[S.ref]:null,refBy=ref&&ref.id!==c.id?ref:null,kids=KIDS[c.id]||[];
   const kg=(Array.isArray(S.feel)?S.feel:[]).filter(f=>f&&typeof f.kg==='number'&&f.kg>=25&&f.kg<=250);
   const months=S.onboarded?monthsOf(S,t):[],lastM=months[months.length-1],mrNew=lastM&&diff(lastM.to,t)<=10&&!done.has('mr:'+lastM.k)?lastM:null;
   const rs=restockInfo(S,done,start,t);
   const gifts=[],needs=[];
   for(const m of MILES){const v=S.gifts&&S.gifts[m.id];if(v&&!done.has(m.id))gifts.push({key:m.id,label:m.name,gift:m.gift,date:typeof v==='string'?v:''})}
+  for(const k of kids){const kd=/^\d{4}-\d{2}-\d{2}$/.test(k.state&&k.state.start||'')?k.state.start:'';
+    /* the thank-you is for friends who joined from the sign-up week to the last challenge day */
+    if((+k.checks||0)>=CHAL.ref&&kd>=CHAL.open&&kd<=add(CHAL.start,CHAL.days-1)&&!done.has('ref:'+k.id))gifts.push({key:'ref:'+k.id,label:'介绍朋友',gift:`介绍谢礼（${nmOf(k)} 打卡满 ${CHAL.ref} 天）`,date:'',friend:nmOf(k)})}
   if(S.flips&&typeof S.flips==='object')for(const d of Object.keys(S.flips)){const f=S.flips[d];if(f&&f.type==='gift'&&!done.has('flip:'+d))gifts.push({key:'flip:'+d,label:'惊喜卡',gift:'小礼物一份',date:d})}
   if(S.onboarded&&(last?since>=2:(start&&diff(start,t)>=2)))needs.push({key:null,kind:'miss',text:last?`${since} 天没打卡`:'还没开始打卡'});
   if(S.answers&&typeof S.answers==='object')for(const d of Object.keys(S.answers)){const r=S.answers[d]||{};
-    if(r.a&&own(NEED,d)&&NEED[d].includes(r.a)&&!done.has('care:'+d)&&(!r.d||diff(r.d,t)<=30))needs.push({key:'care:'+d,kind:'care',text:`第 ${d} 天：${r.a}`,q:own(CARE,d)?CARE[d].q:''})}
+    if(r.a&&needFor(S,d).includes(r.a)&&!done.has('care:'+d)&&(!r.d||diff(r.d,t)<=30))needs.push({key:'care:'+d,kind:'care',text:`第 ${d} 天：${r.a}`,q:(careFor(S,d)||{}).q||''})}
   if(Array.isArray(S.questions))for(const q of S.questions){if(!q||!q.text)continue;const k='q:'+hash((q.day||'')+'|'+q.text),qd=start&&q.day?add(start,q.day-1):null;
     if(!done.has(k)&&(!qd||diff(qd,t)<=30))needs.push({key:k,kind:'ask',text:'问题：'+q.text})}
   return {c,S,n,last,since,start,dn:start?diff(start,t)+1:0,stage:n>=56?3:n>=26?2:1,next:MILES.find(m=>n<m.n),gifts,needs,
     today:!!ck[t],act7:days.filter(d=>{const x=diff(d,t);return x>=0&&x<7}).length,phone:note.phone||'',note:note.note||'',
-    name:String(S.name||c.name||'（没有名字）').slice(0,40),partner:c.partner_code,plan,tk7,kg,months,mrNew,rs}
+    name:String(S.name||c.name||'（没有名字）').slice(0,40),partner:c.partner_code,plan,tk7,kg,months,mrNew,rs,nu,ch,refBy,kids}
 }
-function safeInfo(c){try{return info(c)}catch(e){return {c,S:{},n:0,last:null,since:null,start:null,dn:0,stage:1,next:MILES[0],gifts:[],needs:[],today:false,act7:0,phone:'',note:'',name:'（资料有问题）',partner:c.partner_code,plan:'base',tk7:[],kg:[],months:[],mrNew:null,rs:null}}}
+function safeInfo(c){try{return info(c)}catch(e){return {c,S:{},n:0,last:null,since:null,start:null,dn:0,stage:1,next:MILES[0],gifts:[],needs:[],today:false,act7:0,phone:'',note:'',name:'（资料有问题）',partner:c.partner_code,plan:'base',tk7:[],kg:[],months:[],mrNew:null,rs:null,nu:false,ch:null,refBy:null,kids:[]}}}
+const nmOf=c=>String((c.state&&c.state.name)||c.name||'（没有名字）').slice(0,40);
 const mine=()=>CUS.filter(c=>c.partner_code&&ME&&c.partner_code===ME.code).map(safeInfo);
 const pname=code=>{const p=PARTNERS.find(x=>x.code===code);return p?p.name:code||'没有伙伴'};
 const planTag=k=>`<span class="tag pl">${PLANS[k].emoji} ${esc(PLANS[k].short)}</span>`;
@@ -264,7 +312,7 @@ const INVITE={
 /* ---------- restock: counted as one supply every 30 days, from her start or from the last restock the partner marked ---------- */
 const RS_DAYS=30;
 function restockInfo(S,done,start,t){
-  if(!S.onboarded||!start)return null;
+  if(!S.onboarded||!start||isNu(S))return null;
   let last=null,snz=null;
   for(const k of done){let m=/^rs:(\d{4}-\d{2}-\d{2}):(\d{1,3})$/.exec(k);if(m&&(!last||m[1]>last.d||(m[1]===last.d&&+m[2]>last.n)))last={d:m[1],n:+m[2]};
     m=/^rz:(\d{4}-\d{2}-\d{2})$/.exec(k);if(m&&(!snz||m[1]>snz))snz=m[1]}
@@ -282,7 +330,7 @@ function monthMsg(x,m){
   const tk=m.tasks.filter(r=>r.n>0).sort((a,b)=>b.n-a.n)[0];if(tk)L.push(`「${tk.l}」做到了 ${tk.n} 天。`);
   const up=m.feel.filter(f=>f.d>0).map(f=>f.l);if(up.length)L.push(`${up.join('、')}比之前好了。`);
   if(m.kg&&m.kg.d<=-.3)L.push(`体重比之前轻了 ${kgFmt(-m.kg.d)} 公斤。`);
-  L.push(monthLine(m),`点这里看你的小结：${SITE}?p=${x.partner||ME.code}&m=${m.k}`);
+  L.push(monthLine(m,x.nu),`点这里看你的小结：${SITE}?p=${x.partner||ME.code}&m=${m.k}`);
   return L.join('\n');
 }
 function rsItem(x){const id=x.c.id;
@@ -330,21 +378,53 @@ const dailyText=()=>DAILY[dayOfYear(new Date())%DAILY.length]+'\n'+SITE+'?p='+ME
 const sentToday=()=>{try{return localStorage.getItem('habit_team_sent')===today()}catch(e){return false}};
 const markSent=()=>{try{localStorage.setItem('habit_team_sent',today())}catch(e){}};
 function dailyCard(){
-  const t=dailyText(),sent=sentToday();
-  return `<section class="card daily"><div class="top"><h3>今天的早安信息</h3>${sent?'<span class="tag g">今天已经发了</span>':'<span class="tag y">还没发</span>'}</div>
-    <p class="small muted">每天早上发一次给客人，她点链接就能打卡、领早安图。每天的句子都不一样。</p>
+  const ct=chalDaily(),t=ct||dailyText(),sent=sentToday();
+  return `<section class="card daily"><div class="top"><h3>${ct?'今天发到挑战群的讯息':'今天的早安信息'}</h3>${sent?'<span class="tag g">今天已经发了</span>':'<span class="tag y">还没发</span>'}</div>
+    <p class="small muted">${ct?'挑战期间，每天早上发一次到挑战群：今天第几天、一句小知识和打卡链接。':'每天早上发一次给客人，她点链接就能打卡、领早安图。每天的句子都不一样。'}</p>
     <div class="msg">${esc(t)}</div>
     <div class="row" style="margin-top:10px"><a class="btn wa" data-sent="1" href="https://wa.me/?text=${encodeURIComponent(t)}" target="_blank" rel="noopener">用 WhatsApp 发</a><button class="btn" data-act="copy" data-sent="1" data-text="${esc(t)}">复制</button></div>
     <details class="how"><summary>怎样一次发给全部客人？</summary><p class="small">在 WhatsApp 建一个「广播」名单，把客人都加进去，以后每天发到这个名单就好。客人要先存你的号码，才收得到广播。也可以发到你的客人群。</p></details></section>`;
 }
 
+
+/* ---------- the 30-day challenge: who joined, who brought friends, who finished, and the group's message for today ---------- */
+const REVIEW_URL=''; // the Google review link; when filled in, the congratulation message asks for a review
+const CHAL_TIPS=['第一天！起床先喝一杯温水，再开始新的一天。','准备一个水瓶，放在看得到的地方，看到就喝几口。','走路不用一次走完，饭后走 10 分钟，一天走两次也可以。','口渴才喝已经有点迟了，白天要常常喝几口。','约家人或朋友一起散步，聊着天就走完了。','甜饮料换成白开水，从今天开始。','第一个星期完成了！给自己一个鼓励。',
+  '走路的时候抬头挺胸，手臂自然摆动。','每一餐有一半是蔬菜，颜色越多越好。','坐了一个小时，就站起来走动两三分钟。','早上晒晒太阳，十多分钟就够了，记得避开正午的大太阳。','睡前一小时放下手机，比较容易睡着。','下雨天在家也能动：原地踏步，或跟着音乐动一动。','两个星期了！你已经比第一天的自己更棒了。',
+  '吃饭细嚼慢咽，七分饱刚刚好。','爬楼梯、做家务，都算是活动。','一天的水分开喝：早上、上午、下午、傍晚，各喝一两杯。','穿一双舒服的鞋，走路会更轻松。','把你的打卡分享给好朋友，一起坚持更容易。','每天差不多同一个时间睡、同一个时间起。','三个星期了！好习惯正在慢慢养成。',
+  '煮菜多用蒸、煮、炒，少用油炸。','走路的时候慢慢深呼吸，身体会放松一点。','水果当点心比饼干好，一次一份就够。','今天打个电话给老朋友，聊聊天，笑一笑。','天气热的时候，记得多补充水分。','坚持一点点，每天都在变好。','最后三天！再坚持一下，证书在等你。','想一想这 30 天，你最大的改变是什么？','最后一天！谢谢你每天照顾好自己。'];
+function chalPhase(){const c=chalOf({pcode:ME&&ME.code,checks:{}},today());return c?c.phase:''}
+/* in the challenge = everyone during the sign-up week; afterwards, whoever checked in at least once inside the 30 days */
+function chalStats(L){const ph=chalPhase(),A=L.filter(x=>x.ch&&x.S.onboarded),inn=ph==='pre'?A:A.filter(x=>x.ch.got>0);
+  return {ph,inn,nf:inn.filter(x=>x.nu).length,fin:inn.filter(x=>x.ch.passed),todayN:inn.filter(x=>x.today).length,brought:L.filter(x=>x.refBy&&x.start&&x.start>=CHAL.open).length}}
+const chalLink=()=>SITE+'?p='+ME.code+'&nu=1';
+function chalInvite(){const ph=chalPhase();
+  return `你好！我们在办「${CHAL.name}」🌱\n${ph==='pre'?mdate(CHAL.start)+'（星期一）大家一起开始。':'现在加入也可以。'}每天三件小事：喝够水、走路 20 分钟、打开网页给小花浇水。30 天里打卡满 ${CHAL.pass} 天，就有完成证书，还有小礼物。\n没在吃营养品也可以参加，不用下载，点这里报名：\n${chalLink()}`}
+function chalDaily(){const ph=chalPhase(),t=today(),link=SITE+'?p='+ME.code;
+  if(ph==='pre'){const n=diff(t,CHAL.start);return `【${CHAL.name}】${n===1?'明天就开始':'还有 '+n+' 天开始'} 🌱\n${mdate(CHAL.start)}（星期一）我们一起开始：每天喝够水、走路 20 分钟，打开网页给小花浇水。30 天里打卡满 ${CHAL.pass} 天，就有完成证书。\n还没报名的，点这里：${chalLink()}\n欢迎带家人朋友一起来！`}
+  if(ph==='on'){const d=diff(CHAL.start,t)+1;return `【30天挑战 · 第 ${d} 天】🌱\n${CHAL_TIPS[(d-1)%CHAL_TIPS.length]}\n今天也记得喝够水、走路 20 分钟，再打开小花浇水 👉 ${link}`}
+  return ''}
+const chalMsg=x=>`${x.name} 恭喜你完成「${CHAL.name}」🎉 30 天里你打卡了 ${x.ch.got} 天，真的很棒！\n你的完成证书在网页上，打开小花就能保存、转发。\n下一轮你想继续吗？也欢迎带家人朋友一起来～`+(REVIEW_URL?`\n如果你喜欢这 30 天，可以帮我留一句 Google 评价吗？谢谢你！\n${REVIEW_URL}`:'');
+function chalCard(M){
+  const {ph,inn,nf,fin,todayN,brought}=chalStats(M);if(!ph)return '';
+  const head=ph==='pre'?`${mdate(CHAL.start)}（星期一）开始，还有 ${diff(today(),CHAL.start)} 天`:ph==='on'?`今天是第 ${diff(CHAL.start,today())+1} 天，一共 ${CHAL.days} 天`:`已经结束了，完成率 ${inn.length?Math.round(fin.length/inn.length*100):0}%`;
+  const top=M.filter(x=>x.kids.length).map(x=>({x,n:x.kids.length,n7:x.kids.filter(k=>(+k.checks||0)>=CHAL.ref).length})).sort((a,b)=>b.n-a.n||b.n7-a.n7).slice(0,8);
+  const congr=fin.filter(x=>!(GLOG[x.c.id]||new Set()).has('ch:'+CHAL.start));
+  const chips=[['参加',inn.length],['新朋友',nf],...(ph==='pre'?[]:[['今天打卡',todayN+'/'+inn.length],['已完成',fin.length]]),['朋友带来的',brought]];
+  return `<section class="card chal"><h3>${esc(CHAL.name)}</h3><p class="small muted">${head}。30 天里打卡满 ${CHAL.pass} 天就完成。朋友打卡满 ${CHAL.ref} 天，介绍她的客人有一份谢礼，会出现在「要送的礼物」。</p>
+    <div class="chips">${chips.map(([l,v])=>`<span class="chip">${l} <b>${v}</b></span>`).join('')}</div>
+    ${top.length?`<h4>带朋友来的人</h4><p class="small muted">最会带朋友的，可以约她喝茶，聊聊做伙伴。</p>${top.map(o=>`<div class="item"><div class="top"><div><span class="nm">${esc(o.x.name)}</span><p class="small muted">带了 ${o.n} 位朋友 · ${o.n7} 位打卡满 ${CHAL.ref} 天</p></div><button class="btn sm" data-act="cus" data-id="${o.x.c.id}">详情</button></div></div>`).join('')}`:''}
+    ${congr.length?`<h4>完成挑战了，恭喜她 <span class="tag g">${congr.length}</span></h4><p class="small muted">恭喜她，问她下一轮要不要继续，也请她带朋友来。</p>${congr.map(x=>`<div class="item"><div class="top"><div><span class="nm">${esc(x.name)}</span><p class="small muted">30 天里打卡 ${x.ch.got} 天</p></div></div>
+      <div class="row" style="margin-top:4px"><a class="btn wa sm" href="${wa(x.phone,chalMsg(x))}" target="_blank" rel="noopener">WhatsApp 恭喜她</a><button class="btn sm" data-act="chok" data-id="${x.c.id}">已恭喜</button></div></div>`).join('')}`:''}</section>`}
 /* ---------- data ---------- */
 async function loadAll(){
   const [cus,notes,glog]=await Promise.all([
     SB.req('/rest/v1/customers?select=id,partner_code,name,state,checks,last_check,start_date,points,created_at,updated_at&order=updated_at.desc'),
     SB.req('/rest/v1/customer_notes?select=customer_id,phone,note'),
     SB.req('/rest/v1/gift_log?select=customer_id,gift_key,delivered_at')]);
-  CUS=cus||[];NOTES={};(notes||[]).forEach(n=>NOTES[n.customer_id]=n);GLOG={};(glog||[]).forEach(g=>(GLOG[g.customer_id]=GLOG[g.customer_id]||new Set()).add(g.gift_key));
+  CUS=cus||[];NOTES={};RCMAP=Object.create(null);KIDS={};
+  for(const c of CUS){const r=c.state&&c.state.rc;if(typeof r==='string'&&/^[a-z0-9]{4,8}$/.test(r))RCMAP[r]=c}
+  for(const c of CUS){const r=c.state&&c.state.ref,p=typeof r==='string'?RCMAP[r]:null;if(p&&p.id!==c.id)(KIDS[p.id]=KIDS[p.id]||[]).push(c)}(notes||[]).forEach(n=>NOTES[n.customer_id]=n);GLOG={};(glog||[]).forEach(g=>(GLOG[g.customer_id]=GLOG[g.customer_id]||new Set()).add(g.gift_key));
   PARTNERS=ME.is_leader?(await SB.req('/rest/v1/partners?select=user_id,name,phone,code,status,is_leader,created_at&order=created_at'))||[]:[ME];
   try{const ch=await SB.req('/rest/v1/cheers?select=customer_id,sent_by,from_name&day=eq.'+today());CHEERS={};(ch||[]).forEach(r=>(CHEERS[r.customer_id]=CHEERS[r.customer_id]||[]).push(r))}catch(e){CHEERS=null}
   LOADED=Date.now();
@@ -405,20 +485,23 @@ function hello(M){
     <div class="chips"><span class="chip">客人 <b>${M.length}</b></span><span class="chip">今天打卡 <b>${t}</b>/${M.length}</span><span class="chip">要跟进 <b>${M.filter(x=>x.needs.length).length}</b></span><span class="chip">要送礼物 <b>${M.reduce((s,x)=>s+x.gifts.length,0)}</b></span><span class="chip">要补货 <b>${M.filter(x=>x.rs&&x.rs.show).length}</b></span></div></section>`}
 function needItem(x){
   const first=x.needs.find(n=>n.kind!=='miss');
-  const txt=first?`${x.name} 你好，我看到你说「${first.text.replace(/^第 \d+ 天：|^问题：/,'')}」，想关心一下你的情况～`:`${x.name} 你好！这两天还好吗？营养记得吃哦，吃完打开小花打个卡 🌱`;
+  const said=first?first.text.replace(/^第 \d+ 天：|^问题：/,''):'';
+  const txt=first&&first.key==='care:7'&&x.nu?`${x.name} 你好！我看到你最想照顾好「${said}」，我这里有一些生活上的小方法，想跟你分享～`
+    :first?`${x.name} 你好，我看到你说「${said}」，想关心一下你的情况～`
+    :x.nu?`${x.name} 你好！这两天还好吗？记得多喝水、走一走，喝完第一杯水就打开小花打个卡 🌱`:`${x.name} 你好！这两天还好吗？营养记得吃哦，吃完打开小花打个卡 🌱`;
   return `<div class="item"><div class="top"><div><span class="nm">${esc(x.name)}</span> <span class="small muted">· 累计 ${x.n} 天</span></div><button class="btn sm" data-act="cus" data-id="${x.c.id}">详情</button></div>
     <div>${x.needs.map(n=>`<span class="tag${n.kind==='miss'?'':n.kind==='ask'?' b':' y'}">${esc(n.text)}</span>`).join('')}</div>
     <div class="row" style="margin-top:6px"><a class="btn wa sm" href="${wa(x.phone,txt)}" target="_blank" rel="noopener">WhatsApp 关心</a>${x.needs.some(n=>n.key)?`<button class="btn sm" data-act="handled" data-id="${x.c.id}">已跟进</button>`:''}</div></div>`}
 function giftItem(x,g,who){
-  const txt=`${x.name} 恭喜你完成「${g.label}」！你的礼物「${g.gift}」我会安排给你 🎁`;
+  const txt=g.friend?`${x.name} 谢谢你介绍${g.friend}一起来！她已经打卡满 ${CHAL.ref} 天了，你的介绍谢礼我会安排给你 🎁`:`${x.name} 恭喜你完成「${g.label}」！你的礼物「${g.gift}」我会安排给你 🎁`;
   return `<div class="item"><div class="top"><div><span class="nm">${esc(x.name)}</span>${who?` <span class="small muted">· ${esc(who)}</span>`:''}<div><span class="tag g">${esc(g.label)}</span><span class="small">${esc(g.gift)}</span></div>${g.date?`<p class="small muted">${esc(g.date)} 达成</p>`:''}</div></div>
     <div class="row" style="margin-top:4px"><a class="btn wa sm" href="${wa(x.phone,txt)}" target="_blank" rel="noopener">WhatsApp 通知</a><button class="btn green sm" data-act="gift" data-id="${x.c.id}" data-key="${esc(g.key)}">已送出</button></div></div>`}
 function viewToday(M){
   if(!M.length)return hello(M)+`<div class="card"><h3>开始吧</h3><p>你还没有客人。到「我的链接」复制你的专属链接，或给客人扫二维码，客人一注册就会出现在这里。</p><button class="btn solid" data-tab="link">去我的链接</button></div>`;
   const nd=M.filter(x=>x.needs.length).sort((a,b)=>b.needs.length-a.needs.length),gl=M.flatMap(x=>x.gifts.map(g=>[x,g])),not=M.filter(x=>!x.today&&x.S.onboarded);
-  const remind=x=>`${x.name} 你好！今天的营养吃了吗？吃完记得打开小花打卡哦 🌱\n${SITE}?p=${ME.code}`;
+  const remind=x=>x.nu?`${x.name} 你好！今天喝水了吗？喝完第一杯水，记得打开小花打卡哦 🌱\n${SITE}?p=${ME.code}`:`${x.name} 你好！今天的营养吃了吗？吃完记得打开小花打卡哦 🌱\n${SITE}?p=${ME.code}`;
   const rsL=M.filter(x=>x.rs&&x.rs.show).sort((a,b)=>a.rs.left-b.rs.left),mrL=M.filter(x=>x.mrNew);
-  return hello(M)+dailyCard()+
+  return hello(M)+dailyCard()+chalCard(M)+
     `<section class="card"><h3>要跟进 <span class="tag">${nd.length}</span></h3>${nd.length?nd.map(needItem).join(''):'<p class="empty">都很好，没有要跟进的 👍</p>'}</section>`+
     `<section class="card"><h3>这星期要补货 <span class="tag y">${rsL.length}</span></h3><p class="small muted">按每 30 天吃完一份来算。补了货按「已补货」，下次从那天重新算。</p>${rsL.length?rsL.map(rsItem).join(''):'<p class="empty">这星期没有</p>'}</section>`+
     (mrL.length?`<section class="card"><h3>可以发「这个月的你」 <span class="tag b">${mrL.length}</span></h3><p class="small muted">这些客人刚满一个月，发小结给她，看看自己这 30 天的变化。</p>${mrL.map(mrItem).join('')}</section>`:'')+
@@ -442,7 +525,7 @@ async function cheer(ids,msg){
   await SB.req('/rest/v1/cheers?on_conflict=customer_id,sent_by,day',{method:'POST',body,headers:{Prefer:'resolution=ignore-duplicates,return=minimal'}});
   ids.forEach(id=>(CHEERS[id]=CHEERS[id]||[]).push({customer_id:id,sent_by:ME.user_id,from_name:ME.name}));return ids.length;
 }
-function cusRow(x,who){return `<button class="cus" data-act="cus" data-id="${x.c.id}"><span><span class="nm">${esc(x.name)}</span> ${planTag(x.plan)}${who?` <span class="small muted">· ${esc(who)}</span>`:''}<br><span class="small muted">第 ${x.dn} 天 · 累计 ${x.n} 天 · ${STAGE[x.stage]}</span></span>
+function cusRow(x,who){return `<button class="cus" data-act="cus" data-id="${x.c.id}"><span><span class="nm">${esc(x.name)}</span> ${planTag(x.plan)}${x.nu?' <span class="tag b">新朋友</span>':''}${who?` <span class="small muted">· ${esc(who)}</span>`:''}<br><span class="small muted">第 ${x.dn} 天 · 累计 ${x.n} 天 · ${STAGE[x.stage]}</span></span>
   <span class="r small">${x.needs.length?'<span class="tag">要跟进</span><br>':''}${ago(x.last)}<br><span class="muted">${x.next?`再 ${x.next.n-x.n} 天：${esc(x.next.name)}`:'已毕业'}</span></span></button>`}
 function viewCustomers(M){
   const q=QUERY.trim(),L=M.filter(x=>(!q||x.name.includes(q))&&(!PF||x.plan===PF)).sort((a,b)=>(b.needs.length>0)-(a.needs.length>0)||String(b.last||'').localeCompare(String(a.last||'')));
@@ -456,6 +539,9 @@ function viewLink(){
     <div class="card"><div class="link" id="mylink">${esc(link)}</div><div class="qr" id="qr"></div><p class="small muted" style="text-align:center">客人用手机相机扫这个二维码也可以。长按图片可以保存。</p>
       <div class="row"><button class="btn solid" data-act="copy" data-text="${esc(link)}">复制链接</button><a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(inv)}" target="_blank" rel="noopener">用 WhatsApp 发给客人</a></div></div>
     <div class="card"><h3>邀请文字（可以复制改一改）</h3><p style="white-space:pre-line">${esc(inv)}</p><button class="btn" data-act="copy" data-text="${esc(inv)}">复制邀请文字</button></div>
+    ${chalPhase()&&chalPhase()!=='post'?`<div class="card chal"><h3>${esc(CHAL.name)}：邀请朋友</h3><p class="small muted">给还没吃营养品的朋友用这个链接。她注册时会自动选好「还没有」，每天的打卡按钮是「我喝了今天第一杯水」。</p>
+      <div class="link">${esc(chalLink())}</div><div class="row" style="margin-top:8px"><button class="btn solid" data-act="copy" data-text="${esc(chalLink())}">复制链接</button><a class="btn wa" href="https://wa.me/?text=${encodeURIComponent(chalInvite())}" target="_blank" rel="noopener">用 WhatsApp 邀请</a></div>
+      <p style="white-space:pre-line;margin-top:10px">${esc(chalInvite())}</p><button class="btn" data-act="copy" data-text="${esc(chalInvite())}">复制邀请文字</button></div>`:''}
     ${viewProfile(false)}
     <div class="card"><button class="btn" data-act="logout">退出登录</button></div>`}
 function drawQR(){const el=$('#qr');if(!el||typeof qrcode!=='function')return;const q=qrcode(0,'M');q.addData(planLink(LINKPLAN));q.make();el.innerHTML=`<img alt="我的专属二维码（${esc(PLANS[LINKPLAN].name)}）" src="${q.createDataURL(8,4)}">`}
@@ -467,7 +553,8 @@ function viewTeam(){
   if(TEAMTAB==='overview'){
     const rows=actv.map(p=>{const L=A.filter(x=>x.partner===p.code);return `<tr><td><b>${esc(p.name)}</b><br><span class="small muted">${esc(p.code)}${p.is_leader?' · 领导':''}</span></td><td class="n">${L.length}</td><td class="n">${L.length?Math.round(L.filter(x=>x.act7>=5).length/L.length*100)+'%':'–'}</td><td class="n">${L.filter(x=>x.needs.length).length}</td><td class="n">${L.reduce((s,x)=>s+x.gifts.length,0)}</td><td class="n">${L.filter(x=>x.rs&&x.rs.show).length}</td></tr>`}).join('');
     const un=A.filter(x=>!x.partner);
-    body=`<section class="card"><div class="chips"><span class="chip">全部客人 <b>${A.length}</b></span><span class="chip">今天打卡 <b>${A.filter(x=>x.today).length}</b></span><span class="chip">本周活跃 <b>${A.length?Math.round(act/A.length*100):0}%</b></span><span class="chip">新客人（7 天）<b>${A.filter(x=>x.start&&diff(x.start,t)<7).length}</b></span></div><div class="chips">${Object.keys(PLANS).map(k=>`<span class="chip">${PLANS[k].emoji} ${esc(PLANS[k].name)} <b>${A.filter(x=>x.plan===k).length}</b></span>`).join('')}</div><p class="small muted" style="margin-top:8px">本周活跃 = 最近 7 天打卡 5 天以上</p></section>
+    const cs=chalStats(A);
+    body=`${cs.ph?`<section class="card chal"><h3>${esc(CHAL.name)}（全团队）</h3><div class="chips"><span class="chip">参加 <b>${cs.inn.length}</b></span><span class="chip">新朋友 <b>${cs.nf}</b></span>${cs.ph==='pre'?'':`<span class="chip">今天打卡 <b>${cs.todayN}/${cs.inn.length}</b></span><span class="chip">已完成 <b>${cs.fin.length}</b></span>`}<span class="chip">朋友带来的 <b>${cs.brought}</b></span></div></section>`:''}<section class="card"><div class="chips"><span class="chip">全部客人 <b>${A.length}</b></span><span class="chip">今天打卡 <b>${A.filter(x=>x.today).length}</b></span><span class="chip">本周活跃 <b>${A.length?Math.round(act/A.length*100):0}%</b></span><span class="chip">新客人（7 天）<b>${A.filter(x=>x.start&&diff(x.start,t)<7).length}</b></span></div><div class="chips">${Object.keys(PLANS).map(k=>`<span class="chip">${PLANS[k].emoji} ${esc(PLANS[k].name)} <b>${A.filter(x=>x.plan===k).length}</b></span>`).join('')}</div><p class="small muted" style="margin-top:8px">本周活跃 = 最近 7 天打卡 5 天以上</p></section>
       <section class="card"><h3>伙伴表现</h3><div style="overflow-x:auto"><table><tr><th>伙伴</th><th class="n">客人</th><th class="n">活跃</th><th class="n">跟进</th><th class="n">礼物</th><th class="n">补货</th></tr>${rows||'<tr><td colspan="6" class="empty">还没有伙伴</td></tr>'}</table></div></section>
       ${un.length?`<section class="card"><h3>没有伙伴的客人 <span class="tag">${un.length}</span></h3><p class="small muted">这些客人不是用伙伴链接注册的，请分配给一位伙伴。</p>${un.map(x=>`<div class="item"><span class="nm">${esc(x.name)}</span> <span class="small muted">· 累计 ${x.n} 天</span><div class="row" style="margin-top:6px"><select data-assign="${x.c.id}" style="flex:1;min-width:10rem">${actv.map(p=>`<option value="${esc(p.code)}">${esc(p.name)}（${esc(p.code)}）</option>`).join('')}</select><button class="btn sm" data-act="assign" data-id="${x.c.id}">分配</button></div></div>`).join('')}</section>`:''}`;
   }else if(TEAMTAB==='gifts'){
@@ -495,13 +582,15 @@ function openCus(id){
   const reached=MILES.filter(m=>S.gifts&&S.gifts[m.id]);
   const done=GLOG[c.id]||new Set();
   $('#modal').innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(x.name)}">
-    <div class="top"><div><h2>${esc(x.name)}</h2><p class="muted small">${ME.is_leader&&c.partner_code!==ME.code?esc(pname(c.partner_code))+' 的客人 · ':''}${PLANS[x.plan].emoji} ${esc(PLANS[x.plan].name)} · 第 ${x.dn} 天 · 累计 ${x.n} 天 · ${STAGE[x.stage]} · 积分 ${esc(S.points||0)}</p></div><button class="btn sm" data-act="close">关闭</button></div>
+    <div class="top"><div><h2>${esc(x.name)}</h2><p class="muted small">${ME.is_leader&&c.partner_code!==ME.code?esc(pname(c.partner_code))+' 的客人 · ':''}${PLANS[x.plan].emoji} ${esc(PLANS[x.plan].name)} · 第 ${x.dn} 天 · 累计 ${x.n} 天 · ${STAGE[x.stage]} · 积分 ${esc(S.points||0)}</p>
+      ${x.nu||x.refBy||x.kids.length?`<p class="small">${[x.nu?'<span class="tag b">新朋友</span> 还没吃营养品':'',x.refBy?esc(nmOf(x.refBy))+' 介绍来的':'',x.kids.length?'她带来的朋友：'+x.kids.map(k=>esc(nmOf(k))+'（'+(+k.checks||0)+' 天）').join('、'):''].filter(Boolean).join(' · ')}</p>`:''}</div><button class="btn sm" data-act="close">关闭</button></div>
+    ${x.ch&&x.ch.phase!=='pre'?`<div class="card"><h3>${esc(CHAL.name)}</h3><p>30 天里打卡 <b>${x.ch.got}</b> 天${x.ch.passed?' · <span class="tag g">已完成</span>':x.ch.phase==='on'?(x.ch.can?` · 再 ${x.ch.toGo} 天就完成`:' · 这一轮来不及了，鼓励她继续'):''}</p></div>`:''}
     ${x.needs.length?`<div class="card">${x.needs.map(n=>`<span class="tag${n.kind==='miss'?'':n.kind==='ask'?' b':' y'}">${esc(n.text)}</span>`).join('')}${x.needs.some(n=>n.key)?`<div style="margin-top:8px"><button class="btn sm" data-act="handled" data-id="${c.id}">已跟进</button></div>`:''}</div>`:''}
     <div class="card"><h3>最近 4 个星期</h3><div class="grid28">${grid}</div><p class="small muted">最后打卡：${ago(x.last)} · 宠物：${S.petName?esc(S.petName)+'（'+(S.pet==='dog'?'小狗':'小猫')+'）':(S.pet==='dog'?'小狗':'小猫')}</p></div>
     <div class="card"><h3>小任务（最近 7 天）</h3>${x.tk7.map(r=>`<div class="tkrow"><span>${esc(r.l)}</span><span class="dots" aria-hidden="true">${r.days.map(on=>`<i class="${on?'on':''}"></i>`).join('')}</span><b>${r.days.filter(Boolean).length}/7</b></div>`).join('')}<p class="small muted">每一格是一天，最右边是今天</p></div>
     ${K.length?`<div class="card"><h3>体重记录</h3>${K.length>1?`<p>第一次 <b>${kgFmt(K[0].kg)}</b> 公斤 → 最近 <b>${kgFmt(K[K.length-1].kg)}</b> 公斤 <span class="tag${kd<=-.05?' g':kd>=.05?' y':''}">${Math.abs(kd)<.05?'没有变化':(kd<0?'−':'+')+kgFmt(Math.abs(kd))+' 公斤'}</span></p>`:''}<table><tr><th>日期</th><th class="n">公斤</th></tr>${K.slice(-8).reverse().map(f=>`<tr><td>${esc(f.d||'')}</td><td class="n">${kgFmt(f.kg)}</td></tr>`).join('')}</table></div>`:''}
     <div class="card"><h3>感觉记录</h3>${feel.length?`<table class="feel"><tr><th>日期</th><th>精神</th><th>睡眠</th><th>肠胃</th>${hasSk?'<th>皮肤</th>':''}</tr>${feel.map(f=>`<tr><td>${esc(f.d||'')}</td><td class="faces">${FACE[f.e]||''} ${esc(f.e)}</td><td class="faces">${FACE[f.s]||''} ${esc(f.s)}</td><td class="faces">${FACE[f.g]||''} ${esc(f.g)}</td>${hasSk?`<td class="faces">${f.sk?FACE[f.sk]+' '+esc(f.sk):'–'}</td>`:''}</tr>`).join('')}</table>`:'<p class="empty">还没有记录</p>'}</div>
-    <div class="card"><h3>关心问题的回答</h3>${ans.length?ans.map(d=>`<div class="item"><p class="small muted">第 ${esc(d)} 天 · ${esc(own(CARE,d)?CARE[d].q:'')}</p><p><b>${esc(S.answers[d]&&S.answers[d].a)}</b></p></div>`).join(''):'<p class="empty">还没有</p>'}</div>
+    <div class="card"><h3>关心问题的回答</h3>${ans.length?ans.map(d=>`<div class="item"><p class="small muted">第 ${esc(d)} 天 · ${esc((careFor(S,d)||{}).q||'')}</p><p><b>${esc(S.answers[d]&&S.answers[d].a)}</b></p></div>`).join(''):'<p class="empty">还没有</p>'}</div>
     ${qs.length?`<div class="card"><h3>她问过的问题</h3>${qs.map(q=>`<div class="item"><p class="small muted">第 ${esc(q.day)} 天</p><p>${esc(q.text)}</p></div>`).join('')}</div>`:''}
     ${x.rs?`<div class="card"><h3>补货</h3><p>${rsWhen(x.rs)}</p><p class="small muted">${x.rs.last?`上次补货：${mdate(x.rs.last.d)}，买了 ${Math.max(1,Math.round(x.rs.last.n/30))} 个月`:'还没有补货记录，先从她开始的日子算'}</p>
       <div class="row"><span class="small muted">补了货？买了多久：</span>${[1,2,3].map(n=>`<button class="btn green sm" data-act="restock" data-id="${c.id}" data-m="${n}">${n} 个月</button>`).join('')}</div></div>`:''}
@@ -555,6 +644,7 @@ document.addEventListener('click',async e=>{
       else{await SB.req('/rest/v1/partners',{method:'POST',body:{user_id:SB.uid(),name,phone},headers:{Prefer:'return=minimal'}});await boot();return}
       render();return}
     if(a==='copy'){const t=b.dataset.text;try{await navigator.clipboard.writeText(t);toast('已复制')}catch(_){prompt('请复制下面的内容',t)}return}
+    if(a==='chok'){b.disabled=true;await mark(id,['ch:'+CHAL.start]);toast('已记录：恭喜过了');render();return}
     if(a==='gift'){b.disabled=true;await mark(id,[b.dataset.key]);toast('已记录：礼物送出了');if(!$('#modal').hidden)openCus(id);render();return}
     if(a==='handled'){b.disabled=true;const c=CUS.find(x=>x.id===id);await mark(id,safeInfo(c).needs.map(n=>n.key));toast('已记录：跟进好了');if(!$('#modal').hidden)openCus(id);render();return}
     if(a==='savenote'){const phone=normPhone($('#n_phone').value),note=$('#n_note').value.slice(0,500);

@@ -112,6 +112,8 @@ button{font:inherit;color:inherit;cursor:pointer}
   .h-cap.pre{display:none}
   .hero .checkin{min-height:3.6rem;margin-top:6px;padding-block:8px}
 }
+/* the shortest screens (a small phone inside WhatsApp): a festival or Friday line would push the button under the tabs; the pet's costume still shows it */
+@media (max-height:600px){.h-fest{display:none}}
 /* the scene keeps the room's proportions, so the plant always stands on the sill */
 .h-scene{position:relative;margin:4px -20px 0;aspect-ratio:390/300}
 .h-scene .room{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -461,9 +463,9 @@ details.rows summary{cursor:pointer;color:var(--accent);font-weight:700;font-siz
 .wcan{position:absolute;animation:wcan 1.6s cubic-bezier(.4,0,.3,1) both;filter:drop-shadow(0 3px 4px rgba(60,40,10,.18))}
 .wcan svg{width:100%;height:auto;display:block}
 @keyframes wcan{0%{opacity:0;transform:translate(-14px,-12px) rotate(-10deg)}16%{opacity:1;transform:none}28%{transform:rotate(35deg)}76%{opacity:1;transform:rotate(35deg)}90%{opacity:1;transform:translate(-6px,-6px) rotate(0)}100%{opacity:0;transform:translate(-10px,-10px) rotate(-6deg)}}
-.wd{position:absolute;width:7px;height:9px;margin:-4px 0 0 -3px;animation:wdx .46s linear both}
-.wd i{display:block;width:100%;height:100%;color:var(--water);animation:wdy .46s cubic-bezier(.45,0,.9,.6) both}
-.wd svg{width:100%;height:100%;display:block;opacity:.9}
+.wdrop{position:absolute;width:7px;height:9px;margin:-4px 0 0 -3px;animation:wdx .46s linear both}
+.wdrop i{display:block;width:100%;height:100%;color:var(--water);animation:wdy .46s cubic-bezier(.45,0,.9,.6) both}
+.wdrop svg{width:100%;height:100%;display:block;opacity:.9}
 @keyframes wdx{from{transform:translateX(0)}to{transform:translateX(var(--dx))}}
 @keyframes wdy{0%{transform:translateY(0) scale(.7);opacity:0}12%{opacity:1}88%{opacity:1}100%{transform:translateY(var(--dy)) scale(1);opacity:0}}
 .wr{position:absolute;border:1.5px solid var(--water);border-radius:50%;opacity:0;animation:wr .7s ease-out both}
@@ -513,6 +515,37 @@ details.rows summary{cursor:pointer;color:var(--accent);font-weight:700;font-siz
 .team{display:flex;align-items:center;gap:8px;color:var(--muted);margin-top:-4px}
 .team .ri{flex:none;width:.85rem;height:1.1rem;color:var(--water)}
 .team .ri svg{width:100%;height:100%;display:block}
+</style>
+<style>
+/* ---------- the 30-day challenge: a warm gold card, her 30 days as a calendar, the sign-up question ---------- */
+.chalc{border:1.5px solid rgba(201,166,89,.55);background:var(--gold-soft)}
+.chalc .ch-eb{color:var(--gold);font-weight:700;letter-spacing:.02em}
+.chalc .row-b .ch-eb{margin:0}
+.chalc .tag{background:var(--surface);color:var(--gold)}
+.ch-t{font-family:var(--f-serif);font-weight:600;font-size:1.25rem;line-height:1.4;margin-top:-4px}
+.ch-t b,.ch-say b{font-family:var(--f-num);font-weight:400;font-size:1.45em;color:var(--gold);padding:0 2px}
+.ch-when{display:flex;align-items:center;gap:14px;margin-top:-2px}
+.ch-num{font-family:var(--f-num);font-size:3.6rem;line-height:1;color:var(--gold)}
+.ch-wt{font-family:var(--f-serif);font-weight:600;font-size:1.2rem;line-height:1.35}
+.ch-wt small{display:block;font-family:var(--f-body);font-weight:400;font-size:.85rem;color:var(--muted);margin-top:2px}
+.ch-rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;counter-reset:r}
+.ch-rules li{counter-increment:r;display:flex;gap:10px;align-items:flex-start;line-height:1.5;font-weight:500}
+.ch-rules li::before{content:counter(r);flex:none;width:1.6rem;height:1.6rem;border-radius:50%;background:var(--surface);color:var(--gold);display:grid;place-items:center;font-weight:700;font-size:.85rem;margin-top:.05em}
+.ccal{gap:5px;background:var(--surface);border-radius:18px;padding:10px 8px}
+.ccal .d{font-size:.9rem}
+.ccal .d.fut{color:var(--muted);opacity:.55}
+.ch-range{margin-top:-4px;text-align:center}
+.ch-say{font-family:var(--f-serif);font-weight:600;font-size:1.05rem;line-height:1.5;text-align:center;text-wrap:balance}
+.ch-say.ok{color:var(--accent)}
+.ch-say span,.ch-range span{display:inline-block}
+.chalc .btn{align-self:stretch}
+.btn .bi{flex:none;width:1.2rem;height:1.2rem;margin-right:8px;display:block}
+.btn .bi svg{width:100%;height:100%;display:block}
+/* yes / not yet, side by side */
+.nutpick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nutpick .plc{justify-content:center;text-align:center;min-height:3.6rem}
+.nutrow{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:14px;margin-top:2px}
+.nutrow h4{font-size:1rem;line-height:1.4}
 </style>
 <script>
 /* demo: the claude.ai preview, or ?demo on the real site (kept apart from real data) */
@@ -609,7 +642,7 @@ function monthStats(st,k,t){
 }
 /* every finished month so far, oldest first */
 function monthsOf(st,t){const L=[];for(let k=1;k<=24;k++){const m=monthStats(st,k,t);if(!m)break;L.push(m)}return L}
-const monthLine=m=>m.days>=25?'这个月几乎每天都没忘记，太厉害了！':m.days>=18?'大部分日子都记得吃，继续保持！':m.days>=10?'有几天忘了没关系，下个月我们一起把天数拉高。':'这个月比较忙吧？下个月我每天早上提醒你。';
+const monthLine=(m,nu)=>m.days>=25?'这个月几乎每天都没忘记，太厉害了！':m.days>=18?(nu?'大部分日子都记得打卡，继续保持！':'大部分日子都记得吃，继续保持！'):m.days>=10?'有几天忘了没关系，下个月我们一起把天数拉高。':'这个月比较忙吧？下个月我每天早上提醒你。';
 /*END-MONTH*/
 const COIN=`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" style="fill:var(--gold-bright)"/><circle cx="12" cy="12" r="7" style="fill:none;stroke:var(--gold);stroke-width:1.6"/><path d="M12 8.6v6.8M9.4 12h5.2" style="fill:none;stroke:var(--gold);stroke-width:2;stroke-linecap:round"/></svg>`;
 const DROP=`<svg viewBox="0 0 24 32" aria-hidden="true"><path d="M12 1S2 13.5 2 20.5a10 10 0 0 0 20 0C22 13.5 12 1 12 1z" style="fill:currentColor"/></svg>`;
@@ -647,6 +680,46 @@ function load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):nul
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typeof cloudSave==='function')cloudSave()}
 /* answers that need the partner to act */
 const NEED={1:['还没开始吃'],3:['肠胃有一点不习惯','有问题想问伙伴'],7:['常常忘记'],21:['有，请伙伴联系她'],28:['剩一个星期左右','已经吃完了'],60:['好，请伙伴联系我'],90:['想请伙伴给我建议']};
+/*SHARE-CHAL*/
+/* ---------- the 30-day challenge: everyone starts on the same Monday. She finishes with 25 check-ins inside the 30 days,
+   so a missed day or two never ends it. codes: the partner codes taking part ([] = the whole team) ---------- */
+const CHAL={name:'30天健康好习惯挑战',open:'2026-11-16',start:'2026-11-23',days:30,pass:25,ref:7,codes:[],
+  tasks:[['water','喝够 8 杯水'],['move','走路或运动 20 分钟']]};
+/* a friend who joined without taking nutrition yet */
+const isNu=st=>!!st&&st.nut===false;
+/* where she stands on day t: sign-up week, the 30 days, two weeks of results, otherwise nothing */
+function chalOf(st,t){
+  const D=s=>{const[a,b,c]=String(s).split('-').map(Number);return new Date(a,b-1,c)},
+    Y=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'),
+    A=(s,n)=>{const d=D(s);d.setDate(d.getDate()+n);return Y(d)},F=(a,b)=>Math.round((D(b)-D(a))/864e5);
+  const end=A(CHAL.start,CHAL.days-1);
+  if(CHAL.codes.length&&!(st&&CHAL.codes.includes(st.pcode)))return null;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(t||'')||t<CHAL.open||F(end,t)>14)return null;
+  const ck=st&&st.checks&&typeof st.checks==='object'?st.checks:{},inW=Object.keys(ck).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&d>=CHAL.start&&d<=end).sort();
+  const got=inW.length,phase=t<CHAL.start?'pre':t<=end?'on':'post',day=phase==='on'?F(CHAL.start,t)+1:0;
+  /* check-ins still possible: the days left, today too unless it is already done */
+  const left=phase==='pre'?CHAL.days:phase==='on'?CHAL.days-day+(ck[t]?0:1):0,passed=got>=CHAL.pass;
+  return {phase,day,got,left,end,passed,passD:passed?inW[CHAL.pass-1]:'',can:passed||got+left>=CHAL.pass,toGo:Math.max(0,CHAL.pass-got),soon:phase==='pre'?F(t,CHAL.start):0};
+}
+/* during the sign-up week and the 30 days, everyone's small tasks are the challenge's two */
+const tasksOf=(st,t)=>{const c=chalOf(st,t);return c&&c.phase!=='post'?CHAL.tasks:PLANS[st&&typeof st.plan==='string'&&Object.prototype.hasOwnProperty.call(PLANS,st.plan)?st.plan:'base'].tasks};
+/* her first questions when she isn't taking nutrition yet; the other days share the usual ones */
+const CARE_F={
+  1:{t:'第 1 天 · 伙伴关心',q:'欢迎你！每天什么时候打卡，你比较方便？',o:['早上起床后','午餐后','晚上睡前'],
+     r:a=>'好的！以后每天'+a+'，打开这里点一下就好。'},
+  3:{t:'第 3 天 · 伙伴关心',q:'三天了！喝够水和走路，哪一样比较难做到？',o:['喝够水比较难','走路比较难','两样都还好','有问题想问伙伴'],
+     r:a=>({'喝够水比较难':'小方法：准备一个水瓶，放在看得到的地方，看到就喝几口。','走路比较难':'小方法：饭后走 10 分钟，一天走两次也算。','两样都还好':'太好了，继续保持！'})[a]||'点下面的按钮告诉 {p}，很快就会联系你。'},
+  7:{t:'第 7 天 · 伙伴关心',q:'一个星期了！你最想照顾好哪一方面？',o:['睡眠','精神体力','体重身形','肠胃','皮肤气色'],
+     r:a=>'谢谢你告诉我们！想听听 {p} 的生活小建议，点下面告诉 {p}。'},
+  28:{t:'第 28 天 · 伙伴关心',q:'快一个月了！想不想听听伙伴给你的营养建议？',o:['好，请伙伴联系我','暂时不用'],
+     r:a=>a==='暂时不用'?'好的，我们继续一起养好习惯！':'好的，{p} 会联系你。'}
+};
+const NEED_F={3:['有问题想问伙伴'],7:['睡眠','精神体力','体重身形','肠胃','皮肤气色'],28:['好，请伙伴联系我']};
+/* the question she saw on day d: an answer keeps which set it came from, otherwise her current choice decides */
+const careNu=(st,d)=>{const r=st&&st.answers&&st.answers[d];return !!CARE_F[d]&&(r&&r.a?!!r.nu:isNu(st))};
+const careFor=(st,d)=>careNu(st,d)?CARE_F[d]:CARE[d];
+const needFor=(st,d)=>(careNu(st,d)?NEED_F[d]:NEED[d])||[];
+/*END-CHAL*/
 /* stage 2-3 surprise cards: everyday facts and small quizzes (no health claims) */
 const FACTS=["一个盘子分四份：一半蔬菜水果，四分之一蛋白质，四分之一五谷。", "蔬菜的颜色越多，得到的营养种类也越多。", "口渴才喝水已经有点迟了，白天要常常喝几口。", "早上晒十多分钟太阳，帮助身体分清白天和晚上。", "饭后散步十五分钟，比坐着休息更舒服。", "坐了一个小时，就站起来走动两三分钟。", "吃饭细嚼慢咽，七分饱刚刚好。", "甜饮料里的糖很多，口渴时白开水最好。", "少淋一点酱料和汤汁，盐就会吃得少一点。", "糙米、燕麦这些全谷类，比白米、白面包更耐饱。", "水果当点心比饼干好，一次一份就够。", "鸡蛋、鱼、豆腐、鸡肉，都是很好的蛋白质。", "睡前一小时放下手机，比较容易睡着。", "每天差不多同一个时间睡、同一个时间起，身体会更有规律。", "慢慢吸气、慢慢吐气，做三次深呼吸，心情会平静一点。", "和家人一起吃饭，常常会吃得更慢、更开心。", "营养是每天的事，天天吃一点，比偶尔吃很多更好。", "坚果很好，但一小把就够了。", "买包装食物时看一看成分表，排在前面的成分最多。", "笑一笑、和朋友聊聊天，也是照顾身体的一部分。", "爬楼梯、做家务，都是很好的活动。", "天气热的时候，记得多补充水分。", "煮菜多用蒸、煮、炒，少用油炸。", "晚餐吃早一点、清淡一点，睡得比较舒服。", "久坐以后伸伸腿、转转肩，身体会轻松很多。", "一天两份水果、三份蔬菜，是很好的目标。", "豆类和豆腐，是来自植物的好蛋白质。", "早餐吃得好，上午比较有精神。", "香肠、火腿少吃，新鲜的肉比较好。", "照顾好自己，才能照顾好家人。"];
 const QUIZ=[{"q": "吃饭时，盘子里哪一样最好占一半？", "o": ["蔬菜和水果", "白饭", "肉"], "a": 0, "w": "一半蔬菜水果，四分之一蛋白质，四分之一五谷。"}, {"q": "什么时候喝水最好？", "o": ["口渴了才喝", "白天常常喝几口"], "a": 1, "w": "口渴才喝已经有点迟了，常常喝几口最好。"}, {"q": "口渴的时候，喝哪一种最好？", "o": ["白开水", "汽水", "奶茶"], "a": 0, "w": "白开水没有糖，最适合解渴。"}, {"q": "睡前一小时，做什么比较容易睡着？", "o": ["继续看手机", "放下手机，把灯调暗"], "a": 1, "w": "手机的光会让脑袋以为还是白天。"}, {"q": "吃完饭，做什么比较舒服？", "o": ["马上躺下", "慢慢散步十五分钟"], "a": 1, "w": "饭后轻松走一走，肚子比较舒服。"}, {"q": "坐了一个小时，最好怎样？", "o": ["继续坐着", "站起来走动一下"], "a": 1, "w": "每坐一个小时，就起来动两三分钟。"}, {"q": "下面哪一样是好的蛋白质？", "o": ["鸡蛋", "薯片", "饼干"], "a": 0, "w": "鸡蛋、鱼、豆腐、鸡肉都是好的蛋白质。"}, {"q": "营养怎么吃比较好？", "o": ["想起来才吃很多", "每天固定时间吃"], "a": 1, "w": "天天吃一点，比偶尔吃很多更好。"}, {"q": "煮菜用哪一种方法比较健康？", "o": ["油炸", "蒸或煮"], "a": 1, "w": "蒸、煮、炒用的油比较少。"}, {"q": "哪一样比较耐饱？", "o": ["燕麦", "白面包"], "a": 0, "w": "全谷类的纤维多，比较耐饱。"}, {"q": "吃饭吃到几分饱刚刚好？", "o": ["七分饱", "十分饱"], "a": 0, "w": "七分饱，身体比较轻松。"}, {"q": "早上晒太阳，多久就够？", "o": ["十多分钟", "一整个早上"], "a": 0, "w": "十多分钟就够了，记得避开正午的大太阳。"}];
@@ -654,7 +727,17 @@ const QUIZ=[{"q": "吃饭时，盘子里哪一样最好占一半？", "o": ["蔬
 /* each partner shares the same link with their own WhatsApp number at the end: …#60123456789-Kelvin */
 const PI=(()=>{const m=(location.hash||'').slice(1).match(/^(\d{8,15})(?:-([A-Za-z][A-Za-z0-9._~]{0,19}))?$/);return m?{phone:m[1],name:m[2]||''}:{phone:'',name:''}})();
 const waLink=t=>`https://wa.me/${PI.phone||(S&&S.pphone)||''}?text=${encodeURIComponent(t)}`;
-const askText=q=>`${S.partner} 你好，我是${S.name}（营养打卡第 ${dayNum()} 天）。我想问：${q}`;
+const askText=q=>`${S.partner} 你好，我是${S.name}（${isNu(S)?'':'营养'}打卡第 ${dayNum()} 天）。我想问：${q}`;
+/* a friend's invitation (?r=her code) and the partner's challenge link (?nu=1) both start her as "not taking nutrition yet" */
+const URLQ=(()=>{try{return new URLSearchParams(location.search)}catch(e){return new URLSearchParams('')}})();
+let REFX=(URLQ.get('r')||'').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,8);
+const NUQ=URLQ.get('nu')==='1';
+let draftNut=!(REFX||NUQ);
+/* her own invitation code: short, no look-alike letters */
+const newCode=()=>{const A='abcdefghjkmnpqrstuvwxyz23456789',r=new Uint8Array(6);try{crypto.getRandomValues(r)}catch(e){for(let i=0;i<6;i++)r[i]=Math.random()*256|0}return Array.from(r,v=>A[v%A.length]).join('')};
+/* the base plan's words for someone not taking nutrition */
+const planName=(k,nu)=>nu&&k==='base'?'基础好习惯':PLANS[k].name;
+const planDesc=(k,nu)=>nu&&k==='base'?'喝够水、多走路，打好身体的底子':PLANS[k].desc;
 
 /* ---------- growth plan: one visible change per check-in, a bigger change on gift days ---------- */
 const f1=v=>Math.round(v*10)/10;
@@ -868,12 +951,12 @@ function monthRows(m){
 const monthAlt=m=>`第 ${m.k} 个月：30 天里打卡 ${m.days} 天。`+monthRows(m).map(r=>r[0]+r[1]).join('，')+'。';
 let MOCACHE={};
 async function monthURL(m){
-  const key=[m.k,m.days,m.total,S.name,S.partner,JSON.stringify(monthRows(m))].join('|');
+  const key=[m.k,m.days,m.total,S.name,S.partner,isNu(S),JSON.stringify(monthRows(m))].join('|');
   if(MOCACHE[key])return MOCACHE[key];
   const W=900,H=1125,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
   const th=THEMES[(m.k-1)%THEMES.length],f=pd(m.from),t=pd(m.to),range=`${f.getMonth()+1}月${f.getDate()}日 – ${t.getMonth()+1}月${t.getDate()}日`;
-  const rows=monthRows(m),line=`${S.partner}：${monthLine(m)}`,head=`${S.name}的第 ${m.k} 个月`;
-  const words=head+'这 30 天里，记得吃营养的日子'+range+rows.map(r=>r[0]+r[1]).join('')+line+'这里只是你自己的记录，不是医疗诊断';
+  const rows=monthRows(m),nu=isNu(S),line=`${S.partner}：${monthLine(m,nu)}`,head=`${S.name}的第 ${m.k} 个月`,sub=nu?'30 天里，记得打卡的日子':'30 天里，记得吃营养的日子';
+  const words=head+sub+range+rows.map(r=>r[0]+r[1]).join('')+line+'这里只是你自己的记录，不是医疗诊断';
   try{await Promise.race([Promise.all([document.fonts.load('240px "DM Serif Display"',String(m.days)),document.fonts.load('600 60px "Noto Serif SC"',words),document.fonts.load('500 36px "Noto Serif SC"',words)]),new Promise(r=>setTimeout(r,3500))])}catch(e){}
   x.fillStyle=th.bg;x.fillRect(0,0,W,H);
   x.fillStyle=th.deep;x.beginPath();x.arc(650,300,175,0,Math.PI*2);x.fill();
@@ -886,7 +969,7 @@ async function monthURL(m){
   x.font=serif(500,30);x.globalAlpha=.7;x.fillText(range,84,300);x.globalAlpha=1;
   x.font='240px "DM Serif Display","Noto Serif SC",serif';x.fillText(String(m.days),74,540);const nw=x.measureText(String(m.days)).width;
   x.font=serif(600,56);x.fillText('天',74+nw+14,540);
-  x.font=serif(500,34);x.globalAlpha=.75;x.fillText('30 天里，记得吃营养的日子',84,600);x.globalAlpha=1;
+  x.font=serif(500,34);x.globalAlpha=.75;x.fillText(sub,84,600);x.globalAlpha=1;
   x.fillStyle=th.acc;x.fillRect(84,652,72,5);
   let y=735;
   for(const [l,v] of rows){x.fillStyle=th.ink;x.font=serif(500,38);x.fillText(l,84,y);x.textAlign='right';x.font=serif(700,38);x.fillText(v,W-84,y);x.textAlign='left';
@@ -1156,6 +1239,14 @@ const SERIES=[
   {w:3,from:15,type:'知识',title:'为什么要天天吃？',body:'身体每天都在消耗营养，也每天都需要补充。\n天天吃一点，比偶尔吃很多更好。'},
   {w:4,from:22,type:'知识',title:'第一个月，给自己鼓掌！',body:'去「感觉」页记录一下精神、睡眠和肠胃。\n下个月再记录一次，就能看到自己的变化。'}
 ];
+/* the same four weeks for a friend who isn't taking nutrition yet */
+const SERIES_F=[
+  {w:1,from:2,type:'知识',title:'欢迎加入！怎样才不会忘记打卡？',body:'把打卡和每天都会做的事连在一起，例如喝完早上第一杯水，就打开这里点一下。\n每天早上，伙伴也会在 WhatsApp 提醒你。'},
+  {w:2,from:8,type:'知识',title:'水要怎样才喝得够？',body:'准备一个水瓶，放在看得到的地方，看到就喝几口。\n口渴才喝已经有点迟了，白天常常喝几口最好。'},
+  {w:3,from:15,type:'知识',title:'走路 20 分钟，怎样比较容易做到？',body:'不用一次走完，饭后走 10 分钟，一天走两次也可以。\n约家人或朋友一起走，聊着天就走完了。'},
+  SERIES[3]
+];
+const seriesOf=()=>isNu(S)?SERIES_F:SERIES;
 const stageOf=n=>n>=56?3:n>=26?2:1;
 const STAGE_NAME=['','养成期','稳定期','习惯期'];
 /* a one-time note when a customer moves up, so fewer gifts feel like a level-up, not a loss */
@@ -1198,7 +1289,7 @@ function forMe(w){w=String(w||'').replace(/全部|所有人|所有/g,'');
 /* what this customer may see: series posts already reached, and sheet posts meant for her */
 function allNews(){const t=today(),d=dayNum(),src=NEWS.length?NEWS:(DEMO?demoNews():[]);
   return {b:src.filter(x=>x.date<=t&&forMe(x.who)),
-          s:SERIES.filter(x=>d>=x.from).map(x=>({...x,id:'s'+x.w,date:add(S.start,x.from-1),series:true}))}}
+          s:seriesOf().filter(x=>d>=x.from).map(x=>({...x,id:'s'+x.w,date:add(S.start,x.from-1),series:true}))}}
 /* weeks 1-4 pop the series post; after that the newest sheet post (only if under two weeks old) */
 function newsNow(){const {b,s}=allNews(),d=dayNum(),t=today(),ser=s.find(x=>d>=x.from&&d<x.from+7),
     latest=b.length?b.reduce((a,x)=>x.date>=a.date?x:a):null,seen=x=>x&&S.seen.includes(x.id);
@@ -1296,7 +1387,7 @@ async function cloudRestore(){
   return false
 }
 /* in the browser, keep a takeover code in the address so the home-screen icon carries it */
-function setURL(mc){try{const q=new URLSearchParams(),pc=S.pcode||PCODE;if(pc)q.set('p',pc);if(!S.onboarded&&PLANQ)q.set('plan',PLANQ);if(mc)q.set('move',mc);const t=q.toString();history.replaceState(null,'',location.pathname+(t?'?'+t:'')+location.hash)}catch(e){}}
+function setURL(mc){try{const q=new URLSearchParams(),pc=S.pcode||PCODE;if(pc)q.set('p',pc);if(!S.onboarded&&PLANQ)q.set('plan',PLANQ);if(!S.onboarded&&REFX)q.set('r',REFX);if(!S.onboarded&&NUQ)q.set('nu','1');if(mc)q.set('move',mc);const t=q.toString();history.replaceState(null,'',location.pathname+(t?'?'+t:'')+location.hash)}catch(e){}}
 async function cloudMoveCode(){
   if(!CLOUD||STANDALONE||!S.onboarded||moved())return;
   let m=null;try{m=JSON.parse(flag('_move')||'null')}catch(e){}
@@ -1487,8 +1578,8 @@ function prizeBlock(){
 }
 function careDay(){const d=dayNum(),t=today();for(let k=d;k>=Math.max(1,d-2);k--){if(!CARE[k])continue;const a=S.answers[k];if(k===d||!a||a.d===t)return k}return 0}
 function careBlock(){
-  const d=careDay(),c=CARE[d];if(!c)return '';const a=S.answers[d],eb=`<p class="eyebrow">${esc(S.partner)} 想问你</p>`;
-  if(a){const need=(NEED[d]||[]).includes(a.a);
+  const d=careDay(),c=careFor(S,d);if(!c)return '';const a=S.answers[d],eb=`<p class="eyebrow">${esc(S.partner)} 想问你</p>`;
+  if(a){const need=needFor(S,d).includes(a.a);
     return `<div class="care">${eb}<h3>${c.q}</h3><p>你的回答：<b>${esc(a.a)}</b></p>
     <div class="reply"><div class="avatar">${esc(S.partner[0])}</div><div class="bubble"><b>${esc(S.partner)}</b>${esc(fill(c.r(a.a)))}</div></div>
     ${need?`<a class="btn solid" href="${waLink(`${S.partner} 你好，我是${S.name}。第 ${d} 天的问题「${c.q}」，我的回答是：${a.a}`)}" target="_blank" rel="noopener">用 WhatsApp 告诉 ${esc(S.partner)}</a>`:''}</div>`}
@@ -1496,26 +1587,29 @@ function careBlock(){
   return `<div class="care">${eb}<h3>${c.q}</h3>
     <div class="opts">${opts.map(o=>`<button class="opt" data-care="${d}" data-a="${esc(o)}">${esc(o)}</button>`).join('')}</div></div>`;
 }
-/* the plan's three small habits for today; they earn points but never change the check-in count */
+/* the plan's small habits for today (the challenge's two while it runs); they earn points but never change the check-in count */
+const HOWMANY=['','一样','两样','三样','四样'];
 function tasksCard(){
-  const k=planOf(S),P=PLANS[k],got=(S.tasks&&S.tasks[today()])||[],n=P.tasks.filter(([id])=>got.includes(id)).length,all=n===P.tasks.length;
-  return `<section class="card" id="tasks"><div class="row-b"><h3 class="ch"><span class="ci ${PLAN_CI[k]}">${PLAN_IC[k]}</span>今天的小任务</h3><span class="tag${all?' ok':''}">${n}/${P.tasks.length}</span></div>
-    <p class="small muted" style="margin-top:-4px">${P.name}计划 · 做到一样，点一下</p>
-    <div class="tlist">${P.tasks.map(([id,txt])=>`<button class="task${justTask===id?' pop':''}" data-task="${id}" aria-pressed="${got.includes(id)}"><span class="tk">${TICK}</span><span class="ti">${TICON[id]||''}</span><span class="tt">${esc(txt)}</span><span class="tp">+2</span></button>`).join('')}</div>
-    ${all?'<p class="tdone">三样都做到了，今天好棒！</p>':''}</section>`;
+  const t=today(),k=planOf(S),L=tasksOf(S,t),ch=chalOf(S,t),got=(S.tasks&&S.tasks[t])||[],n=L.filter(([id])=>got.includes(id)).length,all=n===L.length;
+  return `<section class="card" id="tasks"><div class="row-b"><h3 class="ch"><span class="ci ${PLAN_CI[k]}">${PLAN_IC[k]}</span>今天的小任务</h3><span class="tag${all?' ok':''}">${n}/${L.length}</span></div>
+    <p class="small muted" style="margin-top:-4px">${ch&&ch.phase!=='post'?'30 天挑战':planName(k,isNu(S))+'计划'} · 做到一样，点一下</p>
+    <div class="tlist">${L.map(([id,txt])=>`<button class="task${justTask===id?' pop':''}" data-task="${id}" aria-pressed="${got.includes(id)}"><span class="tk">${TICK}</span><span class="ti">${TICON[id]||''}</span><span class="tt">${esc(txt)}</span><span class="tp">+2</span></button>`).join('')}</div>
+    ${all?`<p class="tdone">${HOWMANY[L.length]}都做到了，今天好棒！</p>`:''}</section>`;
 }
-function planPick(cur){return `<div class="plans" role="group" aria-label="选计划">${Object.keys(PLANS).map(k=>`<button class="plc" data-plan="${k}" aria-pressed="${cur===k}"><span class="ci ${PLAN_CI[k]}">${PLAN_IC[k]}</span><span style="min-width:0"><b>${PLANS[k].name}</b><span class="small muted">${PLANS[k].desc}</span></span></button>`).join('')}</div>`}
+function planPick(cur,nu){return `<div class="plans" role="group" aria-label="选计划">${Object.keys(PLANS).map(k=>`<button class="plc" data-plan="${k}" aria-pressed="${cur===k}"><span class="ci ${PLAN_CI[k]}">${PLAN_IC[k]}</span><span style="min-width:0"><b>${planName(k,nu)}</b><span class="small muted">${planDesc(k,nu)}</span></span></button>`).join('')}</div>`}
+/* the one question that sets her daily button: nutrition, or the first glass of water */
+function nutPick(on){return `<div class="nutpick" role="group" aria-label="有没有在吃营养品">${[[1,'有，每天吃'],[0,'还没有']].map(([v,l])=>`<button class="plc" data-nut="${v}" aria-pressed="${on===!!v}"><b>${l}</b></button>`).join('')}</div>`}
 function viewToday(){
   const t=today(),done=!!S.checks[t],y=add(t,-1),canMakeup=y>=S.start&&!S.checks[y],stg=stageOf(count());
   if(moved())return hero()+`<section class="card"><h3 class="ch"><span class="ci">${I.phone}</span>你的小花已经搬家了</h3><p>你的记录已经搬到手机桌面的图标（或新手机）。请从那里打开打卡，${/^[\x20-\x7E]+$/.test(S.partner)?esc(S.partner)+' ':esc(S.partner)}才看得到你的记录。</p></section>`+footer();
-  const rows=(done?'':mornLocked())+(stg===3?newsRow():'')+(stg<3?newsRow():'')+(S.a2hs||IOS||STANDALONE?'':homeRow());
+  const rows=(done?'':mornLocked())+(stg===3?newsRow():'')+(stg<3?newsRow():'')+(chalOf(S,t)?'':inviteRow())+(S.a2hs||IOS||STANDALONE?'':homeRow());
   if(done)teamFetch();
   const gifts=done?`<section class="card list">${mornRow()}</section>`+(S.flips[t]?flipBlock():flipCard()):'';
   const mk=canMakeup?`<button class="link-btn" data-act="makeup">昨天忘了打卡？点这里补上</button>`:'',mn=monthNew();
   /* the one action sits right under the plant, so it is on the first screen even on a small phone with big text */
-  const btn=`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>我今天吃了营养<span class="sub">点一下，给花浇水</span></span></button>`;
+  const btn=`<button class="checkin" data-act="check"><span class="ic">${DROP}</span><span>${isNu(S)?'我喝了今天第一杯水':'我今天吃了营养'}<span class="sub">点一下，给花浇水</span></span></button>`;
   return hero(done?'':btn+mk)+flwNote()+
-    (done?doneCard(mk):'')+(mn?monthCard(mn):'')+
+    (done?doneCard(mk):'')+chalCard()+(mn?monthCard(mn):'')+
     gifts+tasksCard()+changeCard()+
     (rows?`<section class="card list">${rows}</section>`:'')+demoTools()+footer();
 }
@@ -1561,13 +1655,16 @@ function viewLog(){
     if(n>=ms.n)return `<div class="stone got"><div class="mini">${plantSVG(ms.n)}</div><div><h4>${ms.name} · ${ms.stage}</h4><p class="small muted">累计 ${ms.n} 天 · ${ms.gift} · 已达成</p></div></div>`;
     if(nx&&nx.id===ms.id)return `<div class="stone next"><div class="mini">${plantSVG(ms.n)}</div><div><h4>${ms.name} · ${ms.stage} <span class="tag">下一阶段</span></h4><p class="small muted">再打卡 ${ms.n-n} 天 · 可以领：${ms.gift}</p></div></div>`;
     return `<div class="stone"><div class="mini secret" aria-label="还没揭晓">?</div><div><h4>${ms.name} · 到时候揭晓</h4><p class="small muted">累计 ${ms.n} 天 · 礼物：${ms.gift}</p></div></div>`}).join('');
-  const ans=Object.entries(S.answers).map(([d,a])=>`<div><p class="small muted">第 ${d} 天 · ${esc(CARE[d]?CARE[d].q:'')}</p><p><b>${esc(a.a)}</b></p></div>`).join('');
+  const ans=Object.entries(S.answers).map(([d,a])=>`<div><p class="small muted">第 ${d} 天 · ${esc((careFor(S,d)||{}).q||'')}</p><p><b>${esc(a.a)}</b></p></div>`).join('');
+  const nu=isNu(S),cw=chalWin(S);
   return phead('我的记录',`累计打卡 ${n} 天，${STAGE_NAME[stageOf(n)]}，积分 ${S.points}`)+
     `<div class="card"><div class="row-b"><h3 class="ch"><span class="ci g">${I.cal}</span>${m+1}月</h3><span class="muted small">这个月打卡 ${mc} 天</span></div><div class="cal">${cells}</div>
       <p class="note">绿色圆圈是已经打卡的日子。漏了一两天没关系，奖励是按累计天数算的。</p></div>
     ${monthListCard()}
-    <div class="card"><div class="row-b"><h3 class="ch"><span class="ci ${PLAN_CI[pk]}">${PLAN_IC[pk]}</span>我的计划</h3><span class="tag">${PLANS[pk].name}</span></div><p class="small muted" style="margin-top:-4px;word-break:keep-all;text-wrap:balance">${PLANS[pk].desc}</p>
-      <details class="plchg"><summary class="link-btn" style="padding:0">换一个计划</summary>${planPick(pk)}<p class="small muted" style="margin-top:8px">换计划不会影响打卡天数、积分和礼物。</p></details></div>
+    ${cw&&cw.passed&&today()>=cw.passD?`<div class="card chalc"><h3 class="ch"><span class="ci">${MEDAL}</span>${esc(CHAL.name)}</h3><p class="small muted" style="margin-top:-4px">30 天里打卡 ${cw.got} 天，完成了挑战</p><button class="btn solid" data-act="cert">看我的证书</button></div>`:''}
+    <div class="card"><div class="row-b"><h3 class="ch"><span class="ci ${PLAN_CI[pk]}">${PLAN_IC[pk]}</span>我的计划</h3><span class="tag">${planName(pk,nu)}</span></div><p class="small muted" style="margin-top:-4px;word-break:keep-all;text-wrap:balance">${planDesc(pk,nu)}</p>
+      <details class="plchg"><summary class="link-btn" style="padding:0">换一个计划</summary>${planPick(pk,nu)}<p class="small muted" style="margin-top:8px">换计划不会影响打卡天数、积分和礼物。</p></details>
+      <div class="nutrow"><h4>你现在有在吃营养品吗？</h4>${nutPick(!nu)}<p class="small muted">每天的打卡按钮会跟着改：${nu?'「我喝了今天第一杯水」':'「我今天吃了营养」'}</p></div></div>
     <div class="card"><h3 class="ch"><span class="ci">${I.flower}</span>我的花和奖励</h3><div class="path">${path}</div></div>
     <div class="card"><h3 class="ch"><span class="ci">${I.heart}</span>我的宠物</h3><div class="petrow"><div class="petbox">${petSVG(S.pet,petStage(n),costume().cos,'sit',S.fur)}</div><div style="min-width:0"><p><b>${esc(S.petName)}</b>（${S.pet==='dog'?'小狗':'小猫'}）</p><p class="small muted">${PET_TXT[petStage(n)]}</p></div></div>
       <label for="pn2" class="small muted">改名字</label><div class="row"><input type="text" id="pn2" maxlength="8" value="${esc(S.petName)}" style="flex:1;min-width:0"><button class="btn" data-act="rename">保存</button></div>
@@ -1630,7 +1727,7 @@ function viewFeel(){
   return phead('我的感觉','这里只记录感觉，不是医疗诊断')+
     `${form}<div class="card"><h3 class="ch"><span class="ci">${I.chart}</span>我的变化</h3>${chart()}</div>${kgCard()}
     <div class="card"><h3 class="ch"><span class="ci">${I.chat}</span>有什么想问 ${esc(S.partner)}？</h3><label for="q" class="small muted">写下你的问题，${esc(S.partner)} 会回复你。身体不舒服，请先看医生。</label>
-      <textarea id="q" placeholder="例如：营养要饭前吃还是饭后吃？"></textarea><a class="btn solid" id="askbtn" data-act="ask" href="${waLink(askText(''))}" target="_blank" rel="noopener">用 WhatsApp 发给 ${esc(S.partner)}</a>
+      <textarea id="q" placeholder="${isNu(S)?'例如：一天要喝多少水才够？':'例如：营养要饭前吃还是饭后吃？'}"></textarea><a class="btn solid" id="askbtn" data-act="ask" href="${waLink(askText(''))}" target="_blank" rel="noopener">用 WhatsApp 发给 ${esc(S.partner)}</a>
       ${qs?`<div class="qa">${qs}</div>`:''}</div>`+footer();
 }
 
@@ -1640,14 +1737,15 @@ function viewOnboard(){
   const p=period(),c=scenePal(p);
   return `<section class="hero" style="${heroStyle(p)}"><div class="h-top">${dateBlock()}</div><h1 class="h-greet">欢迎你，一起养一盆健康花</h1>
       <div class="h-scene">${roomSVG(p,c)}<div class="plant" style="height:${f1((260-vbY0(grow(0)))/260*76)}%">${plantSVG(0)}</div>${cupSVG(p,c)}</div>
-      <p class="h-cap mute"><span style="display:inline-block">每天吃完营养，点一下打卡，</span><span style="display:inline-block">种子就会慢慢长大开花。</span></p></section>`+
+      <p class="h-cap mute"><span style="display:inline-block">${draftNut?'每天吃完营养，点一下打卡，':'每天喝完第一杯水，点一下打卡，'}</span><span style="display:inline-block">种子就会慢慢长大开花。</span></p></section>`+chalWelcome()+
     (CLOUD&&!S.pcode&&!PCODE&&!PI.phone?`<div class="card" style="background:var(--gold-soft);border:0"><h3>还不知道你的伙伴是谁</h3><p>请用伙伴发给你的链接打开，或请伙伴给你扫二维码。这样你的奖励和问题才会送到伙伴那里。</p></div>`:'')+`<div class="card"><h3>1. 哪一种字看得最清楚？</h3>${fontPick()}</div>
     <div class="card"><label for="nm"><h3>2. 我们怎么称呼你？</h3></label><input type="text" id="nm" placeholder="例如：陈姐" value="${esc(draftName)}"></div>
-    <div class="card"><h3>3. 你想先照顾哪一方面？</h3><p class="small muted" style="margin-top:-6px">每天会有 3 个小任务。以后可以在「记录」页换。</p>${planPick(draftPlan)}</div>
-    <div class="card"><h3>4. 你想养小猫还是小狗？</h3><div class="petpick">${['cat','dog'].map(k=>`<button class="pp" data-pet="${k}" aria-pressed="${draftPet===k}">${petSVG(k,1,'','sit',k===draftPet?draftFur:'')}<span>${k==='cat'?'小猫':'小狗'}</span></button>`).join('')}</div>
+    <div class="card"><h3>3. 你现在有在吃营养品吗？</h3>${nutPick(draftNut)}<p class="small muted">${draftNut?'每天吃完营养，点一下打卡。':'没关系！每天喝完第一杯水，点一下打卡就好。'}</p></div>
+    <div class="card"><h3>4. 你想先照顾哪一方面？</h3><p class="small muted" style="margin-top:-6px">每天会有几个小任务，做到一样点一下。以后可以在「记录」页换。</p>${planPick(draftPlan,!draftNut)}</div>
+    <div class="card"><h3>5. 你想养小猫还是小狗？</h3><div class="petpick">${['cat','dog'].map(k=>`<button class="pp" data-pet="${k}" aria-pressed="${draftPet===k}">${petSVG(k,1,'','sit',k===draftPet?draftFur:'')}<span>${k==='cat'?'小猫':'小狗'}</span></button>`).join('')}</div>
       <p class="small muted" style="margin-top:12px">选一个毛色</p>${furPick(draftPet,furOf(draftPet,draftFur).k)}
       <label for="pn" class="small muted">它的名字（可以改）</label><input type="text" id="pn" maxlength="8" value="${esc(draftPetName)}"></div>
-    <div class="card"><h3>5. 你的生日（可以不填）</h3><p class="small muted">生日那天，宠物会戴上生日帽陪你庆祝。</p>
+    <div class="card"><h3>6. 你的生日（可以不填）</h3><p class="small muted">生日那天，宠物会戴上生日帽陪你庆祝。</p>
       <div class="row"><select id="bm" aria-label="生日月份"><option value="">月</option>${Array.from({length:12},(_,i)=>`<option value="${i+1}"${+draftBM===i+1?' selected':''}>${i+1} 月</option>`).join('')}</select>
       <select id="bd" aria-label="生日日期"><option value="">日</option>${Array.from({length:31},(_,i)=>`<option value="${i+1}"${+draftBD===i+1?' selected':''}>${i+1} 日</option>`).join('')}</select></div></div>
     <div class="card"><label style="display:flex;gap:12px;align-items:flex-start"><input type="checkbox" id="ok" ${draftOk?'checked':''} style="width:1.6rem;height:1.6rem;flex:none;margin-top:4px">
@@ -1661,6 +1759,7 @@ function demoTools(){
     <button class="btn" data-act="jump">直接到下一个礼物日</button><button class="btn" data-act="fast">连续打卡 7 天</button>
     <button class="btn" data-act="new">看新客人第一天</button><button class="btn" data-act="sample">恢复示例</button></div>
     ${S.onboarded?`<div class="row" style="padding-bottom:8px">${Object.keys(PLANS).map(k=>`<button class="btn" data-plan="${k}" aria-pressed="${planOf(S)===k}">看${PLANS[k].name}</button>`).join('')}</div>`:''}
+    <div class="row" style="padding-bottom:8px"><button class="btn" data-act="chpre">看挑战报名期</button><button class="btn" data-act="chon">看挑战第 10 天</button><button class="btn" data-act="chdone">看完成挑战</button><button class="btn" data-act="chfriend">看朋友收到邀请</button></div>
     <div class="row" style="padding-bottom:8px"><button class="btn" data-act="flwdemo">看伙伴送花</button><button class="btn" data-act="newsdemo">看本周信息弹窗</button><button class="btn" data-act="month1">看第一个月小结</button><button class="btn" data-act="cos">看节日装扮${demoCos>=0?`（${demoCos+1}/${DEMO_COS.length}）`:''}</button>${demoCos>=0?'<button class="btn" data-act="cosoff">看平常样子</button>':''}</div>
     <div class="row" style="padding-bottom:8px">${[['am','看早上'],['day','看中午'],['dusk','看傍晚'],['night','看晚上'],['','跟随时间']].map(([k,l])=>`<button class="btn" data-period="${k}" aria-pressed="${demoP===k}">${l}</button>`).join('')}</div>
     <p>${S.sample?'现在显示的是示例客人「陈姐」的资料。':''}想看花每天的变化：先点「跳到明天」，再点打卡。试用版的资料只存在这部手机里。</p></details>`;
@@ -1735,13 +1834,18 @@ function patLine(){
   else if(pc.label)sp.push(['fest',pc.label+'！']);
   const fl=(S.flw||[]).find(f=>f.d===t&&f.f);if(fl)sp.push(['flw',spc(fl.f)+'送的花，好香']);
   if(m&&m.n-n<=3)sp.push(['gift',`再 ${m.n-n} 天，就可以领「${m.gift}」了！`]);
-  const got=(S.tasks&&S.tasks[t])||[],left=PLANS[pk].tasks.filter(([k])=>!got.includes(k)).length;
-  if(!left)sp.push(['tasks','三样小任务都做到了，好厉害！']);
+  const ch=chalOf(S,t);
+  if(ch&&ch.phase==='pre')sp.push(['chal',`还有 ${ch.soon} 天，挑战就开始啦，记得邀请朋友哦`]);
+  else if(ch&&ch.phase==='on'&&ch.day===1)sp.push(['chal','挑战第一天！我们一起加油']);
+  else if(ch&&ch.passed)sp.push(['chal','你完成挑战了，我好骄傲！']);
+  else if(ch&&ch.phase==='on'&&ch.toGo===1&&ch.can)sp.push(['chal','再打卡 1 天，就能拿到挑战证书了！']);
+  const TL=tasksOf(S,t),got=(S.tasks&&S.tasks[t])||[],left=TL.filter(([k])=>!got.includes(k)).length;
+  if(!left)sp.push(['tasks',HOWMANY[TL.length]+'小任务都做到了，好厉害！']);
   else if(period()==='dusk'||period()==='night')sp.push(['tasks',`今天的小任务还差 ${left} 样，做完记得打勾哦`]);
   if(feelDue())sp.push(['feel','这星期的感觉还没记录，去「感觉」页点一点吧']);
   for(const [k,l] of sp)if(PAT_SEEN[k]!==t){PAT_SEEN[k]=t;return l}
   /* otherwise take turns through the everyday lines, so she seldom hears the same one twice */
-  const L=PAT_L.concat(PAT_T[period()],[PAT_P[pk]]),i=+(flag('_pat')||0)||0;flag('_pat',String(i+1));
+  const L=PAT_L.concat(PAT_T[period()],[isNu(S)&&pk==='base'?'水瓶放在看得到的地方，看到就喝几口':PAT_P[pk]]),i=+(flag('_pat')||0)||0;flag('_pat',String(i+1));
   return lineFill(L[i%L.length]);
 }
 
@@ -1759,7 +1863,7 @@ function patPet(){
   const now=Date.now();PET.taps=now-(PET.tapAt||0)<2000?(PET.taps||0)+1:1;PET.tapAt=now;played(); /* quick taps in a row count up */
   buzz(8);const r=petRect();if(r)floaters((r.left+r.right)/2,r.top+6,HEART,'hrt',PET.taps>=3?3:2);
   if(el.dataset.mode!=='awake'){const j=el.querySelector('.pet-j');if(j&&!calm()){j.classList.remove('jump','now','nudge');void j.offsetWidth;j.classList.add('nudge')}
-    say(r,SLEEP_L[(PET.taps-1)%SLEEP_L.length]);return}
+    const sl=(PET.taps-1)%SLEEP_L.length;say(r,!sl&&isNu(S)?'呼……（今天喝水了吗？）':SLEEP_L[sl]);return}
   const k=PET.taps,st=+el.dataset.stage;
   if(k===3)return petSay('好痒，好痒～','groom',2600);
   if(k===5)return petSay('再摸，我就要打滚啦','lie',3000);
@@ -1778,7 +1882,7 @@ function patPlant(){
   sparkleAt((a.left+a.right)/2,a.cy,24,4);
   if(!n)return say(a,'我是一颗种子，浇第一次水，我就会发芽');
   /* what the next watering will bring: a reason to come back */
-  if(!S.checks[today()])return say(a,'有点渴了……吃完营养，就来给我浇水吧',nx?'浇水后：'+nx:'');
+  if(!S.checks[today()])return say(a,isNu(S)?'有点渴了……你喝一杯水，也给我浇点水吧':'有点渴了……吃完营养，就来给我浇水吧',nx?'浇水后：'+nx:'');
   const i=+(flag('_plant')||0)||0;flag('_plant',String(i+1));
   say(a,PLANT_L[i%PLANT_L.length],nx?'下次浇水：'+nx:`累计 ${n} 天，好习惯已经养成`);
 }
@@ -1801,7 +1905,7 @@ function water(){
   const rose=[sx-pw*.14,sy-pw*.86],pv=[rose[0]-rx*s,rose[1]-ry*s];
   const can=document.createElement('div');can.className='wcan';can.innerHTML=CAN;
   can.style.cssText=`left:${pv[0]-31*s}px;top:${pv[1]-38*s}px;width:${cw}px;transform-origin:${31*s}px ${38*s}px`;L.appendChild(can);
-  for(let i=0;i<13;i++){const d=document.createElement('div');d.className='wd';
+  for(let i=0;i<13;i++){const d=document.createElement('div');d.className='wdrop';
     const lx=sx+(Math.random()*.5-.32)*pw,ly=sy-2-Math.random()*pw*.05;
     d.style.cssText=`left:${rose[0]}px;top:${rose[1]}px;--dx:${lx-rose[0]}px;--dy:${ly-rose[1]}px;animation-delay:${330+i*48}ms`;
     d.innerHTML=`<i style="animation-delay:${330+i*48}ms">${DROP}</i>`;L.appendChild(d)}
@@ -1885,6 +1989,123 @@ async function teamFetch(){
   try{const n=await SB.rpc('team_today');TEAM={d:t,n:+n||0};const el=$('#done');if(el&&!$('#team')&&TEAM.n>0){const r=el.querySelector('.reply');if(r)r.insertAdjacentHTML('afterend',teamLine())}}catch(e){TEAM={d:t,n:0}}
 }
 
+/* ---------- the 30-day challenge on her page: the countdown, her 30 days, inviting friends, the certificate ---------- */
+const PEOPLE=ic('<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c.6-3.4 2.8-5.4 5.5-5.4s4.9 2 5.5 5.4"/><circle cx="17" cy="9.2" r="2.6"/><path d="M15.4 14.2c2.4.1 4.4 1.9 5.1 5.3"/>');
+const MEDAL=ic('<circle cx="12" cy="14.5" r="5.8"/><path d="M8.4 3.5l2.3 5.4M15.6 3.5l-2.3 5.4"/><path d="M12 11.9l1 2 2.1.3-1.5 1.5.4 2.1-2-1-1.9 1 .4-2.1-1.5-1.5 2.1-.3z"/>');
+const mdOf=s=>{const d=pd(s);return (d.getMonth()+1)+'月'+d.getDate()+'日'};
+const ymdCN=s=>{const d=pd(s);return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日'};
+/* her 30 days counted whatever today is, so the certificate stays hers after the challenge card has gone */
+function chalWin(st){
+  if(CHAL.codes.length&&!(st&&CHAL.codes.includes(st.pcode)))return null;
+  const end=add(CHAL.start,CHAL.days-1),ck=st&&st.checks||{},inW=Object.keys(ck).filter(d=>d>=CHAL.start&&d<=end).sort(),tk=st&&st.tasks||{};
+  const tdays=id=>Object.keys(tk).filter(d=>d>=CHAL.start&&d<=end&&Array.isArray(tk[d])&&tk[d].includes(id)).length;
+  return {got:inW.length,passed:inW.length>=CHAL.pass,passD:inW[CHAL.pass-1]||'',end,water:tdays('water'),move:tdays('move')};
+}
+/* her own link: friends who join with it are counted as hers on the partner's dashboard */
+function inviteLink(){
+  if(!S.rc){S.rc=newCode();save()}
+  const q=new URLSearchParams(),pc=S.pcode||(typeof PCODE==='string'?PCODE:'');if(pc)q.set('p',pc);q.set('r',S.rc);
+  const base=DEMO?'https://kelvin89mun.github.io/habit/':location.origin+location.pathname;
+  return base+'?'+q.toString()+(PI.phone?'#'+PI.phone+(PI.name?'-'+PI.name:''):'');
+}
+function inviteText(){
+  const c=chalOf(S,today()),l=inviteLink(),three='每天三件小事：喝够水、走路 20 分钟、打开网页给小花浇水。';
+  if(c&&c.phase==='pre')return `我报名了「${CHAL.name}」🌱\n${mdOf(CHAL.start)}（星期一）大家一起开始。${three}30 天里打卡满 ${CHAL.pass} 天，就有完成证书。\n你也一起来吧？不用下载，点这里报名：\n${l}`;
+  if(c&&c.phase==='on'&&!c.passed)return `我在参加「${CHAL.name}」🌱 ${three}\n现在加入也可以，你也一起来吧？不用下载，点这里开始：\n${l}`;
+  if(c&&c.passed)return `我完成了「${CHAL.name}」🎉 30 天里打卡 ${c.got} 天。\n${three}你也一起来吧？不用下载，点这里开始：\n${l}`;
+  return `我每天用这个网页打卡，照顾自己的好习惯 🌱 打一次卡，小花就长大一点，还有小猫小狗陪着。\n你也一起来吧？不用下载，点这里开始：\n${l}`;
+}
+const inviteHref=()=>'https://wa.me/?text='+encodeURIComponent(inviteText());
+const inviteRow=()=>`<a class="rowi" href="${inviteHref()}" target="_blank" rel="noopener"><span class="ri">${PEOPLE}</span><span class="rt">邀请朋友一起来<small>朋友也可以一起养一盆健康花</small></span>${CHEV}</a>`;
+/* sign-up page: what she's joining, and who asked her */
+function chalWelcome(){
+  const c=chalOf(S,today());
+  if(c&&c.phase!=='post')return `<div class="card chalc"><p class="eyebrow ch-eb">${REFX?'朋友邀请你一起参加':'现在可以报名'}</p><h3 class="ch-t">${esc(CHAL.name)}</h3>
+    <p>${c.phase==='pre'?`${mdOf(CHAL.start)}（星期一）大家一起开始${c.soon>1?`，还有 ${c.soon} 天`:c.soon===1?'，就是明天':''}。`:'挑战已经开始了，现在加入也可以。'}</p><p>每天喝够水、走路 20 分钟，打开这里给小花浇水。</p>
+    <p class="small muted">30 天里打卡满 ${CHAL.pass} 天，就有完成证书。不用下载，填好下面就能开始。</p></div>`;
+  return REFX?`<div class="card chalc"><p class="eyebrow ch-eb">朋友邀请你</p><h3 class="ch-t">一起养一盆健康花</h3><p>每天打卡一次，小花就长大一点，还有小猫小狗陪着你。</p></div>`:'';
+}
+/* the 30 days as a calendar, Monday first like her own month view */
+function chalCal(t){
+  const lead=(pd(CHAL.start).getDay()+6)%7;let h='一二三四五六日'.split('').map(w=>`<div class="wd">${w}</div>`).join('')+'<div></div>'.repeat(lead);
+  for(let i=0;i<CHAL.days;i++){const d=add(CHAL.start,i),on=!!S.checks[d],fut=d>t;
+    h+=`<div class="d${on?' on':''}${d===t?' today':''}${fut?' fut':''}" aria-label="${mdOf(d)}${on?' 已打卡':fut?'':' 没打卡'}">${pd(d).getDate()}</div>`}
+  return `<div class="cal ccal">${h}</div>`;
+}
+function chalCard(){
+  const t=today(),c=chalOf(S,t);if(!c)return '';
+  const eb=`<p class="eyebrow ch-eb">${esc(CHAL.name)}</p>`,thx=`<p class="small muted">朋友打卡满 ${CHAL.ref} 天，你可以向 ${esc(S.partner)} 领一份介绍谢礼。</p>`;
+  const inv=(solid,l)=>`<a class="btn${solid?' solid':''}" href="${inviteHref()}" target="_blank" rel="noopener"><span class="bi">${PEOPLE}</span>${l||'邀请朋友一起参加'}</a>`;
+  const cert=solid=>`<button class="btn${solid?' solid':''}" data-act="cert"><span class="bi">${MEDAL}</span>看我的证书</button>`;
+  if(c.phase==='pre'){
+    const first=isNu(S)?'喝今天第一杯水，打开这里给小花浇水':'吃营养，打开这里给小花浇水';
+    return `<section class="card chalc" id="chal">${eb}
+      <div class="ch-when"><span class="ch-num">${c.soon}</span><span class="ch-wt">天后，大家一起开始<small>${mdOf(CHAL.start)}（星期一）</small></span></div>
+      <ol class="ch-rules"><li>${first}</li><li>喝够 8 杯水</li><li>走路或运动 20 分钟</li></ol>
+      <p class="small muted">30 天里打卡满 ${CHAL.pass} 天，就能拿到完成证书，漏一两天也没关系。现在可以先打卡热身，挑战天数从 ${mdOf(CHAL.start)} 开始算。</p>
+      ${inv(true)}${thx}</section>`;
+  }
+  if(c.phase==='on'){
+    const say=c.passed?`<p class="ch-say ok">你完成挑战了！之后的每一天，都是送给自己的礼物。</p>${cert(true)}`
+      :c.can?`<p class="ch-say"><span>再打卡 <b>${c.toGo}</b> 天，</span><span>就能拿到完成证书</span></p>`
+      :`<p class="ch-say"><span>这一轮还有 ${c.left} 天，继续打卡，</span><span>下一轮我们再一起拿证书</span></p>`;
+    return `<section class="card chalc" id="chal"><div class="row-b">${eb}<span class="tag">第 ${c.day} 天</span></div>
+      <h3 class="ch-t">你已经打卡 <b>${c.got}</b> 天</h3>${chalCal(t)}
+      <p class="small muted ch-range"><span>${mdOf(CHAL.start)} – ${mdOf(c.end)}，</span><span>打卡满 ${CHAL.pass} 天就完成</span></p>${say}${inv(false)}${thx}</section>`;
+  }
+  return `<section class="card chalc" id="chal">${eb}${c.passed
+    ?`<h3 class="ch-t">你完成了 30 天挑战！</h3><p>30 天里打卡 <b>${c.got}</b> 天，谢谢你每天照顾好自己。</p>${cert(true)}${inv(false,'邀请朋友下一轮一起来')}`
+    :`<h3 class="ch-t">30 天挑战结束了</h3><p>这一轮你打卡了 <b>${c.got}</b> 天，谢谢你一起参加！下一轮我们再一起来。</p>${inv(false,'邀请朋友下一轮一起来')}`}</section>`;
+}
+/* ---------- the certificate: her name, her days, her partner; long-press to keep or forward ---------- */
+const certAlt=w=>`${S.name}，${CHAL.name}完成证书：${mdOf(CHAL.start)}到${mdOf(w.end)}，打卡 ${w.got} 天。`;
+async function certURL(w){
+  const key=['cert',S.name,S.partner,w.got,w.passD,w.water,w.move].join('|');if(MOCACHE[key])return MOCACHE[key];
+  const W=900,H=1125,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
+  const ink='#2E2A22',gold='#B08A3E',paper='#FBF7EE',red='#C2483B',serif=(wt,px)=>`${wt} ${px}px "Noto Serif SC","Songti SC",serif`;
+  const pn=S.partner&&S.partner!=='你的伙伴'?S.partner:'',l1=`在 ${mdOf(CHAL.start)} – ${mdOf(w.end)} 的挑战里`,l2=`打卡 ${w.got} 天，每天好好照顾自己`;
+  const l3=[w.water?`喝够水 ${w.water} 天`:'',w.move?`走路或运动 ${w.move} 天`:''].filter(Boolean).join(' · ');
+  const words='完成证书'+CHAL.name+S.name+l1+l2+l3+'伙伴'+pn+ymdCN(w.passD||w.end);
+  try{await Promise.race([Promise.all([document.fonts.load(serif(700,60),words),document.fonts.load(serif(500,34),words),document.fonts.load(serif(600,40),words)]),new Promise(r=>setTimeout(r,3500))])}catch(e){}
+  x.fillStyle=paper;x.fillRect(0,0,W,H);
+  x.strokeStyle=gold;x.lineWidth=5;x.strokeRect(36,36,W-72,H-72);x.lineWidth=1.5;x.strokeRect(54,54,W-108,H-108);
+  const th={pet:'#FFFFFF',acc:'#D9677F'};
+  [[110,110,1],[W-110,110,-1]].forEach(([cx,cy,s])=>{x.globalAlpha=.85;cLeaf(x,cx,cy,46,s>0?.5:Math.PI-.5,'#8DB596');cLeaf(x,cx,cy,40,s>0?1.3:Math.PI-1.3,'#4C7A5B');x.globalAlpha=1;cBloom(x,cx,cy,15,th);cBloom(x,cx+s*30,cy+24,9,th)});
+  x.textAlign='center';x.textBaseline='alphabetic';
+  x.fillStyle=gold;x.font=serif(600,30);x.fillText('完　成　证　书',W/2,150);
+  x.fillStyle=ink;let fs=62;x.font=serif(700,fs);while(x.measureText(CHAL.name).width>W-200&&fs>40){fs-=2;x.font=serif(700,fs)}x.fillText(CHAL.name,W/2,232);
+  x.fillStyle=gold;x.fillRect(W/2-40,262,80,4);
+  x.fillStyle='#F1E7D2';x.beginPath();x.arc(W/2,470,160,0,Math.PI*2);x.fill();
+  try{const im=await plantImage(55),h=320,iw=im.width/im.height*h;x.drawImage(im,W/2-iw/2,622-h,iw,h)}catch(e){}
+  x.fillStyle=ink;fs=76;x.font=serif(700,fs);while(x.measureText(S.name).width>W-220&&fs>40){fs-=4;x.font=serif(700,fs)}x.fillText(S.name,W/2,730);
+  x.font=serif(500,34);x.globalAlpha=.8;x.fillText(l1,W/2,800);x.globalAlpha=1;
+  x.font=serif(600,40);x.fillText(l2,W/2,862);
+  if(l3){x.font=serif(500,30);x.globalAlpha=.7;x.fillText(l3,W/2,916);x.globalAlpha=1}
+  /* a red seal between the partner and the date */
+  x.save();x.translate(W/2,1000);x.rotate(-.12);x.strokeStyle=red;x.fillStyle=red;x.lineWidth=5;x.beginPath();x.arc(0,0,54,0,Math.PI*2);x.stroke();
+  x.lineWidth=1.5;x.beginPath();x.arc(0,0,45,0,Math.PI*2);x.stroke();x.font=serif(700,34);x.textBaseline='middle';x.fillText('完成',0,2);x.restore();
+  x.fillStyle=ink;x.font=serif(500,30);x.textBaseline='alphabetic';
+  if(pn){x.textAlign='left';x.fillText('伙伴 '+pn,110,1010)}
+  x.textAlign=pn?'right':'center';x.fillText(ymdCN(w.passD||w.end),pn?W-110:W/2,pn?1010:1090);
+  const url=cv.toDataURL('image/jpeg',.92);MOCACHE[key]=url;return url;
+}
+async function showCert(isNew){
+  const w=chalWin(S);if(!w||!w.passed)return;
+  if(isNew&&S.chalSeen!==w.passD){S.chalSeen=w.passD;save()}
+  const o=$('#overlay');
+  o.innerHTML=`<div class="box month" role="dialog" aria-modal="true" aria-label="完成证书"><h2 class="ntitle">${isNew?'恭喜你完成挑战！':'我的完成证书'}</h2>
+    <div class="frame mframe"><p class="loading" id="ctload">正在准备你的证书…</p><img id="ctimg" alt="${esc(certAlt(w))}" hidden></div>
+    <p class="small muted">长按图片，可以保存或转发给家人朋友。</p>
+    ${isNew?`<a class="btn solid" href="${waLink(`${S.partner} 你好，我是${S.name}，我完成了「${CHAL.name}」，30 天里打卡 ${w.got} 天！`)}" target="_blank" rel="noopener">告诉 ${esc(S.partner)}</a>`:''}
+    <a class="btn" href="${inviteHref()}" target="_blank" rel="noopener"><span class="bi">${PEOPLE}</span>邀请朋友一起来</a>
+    <button class="checkin" data-act="nclose"><span>好的</span></button></div>`;
+  o.hidden=false;o.querySelector('button').focus();if(isNew)confetti();
+  try{const url=await certURL(w),im=$('#ctimg');if(im){im.src=url;im.hidden=false;const l=$('#ctload');if(l)l.hidden=true}}
+  catch(e){const l=$('#ctload');if(l)l.textContent='证书暂时做不出来，请稍后再打开'}
+}
+/* the check-in that makes 25: her certificate opens once, by itself */
+function chalCheck(){const w=chalWin(S);if(w&&w.passed&&S.chalSeen!==w.passD&&today()>=w.passD){showCert(true);return true}return false}
+
 /* ---------- render, effects, events ---------- */
 const calm=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 function render(){
@@ -1932,7 +2153,7 @@ function afterWater(scroll){
   setTimeout(()=>document.querySelectorAll('.drop').forEach(el=>el.remove()),1200);
   if(rit)revealFx();
   /* after the watering moment she gets a few seconds with the plant and the pet before the page moves down */
-  setTimeout(()=>{if(checkMile())return;const go=()=>{if(scroll)toDone();setTimeout(maybeNews,1900)};
+  setTimeout(()=>{if(checkMile()||chalCheck())return;const go=()=>{if(scroll)toDone();setTimeout(maybeNews,1900)};
     if(rit&&scroll)later(2700,go,()=>setTimeout(maybeNews,5000));else go()},rit?1300:1700);
 }
 
@@ -1946,7 +2167,7 @@ document.addEventListener('click',e=>{
   if('period' in b.dataset){demoP=b.dataset.period;render();return}
   if(b.dataset.fur){if(S.onboarded){S.fur=b.dataset.fur;save()}else{keepName();draftFur=b.dataset.fur}render();return}
   if(b.dataset.pet){keepName();draftPet=b.dataset.pet;draftFur='';if(['','招财','旺财'].includes(draftPetName.trim()))draftPetName=PETN[draftPet];render();return}
-  if(b.dataset.care){const d=b.dataset.care;S.answers[d]={a:b.dataset.a,d:t};S.points+=5;save();
+  if(b.dataset.care){const d=b.dataset.care;S.answers[d]=Object.assign({a:b.dataset.a,d:t},careNu(S,d)?{nu:1}:{});S.points+=5;save();
     if(b.dataset.a==='去记录我的感觉')tab='feel';render();bumpPts();return}
   if(b.dataset.m){draft[b.dataset.m]=+b.dataset.v;render();return}
   if('quiz' in b.dataset){const f=S.flips[t];if(f&&f.type==='quiz'&&f.ans==null){const L=quizList(f);f.ans=+b.dataset.quiz;const ok=f.ans===L[f.i%L.length].a;S.points+=ok?5:2;save();render();bumpPts()}return}
@@ -1954,10 +2175,14 @@ document.addEventListener('click',e=>{
     if(!S.onboarded){keepName();draftPlan=k;render();return}
     if(planOf(S)!==k){S.plan=k;S.planD=t;draft={e:0,s:0,g:0,sk:0,kg:''};save();toast('已换成「'+PLANS[k].name+'」计划')}
     render();return}
+  if('nut' in b.dataset){const v=b.dataset.nut==='1';
+    if(!S.onboarded){keepName();draftNut=v;render();return}
+    if(isNu(S)===v){S.nut=v;save();toast(v?'打卡按钮改成「我今天吃了营养」':'打卡按钮改成「我喝了今天第一杯水」')}
+    render();return}
   if(b.dataset.task){const id=b.dataset.task,L=((S.tasks||(S.tasks={}))[t]||[]).slice(),i=L.indexOf(id);
     if(i>=0){L.splice(i,1);S.points=Math.max(0,S.points-2)}else{L.push(id);S.points+=2;justTask=id}
     if(L.length)S.tasks[t]=L;else delete S.tasks[t];
-    const all=PLANS[planOf(S)].tasks.every(([k])=>L.includes(k));save();render();justTask='';bumpPts();return}
+    save();render();justTask='';bumpPts();return}
   if(b.dataset.anchor){keepName();draftAnchor=b.dataset.anchor;render();return}
   switch(a){
     case 'check':if(!S.checks[t])water();break;
@@ -2000,7 +2225,17 @@ document.addEventListener('click',e=>{
     case 'rename':{const v=($('#pn2')||{}).value;if(v&&v.trim()){S.petName=v.trim().slice(0,8);save();render()}break}
     case 'cos':demoCos=demoCos+1>=DEMO_COS.length?-1:demoCos+1;render();break;
     case 'cosoff':demoCos=-1;render();break;
-    case 'close':$('#overlay').hidden=true;toDone();break;
+    case 'close':$('#overlay').hidden=true;if(!chalCheck())toDone();break;
+    case 'cert':showCert(false);break;
+    /* demo: the same customer on a sign-up-week day, on challenge day 10, and the day her 25th check-in is due */
+    case 'chpre':case 'chon':case 'chdone':{
+      const sim=a==='chpre'?add(CHAL.open,2):a==='chon'?add(CHAL.start,9):add(CHAL.start,25),st=add(CHAL.open,-10),fs=S.fs;
+      S=seed();S.fs=fs;S.offset=diff(ymd(new Date()),sim);S.start=st;S.planD=st;S.checks={};S.tasks={};S.answers={};S.flips={};S.flw=[];S.chalSeen='';
+      for(let d=st;d<sim;d=add(d,1)){if(d===add(CHAL.start,3))continue;S.checks[d]=1;if(d>=CHAL.start)S.tasks[d]=diff(CHAL.start,d)%3?['water','move']:['water']}
+      S.gifts={};MILES.forEach(m=>{if(count()>=m.n)S.gifts[m.id]=st});S.seen=['s1','s2','s3','s4','st2','st3'];
+      tab='today';save();render();scrollTo(0,0);break}
+    case 'chfriend':{const fs=S.fs;S=fresh();S.fs=fs;S.offset=diff(ymd(new Date()),add(CHAL.open,3));S.refQ='chenjie';REFX='chenjie';
+      draftNut=false;draftName='';draftAnchor='';draftOk=false;draftPet='cat';draftFur='';draftPetName='招财';draftBM='';draftBD='';draftPlan='base';tab='today';save();render();scrollTo(0,0);break}
     case 'nclose':$('#overlay').hidden=true;break;
     case 'delme':cloudDelete();break;
     case 'month':showMonth(b.dataset.k);break;
@@ -2013,15 +2248,18 @@ document.addEventListener('click',e=>{
     case 'newsdemo':showNews(newsNow().card||demoNews()[2]);break;
     case 'next':S.offset=(S.offset||0)+1;save();render();scrollTo(0,0);break;
     case 'prev':if(diff(S.start,add(t,-1))>=0){S.offset=(S.offset||0)-1;save();render()}break;
-    case 'new':{const fs=S.fs;S=fresh();S.fs=fs;draftName='';draftAnchor='';draftOk=false;draftPet='cat';draftFur='';draftPetName='招财';draftBM='';draftBD='';draftPlan=PLANQ||'base';tab='today';save();render();scrollTo(0,0);break}
+    case 'new':{const fs=S.fs;S=fresh();S.fs=fs;REFX='';draftNut=true;draftName='';draftAnchor='';draftOk=false;draftPet='cat';draftFur='';draftPetName='招财';draftBM='';draftBD='';draftPlan=PLANQ||'base';tab='today';save();render();scrollTo(0,0);break}
     case 'sample':S=seed();tab='today';save();render();scrollTo(0,0);break;
     case 'start':keepName();if(!(draftName.trim()&&draftOk))return;
       S.name=draftName.trim();S.anchor=draftAnchor;S.plan=PLANS[draftPlan]?draftPlan:'base';S.planD=t;S.pet=draftPet;S.fur=furOf(draftPet,draftFur).k;S.petName=(draftPetName.trim()||PETN[draftPet]).slice(0,8);
-      S.bday=draftBM&&draftBD?String(draftBM).padStart(2,'0')+'-'+String(draftBD).padStart(2,'0'):'';S.onboarded=true;S.consent=t;S.start=t;tab='today';save();render();scrollTo(0,0);if(CLOUD)cloudSave(true);break;
+      S.bday=draftBM&&draftBD?String(draftBM).padStart(2,'0')+'-'+String(draftBD).padStart(2,'0'):'';S.onboarded=true;S.consent=t;S.start=t;
+      /* her own invitation code, and the friend whose link brought her here */
+      S.nut=draftNut;S.rc=S.rc||newCode();{const r=REFX||S.refQ||'';if(r&&r!==S.rc)S.ref=r}delete S.refQ;
+      tab='today';save();render();scrollTo(0,0);if(CLOUD)cloudSave(true);break;
   }
 });
 document.addEventListener('change',e=>{if(e.target.id==='bm')draftBM=e.target.value;if(e.target.id==='bd')draftBD=e.target.value});
-document.addEventListener('input',e=>{if(e.target.id==='pn')draftPetName=e.target.value;if(e.target.id==='kg'){draft.kg=e.target.value;const er=$('#kgerr');if(er)er.hidden=true}if(e.target.id==='q'){const a=$('#askbtn');if(a)a.href=waLink(askText(e.target.value.trim()))}if(e.target.id==='nm'){draftName=e.target.value;const s=document.querySelector('[data-act=start]');if(s)s.disabled=!(draftName.trim()&&draftAnchor&&draftOk)}});
+document.addEventListener('input',e=>{if(e.target.id==='pn')draftPetName=e.target.value;if(e.target.id==='kg'){draft.kg=e.target.value;const er=$('#kgerr');if(er)er.hidden=true}if(e.target.id==='q'){const a=$('#askbtn');if(a)a.href=waLink(askText(e.target.value.trim()))}if(e.target.id==='nm'){draftName=e.target.value;const s=document.querySelector('[data-act=start]');if(s)s.disabled=!(draftName.trim()&&draftOk)}});
 document.addEventListener('change',e=>{if(e.target.id==='ok'){keepName();draftOk=e.target.checked;render()}});
 
 S=load()||(DEMO?seed():fresh());
@@ -2032,6 +2270,9 @@ if(!PLANS[S.plan])S.plan='base';
 if(!S.tasks||typeof S.tasks!=='object')S.tasks={};
 if(PI.phone)S.pphone=PI.phone;
 if(PI.name)S.partner=PI.name;
+if(S.onboarded&&!S.rc)S.rc=newCode();
+/* a friend's invitation survives the address being tidied before she finishes signing up */
+if(!S.onboarded){if(REFX)S.refQ=REFX;else if(S.refQ){REFX=S.refQ;draftNut=false}}
 save();loadNews();render();fetchNews();cloudInit();
 if(!DEMO&&tab==='today'&&S.onboarded&&S.checks[today()])setTimeout(maybeNews,1500);
 /* the partner's month-summary link opens that summary straight away */
