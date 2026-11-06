@@ -15,13 +15,13 @@
 <!-- the WhatsApp link preview: every daily link shows the windowsill instead of a bare address -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="营养好习惯">
-<meta property="og:title" content="营养好习惯">
-<meta property="og:description" content="每天吃完营养，点一下打卡，和伙伴一起养一盆健康花。">
-<meta property="og:image" content="https://kelvin89mun.github.io/habit/og.jpg">
+<meta property="og:title" content="30天健康好习惯挑战">
+<meta property="og:description" content="12月1日（星期二）一起开始。每天喝够水、走路20分钟，打开小花打卡。免费参加，不用下载。">
+<meta property="og:image" content="https://kelvin89mun.github.io/habit/og-chal.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="窗台上一盆开花的植物，旁边坐着一只小猫">
+<meta property="og:image:alt" content="30天，养成3个好习惯：窗台上一盆长大的植物，旁边坐着一只小猫">
 <meta name="twitter:card" content="summary_large_image">
 <script>window.APP_MODE='prod'</script>
 <style>html,body{margin:0;padding:0}</style>
@@ -30,7 +30,7 @@
 <title>营养好习惯</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Noto+Serif+SC:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap">
 <style>
 /* 「日签」: the page reads like the morning card she shares — a big serif date, one plant, quiet sage paper,
    one accent colour. The day-card at the top takes today's morning-card tint; everything else stays calm. */
@@ -40,8 +40,9 @@
   --gold:#86682A; --gold-bright:#C9A659; --gold-soft:#F4EEDD;
   --shadow:rgba(31,43,36,.08);
   --f-body:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC","Source Han Sans SC",system-ui,sans-serif;
-  --f-serif:"Noto Serif SC","Songti SC","STSong",serif;
-  --f-num:"DM Serif Display","Noto Serif SC",serif;
+  /* titles: the phone's own Chinese sans, bold and clear, nothing to download; big numbers keep the serif digits */
+  --f-serif:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC","Source Han Sans SC",system-ui,sans-serif;
+  --f-num:"DM Serif Display",-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC","Source Han Sans SC",system-ui,sans-serif;
   /* older names kept so every part of the page follows the same palette */
   --bg:var(--paper); --coral:var(--accent); --coral-deep:var(--accent-deep); --coral-soft:var(--accent-soft); --coral-text:var(--accent); --on-coral:var(--on-accent);
   --leaf:var(--accent); --leaf-dark:var(--accent); --leaf-soft:var(--accent-soft); --on-leaf:var(--on-accent);
@@ -65,7 +66,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--f-body);line-hei
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 h1,h2,h3,h4,p{margin:0}
-h1,h2,h3,h4{font-family:var(--f-serif);font-weight:600;font-feature-settings:"halt";letter-spacing:.01em;text-wrap:balance}
+h1,h2,h3,h4{font-family:var(--f-serif);font-weight:700;letter-spacing:.01em;text-wrap:balance}
 p,li{text-wrap:pretty}
 .h-cap,.task .tt,.rowi .rt,.checkin,.btn,.opt,.reply p,#overlay .box>p:not(.nbody),footer.fine{text-wrap:balance}
 /* short display lines break at punctuation or spaces, never inside a phrase like 七分饱 or 健康花 */
@@ -547,7 +548,126 @@ details.rows summary{cursor:pointer;color:var(--accent);font-weight:700;font-siz
 .nutrow{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:14px;margin-top:2px}
 .nutrow h4{font-size:1rem;line-height:1.4}
 </style>
-<script>
+<style>
+/* ---------- motion: pages slide in, new cards rise, pop-ups open and close softly; the windowsill rests when nobody is looking ---------- */
+#app.enter>*{animation:enter .46s cubic-bezier(.2,.8,.25,1) both}
+#app.enter>*:nth-child(2){animation-delay:.05s}
+#app.enter>*:nth-child(3){animation-delay:.1s}
+#app.enter>*:nth-child(4){animation-delay:.15s}
+#app.enter>*:nth-child(n+5){animation-delay:.2s}
+@keyframes enter{from{opacity:0;transform:translateY(16px)}}
+#app>.pop-in{animation:popIn .5s cubic-bezier(.2,.9,.3,1.05) both}
+@keyframes popIn{from{opacity:0;transform:translateY(14px) scale(.98)}}
+#overlay.in{animation:ovIn .26s ease-out both}
+#overlay.in>*{animation:boxIn .42s cubic-bezier(.2,1.1,.35,1) both}
+#overlay.out{animation:ovOut .19s ease-in both}
+#overlay.out>*{animation:boxOut .19s ease-in both}
+@keyframes ovIn{from{opacity:0}}
+@keyframes ovOut{to{opacity:0}}
+@keyframes boxIn{from{opacity:0;transform:translateY(28px) scale(.96)}}
+@keyframes boxOut{to{opacity:0;transform:translateY(14px) scale(.98)}}
+/* pressing feels like pressing */
+.btn,.opt,.plc,.task,.rowi,.fp{transition:transform .14s ease,background-color .2s,border-color .2s}
+.btn:active,.opt:active,.plc:active,.task:active,.rowi:active,.fp:active{transform:scale(.97)}
+nav.tabs button{transition:background-color .25s ease,color .25s ease}
+nav.tabs button[aria-current="page"] svg{animation:tabPop .38s cubic-bezier(.3,1.6,.5,1)}
+@keyframes tabPop{40%{transform:scale(1.18)}}
+/* the windowsill rests when it is out of sight or nobody has touched the page for a while */
+.h-scene.hz *{animation-play-state:paused!important}
+/* only the plant, the pet and the vase take taps; the drawings around them are skipped when a finger lands */
+.h-scene svg{pointer-events:none}
+.h-scene .ptap,.h-scene .vase{pointer-events:auto}
+@media (prefers-reduced-motion:reduce){#app.enter>*,#app>.pop-in,#overlay.in,#overlay.in>*,#overlay.out,#overlay.out>*,nav.tabs button svg{animation:none!important}}
+</style>
+<style>
+/* ---------- first visit: the invitation (one warm hero, short cards, the button twice) and the five steps ---------- */
+.j-hero{gap:10px;padding-bottom:18px}
+.j-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.j-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px 6px 9px;border-radius:999px;background:var(--surface);color:var(--ink);font-weight:700;font-size:.8rem;box-shadow:0 2px 8px var(--shadow);min-width:0}
+.j-badge svg{width:1rem;height:1rem;flex:none;color:#D9677F;fill:#F5C6D0}
+.fsmini{display:inline-flex;align-items:center;gap:2px;padding:3px;border-radius:999px;background:rgba(255,255,255,.6);font-size:.72rem;flex:none}
+.fsmini>span{padding:0 4px 0 7px;color:var(--muted);font-weight:600}
+.fsmini button{border:0;background:none;color:var(--muted);font:inherit;font-weight:700;min-width:1.9rem;height:1.9rem;border-radius:999px;cursor:pointer}
+.fsmini button[aria-pressed="true"]{background:var(--surface);color:var(--accent);box-shadow:0 1px 4px var(--shadow)}
+.j-title{font-size:1.95rem;line-height:1.22;font-weight:800;letter-spacing:.01em;color:var(--t-ink);margin-top:6px}
+.j-title span{display:inline-block}
+.j-when{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-weight:600;font-size:.95rem;color:var(--t-ink)}
+.j-when>span:first-child{opacity:.8}
+.j-soon{display:inline-flex;align-items:baseline;gap:3px;padding:3px 11px;border-radius:999px;background:var(--surface);color:var(--gold);font-weight:700;font-size:.85rem;box-shadow:0 2px 8px var(--shadow)}
+.j-soon b{font-family:var(--f-num);font-weight:400;font-size:1.25rem;line-height:1}
+.j-scene{margin-top:2px}
+.j-pet{position:absolute;left:5%;bottom:9.4%;width:calc(min(5.6rem,29vw)*.92);z-index:2;pointer-events:none}
+.j-pet svg{width:100%;height:auto;display:block}
+.j-tags{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:2px}
+.j-tags span{display:inline-flex;align-items:center;gap:4px;background:var(--surface);border-radius:999px;padding:5px 10px 5px 7px;font-size:.78rem;font-weight:700;color:var(--accent)}
+.j-tags svg{width:.95rem;height:.95rem}
+.j-hero .j-go{margin-top:4px}
+.j-go>span,.j-step .checkin>span{text-align:center}
+.j-card{display:flex;flex-direction:column;gap:14px}
+.j-h{font-size:1.2rem;line-height:1.35;font-weight:800}
+.j-row{display:flex;align-items:center;gap:12px}
+.j-row b{display:block;font-size:1rem;line-height:1.4}
+.j-row small{display:block;color:var(--muted);font-size:.82rem;line-height:1.45;margin-top:1px}
+.j-ic{flex:none;width:2.6rem;height:2.6rem;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.j-ic svg{width:1.3rem;height:1.3rem}
+.j-ic.g{background:#E3EEF7;color:#3F7DB0}
+.j-ic.y{background:var(--gold-soft);color:var(--gold)}
+.j-ic.p{background:#FBE7EC;color:#C8566F}
+.j-ic.j-pt{background:var(--gold-soft);overflow:hidden}
+.j-ic.j-pt svg{width:2.3rem;height:auto;margin-top:6px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .j-ic.g{background:#1D2A33;color:#8FBCE0}:root:not([data-theme="light"]) .j-ic.p{background:#33222A;color:#F0A3B6}}
+:root[data-theme="dark"] .j-ic.g{background:#1D2A33;color:#8FBCE0}
+:root[data-theme="dark"] .j-ic.p{background:#33222A;color:#F0A3B6}
+/* growth: day 1, day 10, day 30 */
+.j-grow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:end;gap:2px;background:var(--paper);border-radius:18px;padding:12px 8px 8px}
+.jg{margin:0;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.jg-p{height:6.2rem;width:100%}
+.jg-p svg{height:100%;width:100%;display:block}
+.jg figcaption{font-size:.75rem;font-weight:700;color:var(--muted)}
+.jg-ar{color:var(--gold-bright);font-size:1.3rem;font-weight:700;padding-bottom:1.6rem}
+/* the prize: a little paper certificate beside the words */
+.j-pz{display:grid;grid-template-columns:42% 1fr;gap:14px;align-items:center}
+.j-pzt{display:flex;flex-direction:column;gap:10px}
+.j-pzt p{font-size:.88rem;line-height:1.5;color:var(--muted)}
+.j-pzt b{color:var(--ink);font-size:1rem}
+.mcert{background:#FBF7EE;border-radius:6px;padding:5px;box-shadow:0 6px 16px rgba(60,45,20,.16);transform:rotate(-3deg);color:#2E2A22}
+.mc-in{position:relative;border:2px solid #C9A659;outline:1px solid #C9A659;outline-offset:-5px;border-radius:3px;padding:10px 6px 26px;text-align:center}
+.mc-eb{font-size:.5rem;letter-spacing:.2em;color:#B08A3E;font-weight:700}
+.mc-t{font-size:.62rem;font-weight:800;margin-top:2px;line-height:1.3}
+.mc-p{height:3.6rem;display:flex;justify-content:center;margin:4px 0 2px}
+.mc-p svg{height:100%;width:auto}
+.mc-n{font-size:.78rem;font-weight:800;border-bottom:1px dashed #C9A659;display:inline-block;padding:0 6px}
+.mc-l{font-size:.5rem;margin-top:4px;opacity:.75}
+.mc-seal{position:absolute;right:7px;bottom:5px;width:1.5rem;height:1.5rem;border-radius:50%;border:2px solid #C2483B;color:#C2483B;font-size:.48rem;font-weight:800;display:grid;place-items:center;transform:rotate(-12deg)}
+.j-faq>div{border-top:1px solid var(--line);padding-top:10px}
+.j-faq>div:first-of-type{border-top:0;padding-top:0}
+.j-faq b{font-size:.98rem}
+.j-faq p{color:var(--muted);font-size:.9rem;line-height:1.55;margin-top:2px}
+.j-end{margin:6px 0 10px}
+/* the steps */
+.j-step{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+.j-steps{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-4px 0 4px}
+.j-back{padding:6px 0;font-weight:700}
+.j-dots{display:flex;gap:6px}
+.j-dots i{width:.55rem;height:.55rem;border-radius:50%;background:var(--line);transition:background-color .3s,transform .3s}
+.j-dots i.on{background:var(--accent)}
+.j-dots i.on:last-of-type{transform:scale(1.25)}
+.j-of{font-size:.8rem;color:var(--muted);font-weight:700;min-width:2.6rem;text-align:right}
+.j-q{font-size:1.45rem;line-height:1.35;font-weight:800}
+.j-step input[type=text]{font-size:1.15rem}
+.j-next{margin-top:6px}
+.j-err{color:#C2483B;font-weight:700;margin-top:-6px}
+.shake{animation:shake .42s ease}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.j-sub{display:flex;flex-direction:column;gap:8px}
+.j-sub h3{font-size:1.05rem}
+.j-ok{display:flex;gap:12px;align-items:flex-start;background:var(--paper);border-radius:16px;padding:12px;font-size:.9rem;line-height:1.55}
+.j-ok input{width:1.6rem;height:1.6rem;flex:none;margin-top:2px;accent-color:var(--accent)}
+@media (max-width:350px){.j-title{font-size:1.65rem}.j-pz{grid-template-columns:1fr}.mcert{max-width:12rem;margin:0 auto}}
+</style>
+<script>/*! morphdom 2.7.4 | MIT License | Copyright (c) Patrick Steele-Idem | https://github.com/patrick-steele-idem/morphdom */
+(function(global,factory){typeof exports==="object"&&typeof module!=="undefined"?module.exports=factory():typeof define==="function"&&define.amd?define(factory):(global=global||self,global.morphdom=factory())})(this,function(){"use strict";var DOCUMENT_FRAGMENT_NODE=11;function morphAttrs(fromNode,toNode){var toNodeAttrs=toNode.attributes;var attr;var attrName;var attrNamespaceURI;var attrValue;var fromValue;if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE||fromNode.nodeType===DOCUMENT_FRAGMENT_NODE){return}for(var i=toNodeAttrs.length-1;i>=0;i--){attr=toNodeAttrs[i];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;attrValue=attr.value;if(attrNamespaceURI){attrName=attr.localName||attrName;fromValue=fromNode.getAttributeNS(attrNamespaceURI,attrName);if(fromValue!==attrValue){if(attr.prefix==="xmlns"){attrName=attr.name}fromNode.setAttributeNS(attrNamespaceURI,attrName,attrValue)}}else{fromValue=fromNode.getAttribute(attrName);if(fromValue!==attrValue){fromNode.setAttribute(attrName,attrValue)}}}var fromNodeAttrs=fromNode.attributes;for(var d=fromNodeAttrs.length-1;d>=0;d--){attr=fromNodeAttrs[d];attrName=attr.name;attrNamespaceURI=attr.namespaceURI;if(attrNamespaceURI){attrName=attr.localName||attrName;if(!toNode.hasAttributeNS(attrNamespaceURI,attrName)){fromNode.removeAttributeNS(attrNamespaceURI,attrName)}}else{if(!toNode.hasAttribute(attrName)){fromNode.removeAttribute(attrName)}}}}var range;var NS_XHTML="http://www.w3.org/1999/xhtml";var doc=typeof document==="undefined"?undefined:document;var HAS_TEMPLATE_SUPPORT=!!doc&&"content"in doc.createElement("template");var HAS_RANGE_SUPPORT=!!doc&&doc.createRange&&"createContextualFragment"in doc.createRange();function createFragmentFromTemplate(str){var template=doc.createElement("template");template.innerHTML=str;return template.content.childNodes[0]}function createFragmentFromRange(str){if(!range){range=doc.createRange();range.selectNode(doc.body)}var fragment=range.createContextualFragment(str);return fragment.childNodes[0]}function createFragmentFromWrap(str){var fragment=doc.createElement("body");fragment.innerHTML=str;return fragment.childNodes[0]}function toElement(str){str=str.trim();if(HAS_TEMPLATE_SUPPORT){return createFragmentFromTemplate(str)}else if(HAS_RANGE_SUPPORT){return createFragmentFromRange(str)}return createFragmentFromWrap(str)}function compareNodeNames(fromEl,toEl){var fromNodeName=fromEl.nodeName;var toNodeName=toEl.nodeName;var fromCodeStart,toCodeStart;if(fromNodeName===toNodeName){return true}fromCodeStart=fromNodeName.charCodeAt(0);toCodeStart=toNodeName.charCodeAt(0);if(fromCodeStart<=90&&toCodeStart>=97){return fromNodeName===toNodeName.toUpperCase()}else if(toCodeStart<=90&&fromCodeStart>=97){return toNodeName===fromNodeName.toUpperCase()}else{return false}}function createElementNS(name,namespaceURI){return!namespaceURI||namespaceURI===NS_XHTML?doc.createElement(name):doc.createElementNS(namespaceURI,name)}function moveChildren(fromEl,toEl){var curChild=fromEl.firstChild;while(curChild){var nextChild=curChild.nextSibling;toEl.appendChild(curChild);curChild=nextChild}return toEl}function syncBooleanAttrProp(fromEl,toEl,name){if(fromEl[name]!==toEl[name]){fromEl[name]=toEl[name];if(fromEl[name]){fromEl.setAttribute(name,"")}else{fromEl.removeAttribute(name)}}}var specialElHandlers={OPTION:function(fromEl,toEl){var parentNode=fromEl.parentNode;if(parentNode){var parentName=parentNode.nodeName.toUpperCase();if(parentName==="OPTGROUP"){parentNode=parentNode.parentNode;parentName=parentNode&&parentNode.nodeName.toUpperCase()}if(parentName==="SELECT"&&!parentNode.hasAttribute("multiple")){if(fromEl.hasAttribute("selected")&&!toEl.selected){fromEl.setAttribute("selected","selected");fromEl.removeAttribute("selected")}parentNode.selectedIndex=-1}}syncBooleanAttrProp(fromEl,toEl,"selected")},INPUT:function(fromEl,toEl){syncBooleanAttrProp(fromEl,toEl,"checked");syncBooleanAttrProp(fromEl,toEl,"disabled");if(fromEl.value!==toEl.value){fromEl.value=toEl.value}if(!toEl.hasAttribute("value")){fromEl.removeAttribute("value")}},TEXTAREA:function(fromEl,toEl){var newValue=toEl.value;if(fromEl.value!==newValue){fromEl.value=newValue}var firstChild=fromEl.firstChild;if(firstChild){var oldValue=firstChild.nodeValue;if(oldValue==newValue||!newValue&&oldValue==fromEl.placeholder){return}firstChild.nodeValue=newValue}},SELECT:function(fromEl,toEl){if(!toEl.hasAttribute("multiple")){var selectedIndex=-1;var i=0;var curChild=fromEl.firstChild;var optgroup;var nodeName;while(curChild){nodeName=curChild.nodeName&&curChild.nodeName.toUpperCase();if(nodeName==="OPTGROUP"){optgroup=curChild;curChild=optgroup.firstChild}else{if(nodeName==="OPTION"){if(curChild.hasAttribute("selected")){selectedIndex=i;break}i++}curChild=curChild.nextSibling;if(!curChild&&optgroup){curChild=optgroup.nextSibling;optgroup=null}}}fromEl.selectedIndex=selectedIndex}}};var ELEMENT_NODE=1;var DOCUMENT_FRAGMENT_NODE$1=11;var TEXT_NODE=3;var COMMENT_NODE=8;function noop(){}function defaultGetNodeKey(node){if(node){return node.getAttribute&&node.getAttribute("id")||node.id}}function morphdomFactory(morphAttrs){return function morphdom(fromNode,toNode,options){if(!options){options={}}if(typeof toNode==="string"){if(fromNode.nodeName==="#document"||fromNode.nodeName==="HTML"||fromNode.nodeName==="BODY"){var toNodeHtml=toNode;toNode=doc.createElement("html");toNode.innerHTML=toNodeHtml}else{toNode=toElement(toNode)}}else if(toNode.nodeType===DOCUMENT_FRAGMENT_NODE$1){toNode=toNode.firstElementChild}var getNodeKey=options.getNodeKey||defaultGetNodeKey;var onBeforeNodeAdded=options.onBeforeNodeAdded||noop;var onNodeAdded=options.onNodeAdded||noop;var onBeforeElUpdated=options.onBeforeElUpdated||noop;var onElUpdated=options.onElUpdated||noop;var onBeforeNodeDiscarded=options.onBeforeNodeDiscarded||noop;var onNodeDiscarded=options.onNodeDiscarded||noop;var onBeforeElChildrenUpdated=options.onBeforeElChildrenUpdated||noop;var skipFromChildren=options.skipFromChildren||noop;var addChild=options.addChild||function(parent,child){return parent.appendChild(child)};var childrenOnly=options.childrenOnly===true;var fromNodesLookup=Object.create(null);var keyedRemovalList=[];function addKeyedRemoval(key){keyedRemovalList.push(key)}function walkDiscardedChildNodes(node,skipKeyedNodes){if(node.nodeType===ELEMENT_NODE){var curChild=node.firstChild;while(curChild){var key=undefined;if(skipKeyedNodes&&(key=getNodeKey(curChild))){addKeyedRemoval(key)}else{onNodeDiscarded(curChild);if(curChild.firstChild){walkDiscardedChildNodes(curChild,skipKeyedNodes)}}curChild=curChild.nextSibling}}}function removeNode(node,parentNode,skipKeyedNodes){if(onBeforeNodeDiscarded(node)===false){return}if(parentNode){parentNode.removeChild(node)}onNodeDiscarded(node);walkDiscardedChildNodes(node,skipKeyedNodes)}function indexTree(node){if(node.nodeType===ELEMENT_NODE||node.nodeType===DOCUMENT_FRAGMENT_NODE$1){var curChild=node.firstChild;while(curChild){var key=getNodeKey(curChild);if(key){fromNodesLookup[key]=curChild}indexTree(curChild);curChild=curChild.nextSibling}}}indexTree(fromNode);function handleNodeAdded(el){onNodeAdded(el);var curChild=el.firstChild;while(curChild){var nextSibling=curChild.nextSibling;var key=getNodeKey(curChild);if(key){var unmatchedFromEl=fromNodesLookup[key];if(unmatchedFromEl&&compareNodeNames(curChild,unmatchedFromEl)){curChild.parentNode.replaceChild(unmatchedFromEl,curChild);morphEl(unmatchedFromEl,curChild)}else{handleNodeAdded(curChild)}}else{handleNodeAdded(curChild)}curChild=nextSibling}}function cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey){while(curFromNodeChild){var fromNextSibling=curFromNodeChild.nextSibling;if(curFromNodeKey=getNodeKey(curFromNodeChild)){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}}function morphEl(fromEl,toEl,childrenOnly){var toElKey=getNodeKey(toEl);if(toElKey){delete fromNodesLookup[toElKey]}if(!childrenOnly){var beforeUpdateResult=onBeforeElUpdated(fromEl,toEl);if(beforeUpdateResult===false){return}else if(beforeUpdateResult instanceof HTMLElement){fromEl=beforeUpdateResult;indexTree(fromEl)}morphAttrs(fromEl,toEl);onElUpdated(fromEl);if(onBeforeElChildrenUpdated(fromEl,toEl)===false){return}}if(fromEl.nodeName!=="TEXTAREA"){morphChildren(fromEl,toEl)}else{specialElHandlers.TEXTAREA(fromEl,toEl)}}function morphChildren(fromEl,toEl){var skipFrom=skipFromChildren(fromEl,toEl);var curToNodeChild=toEl.firstChild;var curFromNodeChild=fromEl.firstChild;var curToNodeKey;var curFromNodeKey;var fromNextSibling;var toNextSibling;var matchingFromEl;outer:while(curToNodeChild){toNextSibling=curToNodeChild.nextSibling;curToNodeKey=getNodeKey(curToNodeChild);while(!skipFrom&&curFromNodeChild){fromNextSibling=curFromNodeChild.nextSibling;if(curToNodeChild.isSameNode&&curToNodeChild.isSameNode(curFromNodeChild)){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}curFromNodeKey=getNodeKey(curFromNodeChild);var curFromNodeType=curFromNodeChild.nodeType;var isCompatible=undefined;if(curFromNodeType===curToNodeChild.nodeType){if(curFromNodeType===ELEMENT_NODE){if(curToNodeKey){if(curToNodeKey!==curFromNodeKey){if(matchingFromEl=fromNodesLookup[curToNodeKey]){if(fromNextSibling===matchingFromEl){isCompatible=false}else{fromEl.insertBefore(matchingFromEl,curFromNodeChild);if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=matchingFromEl;curFromNodeKey=getNodeKey(curFromNodeChild)}}else{isCompatible=false}}}else if(curFromNodeKey){isCompatible=false}isCompatible=isCompatible!==false&&compareNodeNames(curFromNodeChild,curToNodeChild);if(isCompatible){morphEl(curFromNodeChild,curToNodeChild)}}else if(curFromNodeType===TEXT_NODE||curFromNodeType==COMMENT_NODE){isCompatible=true;if(curFromNodeChild.nodeValue!==curToNodeChild.nodeValue){curFromNodeChild.nodeValue=curToNodeChild.nodeValue}}}if(isCompatible){curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling;continue outer}if(curFromNodeKey){addKeyedRemoval(curFromNodeKey)}else{removeNode(curFromNodeChild,fromEl,true)}curFromNodeChild=fromNextSibling}if(curToNodeKey&&(matchingFromEl=fromNodesLookup[curToNodeKey])&&compareNodeNames(matchingFromEl,curToNodeChild)){if(!skipFrom){addChild(fromEl,matchingFromEl)}morphEl(matchingFromEl,curToNodeChild)}else{var onBeforeNodeAddedResult=onBeforeNodeAdded(curToNodeChild);if(onBeforeNodeAddedResult!==false){if(onBeforeNodeAddedResult){curToNodeChild=onBeforeNodeAddedResult}if(curToNodeChild.actualize){curToNodeChild=curToNodeChild.actualize(fromEl.ownerDocument||doc)}addChild(fromEl,curToNodeChild);handleNodeAdded(curToNodeChild)}}curToNodeChild=toNextSibling;curFromNodeChild=fromNextSibling}cleanupFromEl(fromEl,curFromNodeChild,curFromNodeKey);var specialElHandler=specialElHandlers[fromEl.nodeName];if(specialElHandler){specialElHandler(fromEl,toEl)}}var morphedNode=fromNode;var morphedNodeType=morphedNode.nodeType;var toNodeType=toNode.nodeType;if(!childrenOnly){if(morphedNodeType===ELEMENT_NODE){if(toNodeType===ELEMENT_NODE){if(!compareNodeNames(fromNode,toNode)){onNodeDiscarded(fromNode);morphedNode=moveChildren(fromNode,createElementNS(toNode.nodeName,toNode.namespaceURI))}}else{morphedNode=toNode}}else if(morphedNodeType===TEXT_NODE||morphedNodeType===COMMENT_NODE){if(toNodeType===morphedNodeType){if(morphedNode.nodeValue!==toNode.nodeValue){morphedNode.nodeValue=toNode.nodeValue}return morphedNode}else{morphedNode=toNode}}}if(morphedNode===toNode){onNodeDiscarded(fromNode)}else{if(toNode.isSameNode&&toNode.isSameNode(morphedNode)){return}morphEl(morphedNode,toNode,childrenOnly);if(keyedRemovalList){for(var i=0,len=keyedRemovalList.length;i<len;i++){var elToRemove=fromNodesLookup[keyedRemovalList[i]];if(elToRemove){removeNode(elToRemove,elToRemove.parentNode,false)}}}}if(!childrenOnly&&morphedNode!==fromNode&&fromNode.parentNode){if(morphedNode.actualize){morphedNode=morphedNode.actualize(fromNode.ownerDocument||doc)}fromNode.parentNode.replaceChild(morphedNode,fromNode)}return morphedNode}}var morphdom=morphdomFactory(morphAttrs);return morphdom});
+
 /* demo: the claude.ai preview, or ?demo on the real site (kept apart from real data) */
 const DEMO=window.APP_MODE==='demo'||/[?&]demo\b/.test(location.search);
 const KEY='yyhabit_v2'+(DEMO&&window.APP_MODE!=='demo'?'_demo':'');
@@ -681,10 +801,13 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(typ
 /* answers that need the partner to act */
 const NEED={1:['还没开始吃'],3:['肠胃有一点不习惯','有问题想问伙伴'],7:['常常忘记'],21:['有，请伙伴联系她'],28:['剩一个星期左右','已经吃完了'],60:['好，请伙伴联系我'],90:['想请伙伴给我建议']};
 /*SHARE-CHAL*/
-/* ---------- the 30-day challenge: everyone starts on the same Monday. She finishes with 25 check-ins inside the 30 days,
-   so a missed day or two never ends it. codes: the partner codes taking part ([] = the whole team) ---------- */
-const CHAL={name:'30天健康好习惯挑战',open:'2026-11-16',start:'2026-11-23',days:30,pass:25,ref:7,codes:[],
+/* ---------- the 30-day challenge: everyone starts on the same day (sign-up opens a week before). She finishes with 25 check-ins
+   inside the 30 days, so a missed day or two never ends it. prize: what finishing brings besides the certificate.
+   codes: the partner codes taking part ([] = the whole team). Change the dates here; every weekday and date on the page follows. ---------- */
+const CHAL={name:'30天健康好习惯挑战',open:'2026-11-23',start:'2026-12-01',days:30,pass:25,ref:7,codes:[],prize:'还有小礼物一份',
   tasks:[['water','喝够 8 杯水'],['move','走路或运动 20 分钟']]};
+/* 12月1日（星期二）: a date with its weekday, worked out from the date itself */
+const chalDay=s=>{const[a,b,c]=String(s).split('-').map(Number);return b+'月'+c+'日（星期'+'日一二三四五六'[new Date(a,b-1,c).getDay()]+'）'};
 /* a friend who joined without taking nutrition yet */
 const isNu=st=>!!st&&st.nut===false;
 /* where she stands on day t: sign-up week, the 30 days, two weeks of results, otherwise nothing */
@@ -821,9 +944,11 @@ function bfly(x,y,i,still,u){
 }
 function potBloom(x,y){let s='';for(let i=0;i<5;i++){const a=i*Math.PI*.4-Math.PI/2;s+=`<circle class="p-pblm" cx="${f1(x+Math.cos(a)*2.3)}" cy="${f1(y+Math.sin(a)*2.3)}" r="1.7"/>`}return s+`<circle class="p-ctr" cx="${x}" cy="${y}" r="1"/>`}
 
-let UID=0;
+/* gradient ids: numbered afresh on each render (same picture, same markup, nothing to patch); pictures made outside a render keep their own count */
+let UID=0,UIDR=0,RENDERING=false;
+const uid=p=>RENDERING?p+'r'+(++UIDR)+'_':p+(++UID)+'_';
 function plantSVG(n,o={}){
-  const P=grow(n),HL=new Set(o.hl?P.today:[]),has=k=>HL.has(k),still=calm(),u='g'+(++UID)+'_';
+  const P=grow(n),HL=new Set(o.hl?P.today:[]),has=k=>HL.has(k),still=calm(),u=uid('g');
   const H=plantH(P),top=196-H,SW=22,y0=vbY0(P);
   const sx=t=>100+3*t*(1-t)*(1-2*t)*SW,xs=y=>sx((196-y)/(H||1));
   const glow=(x,y,r)=>`<circle class="hl" fill="url(#${u}hl)" cx="${f1(x)}" cy="${f1(y)}" r="${f1(r)}"/>`;
@@ -913,15 +1038,15 @@ function morningURL(){
     x.strokeStyle=th.deep;x.lineWidth=3;x.beginPath();x.arc(650,300,298,0,Math.PI*2);x.stroke();
     sprig(x,760,H+20,440,-80,th,7);sprig(x,870,H+20,300,-30,th,5);
     x.textAlign='left';x.textBaseline='alphabetic';x.fillStyle=th.ink;
-    x.font='600 56px "Noto Serif SC","Songti SC",serif';x.fillText(g,92,160);
-    x.font='300px "DM Serif Display","Noto Serif SC",serif';x.fillText(num,78,450);
+    x.font='600 56px "PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif';x.fillText(g,92,160);
+    x.font='300px "DM Serif Display","PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif';x.fillText(num,78,450);
     const nw=x.measureText(num).width;
-    x.font='600 50px "Noto Serif SC","Songti SC",serif';x.fillText(mo,78+nw+34,335);
-    x.font='500 40px "Noto Serif SC","Songti SC",serif';x.globalAlpha=.72;x.fillText(wk,78+nw+34,400);x.globalAlpha=1;
+    x.font='600 50px "PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif';x.fillText(mo,78+nw+34,335);
+    x.font='500 40px "PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif';x.globalAlpha=.72;x.fillText(wk,78+nw+34,400);x.globalAlpha=1;
     x.fillStyle=th.acc;x.fillRect(92,525,72,6);
-    x.fillStyle=th.ink;x.font='500 48px "Noto Serif SC","Songti SC",serif';
+    x.fillStyle=th.ink;x.font='500 48px "PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif';
     wrapLines(x,tip,520).forEach((l,i)=>x.fillText(l,92,625+i*84));
-    x.font='500 36px "Noto Serif SC","Songti SC",serif';x.globalAlpha=.7;x.fillText(bl,92,H-96);x.globalAlpha=1;
+    x.font='500 36px "PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif';x.globalAlpha=.7;x.fillText(bl,92,H-96);x.globalAlpha=1;
     const url=c.toDataURL('image/jpeg',.9);MCACHE={key,url};return url;
   })();
   mBusy={key,p};return p;
@@ -962,12 +1087,12 @@ async function monthURL(m){
   x.fillStyle=th.deep;x.beginPath();x.arc(650,300,175,0,Math.PI*2);x.fill();
   x.strokeStyle=th.deep;x.lineWidth=3;x.beginPath();x.arc(650,300,212,0,Math.PI*2);x.stroke();
   try{const im=await plantImage(m.total),h=340,w=im.width/im.height*h;x.drawImage(im,650-w/2,452-h,w,h)}catch(e){}
-  const serif=(w,px)=>`${w} ${px}px "Noto Serif SC","Songti SC",serif`;
+  const serif=(w,px)=>`${w} ${px}px "PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif`;
   x.textAlign='left';x.textBaseline='alphabetic';x.fillStyle=th.ink;
   x.font=serif(600,38);x.globalAlpha=.75;wrapLines(x,head,360).slice(0,2).forEach((l,i)=>x.fillText(l,84,120+i*48));x.globalAlpha=1;
   x.font=serif(700,64);x.fillText('这 30 天',84,250);
   x.font=serif(500,30);x.globalAlpha=.7;x.fillText(range,84,300);x.globalAlpha=1;
-  x.font='240px "DM Serif Display","Noto Serif SC",serif';x.fillText(String(m.days),74,540);const nw=x.measureText(String(m.days)).width;
+  x.font='240px "DM Serif Display","PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif';x.fillText(String(m.days),74,540);const nw=x.measureText(String(m.days)).width;
   x.font=serif(600,56);x.fillText('天',74+nw+14,540);
   x.font=serif(500,34);x.globalAlpha=.75;x.fillText(sub,84,600);x.globalAlpha=1;
   x.fillStyle=th.acc;x.fillRect(84,652,72,5);
@@ -1049,7 +1174,7 @@ const petThumb=(kind,fur)=>petSVG(kind,1,'','sit',fur).replace('viewBox="0 0 140
 let PU=0;
 function petSVG(kind,st,cos,pose,fur){
   pose=pose||'sit';
-  const u='q'+(++PU),cat=kind!=='dog',k=st<=1?0:st<=4?.55:1,R=v=>Math.round(v*10)/10;
+  const u=uid('q'),cat=kind!=='dog',k=st<=1?0:st<=4?.55:1,R=v=>Math.round(v*10)/10;
   const still=typeof calm==='function'&&calm(),rnd=((PU*37)%50)/10,OW=1.5;
   const C=furOf(kind,fur),up=cat||C.up;
   const hasHat=['cny','xmas','party','bday','straw','sport'].includes(cos),neck=['xmas','scarf','winter'].includes(cos);
@@ -1475,7 +1600,7 @@ const SKY={am:['#F4CDB8','#FAE2CD','#FDF1E2'],day:['#9FCCEB','#C9E4F4','#E8F4F7'
 const HILL={am:['#D5DFCB','#B7CCB1','#9EBB9A'],day:['#C2DBBB','#A1C79E','#84B384'],dusk:['#C9B0AA','#AF9898','#93818A'],night:['#313E5D','#293551','#212B44']};
 const BEAM={am:'#FFF1D2',day:'#FFFFFF',dusk:'#FFD3AE'};
 function roomSVG(p,c){
-  const sky=SKY[p],hill=HILL[p],u='rm'+(++UID)+'_',open='M100 262V118A95 95 0 0 1 290 118V262Z',rev='M88 262V118A107 107 0 0 1 302 118V262Z';
+  const sky=SKY[p],hill=HILL[p],u=uid('rm'),open='M100 262V118A95 95 0 0 1 290 118V262Z',rev='M88 262V118A107 107 0 0 1 302 118V262Z';
   const fold=mixHex(c.curtain,'#FFFFFF',.08),lite=mixHex(c.curtain,'#FFFFFF',.5),rod=mixHex(c.frame,'#7C7062',.45);
   let view=`<rect x="80" y="0" width="230" height="270" fill="url(#${u}sky)"/>`;
   if(p==='night'){
@@ -1533,7 +1658,7 @@ function hero(act){
 function furPick(kind,cur){return `<div class="furpick">${FUR[kind].map(f=>`<button class="fp" data-fur="${f.k}" aria-pressed="${cur===f.k}">${petThumb(kind,f.k)}<span>${f.n}</span></button>`).join('')}</div>`}
 function petMarkup(n,pc,awake){
   const st=petStage(n);
-  return `<div class="pet" id="petw" data-mode="${awake?'awake':'sleep'}" data-stage="${st}" data-cos="${pc.cos}" style="--ps:${petScale(st)}"><button class="ptap" data-act="pat" aria-label="摸摸${esc(S.petName)}"><div class="pet-j${justChecked&&!calm()?' jump':''}"><div class="pet-in" id="petin">${petSVG(S.pet,st,pc.cos,awake?'sit':'sleep',S.fur)}</div></div></button></div>`;
+  return `<div class="pet" id="petw" data-mode="${awake?'awake':'sleep'}" data-stage="${st}" data-cos="${pc.cos}" data-k="${esc(S.pet+'|'+S.fur+'|'+S.petName)}" style="--ps:${petScale(st)}"><button class="ptap" data-act="pat" aria-label="摸摸${esc(S.petName)}"><div class="pet-j${justChecked&&!calm()?' jump':''}"><div class="pet-in" id="petin">${petSVG(S.pet,st,pc.cos,awake?'sit':'sleep',S.fur)}</div></div></button></div>`;
 }
 /* after the check-in: one quiet card with the partner's words, and her question when there is one */
 function doneCard(makeup){
@@ -1732,26 +1857,8 @@ function viewFeel(){
 }
 
 /* ---------- first visit ---------- */
-function viewOnboard(){
-  const ok=draftName.trim()&&draftOk;
-  const p=period(),c=scenePal(p);
-  return `<section class="hero" style="${heroStyle(p)}"><div class="h-top">${dateBlock()}</div><h1 class="h-greet">欢迎你，一起养一盆健康花</h1>
-      <div class="h-scene">${roomSVG(p,c)}<div class="plant" style="height:${f1((260-vbY0(grow(0)))/260*76)}%">${plantSVG(0)}</div>${cupSVG(p,c)}</div>
-      <p class="h-cap mute"><span style="display:inline-block">${draftNut?'每天吃完营养，点一下打卡，':'每天喝完第一杯水，点一下打卡，'}</span><span style="display:inline-block">种子就会慢慢长大开花。</span></p></section>`+chalWelcome()+
-    (CLOUD&&!S.pcode&&!PCODE&&!PI.phone?`<div class="card" style="background:var(--gold-soft);border:0"><h3>还不知道你的伙伴是谁</h3><p>请用伙伴发给你的链接打开，或请伙伴给你扫二维码。这样你的奖励和问题才会送到伙伴那里。</p></div>`:'')+`<div class="card"><h3>1. 哪一种字看得最清楚？</h3>${fontPick()}</div>
-    <div class="card"><label for="nm"><h3>2. 我们怎么称呼你？</h3></label><input type="text" id="nm" placeholder="例如：陈姐" value="${esc(draftName)}"></div>
-    <div class="card"><h3>3. 你现在有在吃营养品吗？</h3>${nutPick(draftNut)}<p class="small muted">${draftNut?'每天吃完营养，点一下打卡。':'没关系！每天喝完第一杯水，点一下打卡就好。'}</p></div>
-    <div class="card"><h3>4. 你想先照顾哪一方面？</h3><p class="small muted" style="margin-top:-6px">每天会有几个小任务，做到一样点一下。以后可以在「记录」页换。</p>${planPick(draftPlan,!draftNut)}</div>
-    <div class="card"><h3>5. 你想养小猫还是小狗？</h3><div class="petpick">${['cat','dog'].map(k=>`<button class="pp" data-pet="${k}" aria-pressed="${draftPet===k}">${petSVG(k,1,'','sit',k===draftPet?draftFur:'')}<span>${k==='cat'?'小猫':'小狗'}</span></button>`).join('')}</div>
-      <p class="small muted" style="margin-top:12px">选一个毛色</p>${furPick(draftPet,furOf(draftPet,draftFur).k)}
-      <label for="pn" class="small muted">它的名字（可以改）</label><input type="text" id="pn" maxlength="8" value="${esc(draftPetName)}"></div>
-    <div class="card"><h3>6. 你的生日（可以不填）</h3><p class="small muted">生日那天，宠物会戴上生日帽陪你庆祝。</p>
-      <div class="row"><select id="bm" aria-label="生日月份"><option value="">月</option>${Array.from({length:12},(_,i)=>`<option value="${i+1}"${+draftBM===i+1?' selected':''}>${i+1} 月</option>`).join('')}</select>
-      <select id="bd" aria-label="生日日期"><option value="">日</option>${Array.from({length:31},(_,i)=>`<option value="${i+1}"${+draftBD===i+1?' selected':''}>${i+1} 日</option>`).join('')}</select></div></div>
-    <div class="card"><label style="display:flex;gap:12px;align-items:flex-start"><input type="checkbox" id="ok" ${draftOk?'checked':''} style="width:1.6rem;height:1.6rem;flex:none;margin-top:4px">
-      <span>我同意把我的打卡、感觉记录、体重（如果有填）和问题安全地存在网上，只给我的伙伴 ${esc(S.partner)} 和团队领导用来关心我的情况。我可以随时在「记录」页删除这些资料。</span></label></div>
-    <button class="checkin" data-act="start" ${ok?'':'disabled'}><span>种下我的健康花<span class="sub">开始 90 天旅程</span></span></button>`+demoTools();
-}
+/* first visit: the invitation, then the five short steps (p5e_join) */
+function viewOnboard(){return obStep?joinStep():joinLanding()}
 function demoTools(){
   if(!DEMO)return '';
   return `<details class="demo"><summary>演示工具（给伙伴看，正式版没有）</summary>
@@ -1940,7 +2047,7 @@ function later(ms,go,skip){
 /* ---------- flowers from the partner ---------- */
 const recentFlw=()=>(S.flw||[]).filter(f=>f&&f.d&&diff(f.d,today())<7);
 function vaseSVG(k,c){
-  const u='vs'+(++UID)+'_',heads=[[22,6,4.8],[11.5,13,4.2],[32.5,11,4.4],[16,3.5,3.8],[29,2.5,3.8]].slice(0,Math.max(1,Math.min(5,k)));
+  const u=uid('vs'),heads=[[22,6,4.8],[11.5,13,4.2],[32.5,11,4.4],[16,3.5,3.8],[29,2.5,3.8]].slice(0,Math.max(1,Math.min(5,k)));
   const glaze=c.dim?['#8B9B94','#6E7D77']:['#D3E2D8','#A9C2B2'];
   let g='';heads.forEach(([x,y,r],i)=>{g+=`<path d="M22 37Q${x<22?20:24} ${(y+37)/2} ${x} ${y+3}" fill="none" stroke="var(--leaf-a)" stroke-width="1.3"/>`});
   g+=leaf(21,28,7,-160,u)+leaf(23,24,6.5,-25,u);
@@ -2010,7 +2117,7 @@ function inviteLink(){
 }
 function inviteText(){
   const c=chalOf(S,today()),l=inviteLink(),three='每天三件小事：喝够水、走路 20 分钟、打开网页给小花浇水。';
-  if(c&&c.phase==='pre')return `我报名了「${CHAL.name}」🌱\n${mdOf(CHAL.start)}（星期一）大家一起开始。${three}30 天里打卡满 ${CHAL.pass} 天，就有完成证书。\n你也一起来吧？不用下载，点这里报名：\n${l}`;
+  if(c&&c.phase==='pre')return `我报名了「${CHAL.name}」🌱\n${chalDay(CHAL.start)}大家一起开始。${three}30 天里打卡满 ${CHAL.pass} 天，就有完成证书。\n你也一起来吧？不用下载，点这里报名：\n${l}`;
   if(c&&c.phase==='on'&&!c.passed)return `我在参加「${CHAL.name}」🌱 ${three}\n现在加入也可以，你也一起来吧？不用下载，点这里开始：\n${l}`;
   if(c&&c.passed)return `我完成了「${CHAL.name}」🎉 30 天里打卡 ${c.got} 天。\n${three}你也一起来吧？不用下载，点这里开始：\n${l}`;
   return `我每天用这个网页打卡，照顾自己的好习惯 🌱 打一次卡，小花就长大一点，还有小猫小狗陪着。\n你也一起来吧？不用下载，点这里开始：\n${l}`;
@@ -2021,7 +2128,7 @@ const inviteRow=()=>`<a class="rowi" href="${inviteHref()}" target="_blank" rel=
 function chalWelcome(){
   const c=chalOf(S,today());
   if(c&&c.phase!=='post')return `<div class="card chalc"><p class="eyebrow ch-eb">${REFX?'朋友邀请你一起参加':'现在可以报名'}</p><h3 class="ch-t">${esc(CHAL.name)}</h3>
-    <p>${c.phase==='pre'?`${mdOf(CHAL.start)}（星期一）大家一起开始${c.soon>1?`，还有 ${c.soon} 天`:c.soon===1?'，就是明天':''}。`:'挑战已经开始了，现在加入也可以。'}</p><p>每天喝够水、走路 20 分钟，打开这里给小花浇水。</p>
+    <p>${c.phase==='pre'?`${chalDay(CHAL.start)}大家一起开始${c.soon>1?`，还有 ${c.soon} 天`:c.soon===1?'，就是明天':''}。`:'挑战已经开始了，现在加入也可以。'}</p><p>每天喝够水、走路 20 分钟，打开这里给小花浇水。</p>
     <p class="small muted">30 天里打卡满 ${CHAL.pass} 天，就有完成证书。不用下载，填好下面就能开始。</p></div>`;
   return REFX?`<div class="card chalc"><p class="eyebrow ch-eb">朋友邀请你</p><h3 class="ch-t">一起养一盆健康花</h3><p>每天打卡一次，小花就长大一点，还有小猫小狗陪着你。</p></div>`:'';
 }
@@ -2040,7 +2147,7 @@ function chalCard(){
   if(c.phase==='pre'){
     const first=isNu(S)?'喝今天第一杯水，打开这里给小花浇水':'吃营养，打开这里给小花浇水';
     return `<section class="card chalc" id="chal">${eb}
-      <div class="ch-when"><span class="ch-num">${c.soon}</span><span class="ch-wt">天后，大家一起开始<small>${mdOf(CHAL.start)}（星期一）</small></span></div>
+      <div class="ch-when"><span class="ch-num">${c.soon}</span><span class="ch-wt">天后，大家一起开始<small>${chalDay(CHAL.start)}</small></span></div>
       <ol class="ch-rules"><li>${first}</li><li>喝够 8 杯水</li><li>走路或运动 20 分钟</li></ol>
       <p class="small muted">30 天里打卡满 ${CHAL.pass} 天，就能拿到完成证书，漏一两天也没关系。现在可以先打卡热身，挑战天数从 ${mdOf(CHAL.start)} 开始算。</p>
       ${inv(true)}${thx}</section>`;
@@ -2062,7 +2169,7 @@ const certAlt=w=>`${S.name}，${CHAL.name}完成证书：${mdOf(CHAL.start)}到$
 async function certURL(w){
   const key=['cert',S.name,S.partner,w.got,w.passD,w.water,w.move].join('|');if(MOCACHE[key])return MOCACHE[key];
   const W=900,H=1125,cv=document.createElement('canvas');cv.width=W;cv.height=H;const x=cv.getContext('2d');
-  const ink='#2E2A22',gold='#B08A3E',paper='#FBF7EE',red='#C2483B',serif=(wt,px)=>`${wt} ${px}px "Noto Serif SC","Songti SC",serif`;
+  const ink='#2E2A22',gold='#B08A3E',paper='#FBF7EE',red='#C2483B',serif=(wt,px)=>`${wt} ${px}px "PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Noto Sans SC","Microsoft YaHei",sans-serif`;
   const pn=S.partner&&S.partner!=='你的伙伴'?S.partner:'',l1=`在 ${mdOf(CHAL.start)} – ${mdOf(w.end)} 的挑战里`,l2=`打卡 ${w.got} 天，每天好好照顾自己`;
   const l3=[w.water?`喝够水 ${w.water} 天`:'',w.move?`走路或运动 ${w.move} 天`:''].filter(Boolean).join(' · ');
   const words='完成证书'+CHAL.name+S.name+l1+l2+l3+'伙伴'+pn+ymdCN(w.passD||w.end);
@@ -2106,17 +2213,146 @@ async function showCert(isNew){
 /* the check-in that makes 25: her certificate opens once, by itself */
 function chalCheck(){const w=chalWin(S);if(w&&w.passed&&S.chalSeen!==w.passD&&today()>=w.passD){showCert(true);return true}return false}
 
+/* ---------- motion: a new page slides in; on the same page only what changed changes (new cards rise into place);
+   pop-ups open and close softly; the windowsill rests when nobody is looking, so the phone stays cool ---------- */
+let VIEW='',ENT=0;
+const FX_KEEP=['say','fl','spk','plus','fdrift']; /* bubbles and sparkles finish on their own */
+const samePet=(f,t)=>['mode','stage','cos','k'].every(k=>f.dataset[k]===t.dataset[k])&&f.style.getPropertyValue('--ps')===t.style.getPropertyValue('--ps')
+  &&((f.querySelector('.pet-j')||{}).className===(t.querySelector('.pet-j')||{}).className);
+function paint(app,html,key){
+  const swap=key!==VIEW,first=!VIEW;VIEW=key;
+  if(swap||typeof morphdom!=='function'){if(swap)clearTimeout(PET.t);app.innerHTML=html;if(swap&&!first)enter(app);return}
+  morphdom(app,'<div>'+html+'</div>',{childrenOnly:true,
+    onBeforeElUpdated(f,t){
+      if(f.classList&&f.classList.contains('hz'))t.classList.add('hz');
+      if(f.isEqualNode(t))return false;
+      /* what she is typing stays where it is */
+      if(f===document.activeElement&&(f.tagName==='TEXTAREA'||(f.tagName==='INPUT'&&f.type!=='checkbox')))return false;
+      /* a pet that looks the same keeps walking where it is */
+      if(f.id==='petw'&&samePet(f,t))return false;
+      return true},
+    onElUpdated(el){if(el.id==='petw')el._live=0},
+    onBeforeNodeDiscarded(n){return !(n.nodeType===1&&n.classList&&FX_KEEP.some(c=>n.classList.contains(c)))},
+    onNodeAdded(n){if(n.nodeType===1&&n.parentNode===app&&!calm()){n.classList.add('pop-in');setTimeout(()=>{if(n.classList)n.classList.remove('pop-in')},800)}return n}});
+}
+function enter(app){if(calm())return;app.classList.remove('enter');void app.offsetWidth;app.classList.add('enter');clearTimeout(ENT);ENT=setTimeout(()=>app.classList.remove('enter'),1000)}
+/* pop-ups: they rise in when shown (whoever shows them), and fade down before hiding */
+function ovHide(after){const o=$('#overlay'),done=()=>{o.hidden=true;o.classList.remove('out','in');if(after)after()};
+  if(o.hidden){if(after)after();return}
+  if(calm()){done();return}
+  o.classList.remove('in');o.classList.add('out');setTimeout(done,190)}
+(function(){const o=$('#overlay');if(!o||!('MutationObserver' in window))return;
+  new MutationObserver(()=>{if(!o.hidden&&!o.classList.contains('out')){o.classList.remove('in');void o.offsetWidth;o.classList.add('in')}}).observe(o,{attributes:true,attributeFilter:['hidden']})})();
+/* the windowsill's endless little movements run while she is looking: 15 s after any touch, and only on screen */
+const HL={io:null,el:null,vis:true,until:0,on:null,t:0};
+function heroWatch(){const el=$('.h-scene');
+  if(el!==HL.el){HL.el=el;HL.on=null;if(HL.io){HL.io.disconnect();HL.io=null}HL.vis=true;
+    if(el&&'IntersectionObserver' in window){HL.io=new IntersectionObserver(es=>{HL.vis=es[es.length-1].isIntersecting;if(HL.vis)wake();else heroLive()});HL.io.observe(el)}
+    wake()}
+  else heroLive()}
+function heroLive(){const el=HL.el;if(!el||!el.isConnected)return;const on=HL.vis&&!document.hidden&&Date.now()<HL.until;if(on===HL.on)return;HL.on=on;
+  el.classList.toggle('hz',!on);el.querySelectorAll('svg').forEach(s=>{try{on?s.unpauseAnimations():s.pauseAnimations()}catch(e){}})}
+function wake(){HL.until=Date.now()+15000;heroLive();clearTimeout(HL.t);HL.t=setTimeout(heroLive,15050)}
+addEventListener('pointerdown',wake,{passive:true});addEventListener('keydown',wake);
+addEventListener('scroll',()=>{if(HL.on===false&&HL.vis)wake()},{passive:true});
+document.addEventListener('visibilitychange',heroLive);
+
+/* ---------- first visit: an invitation worth saying yes to, then five short steps with one question each ---------- */
+let obStep=0;const OB_N=5;
+const J_IC={
+  drop:ic('<path d="M12 3.2S5.8 10.3 5.8 14.6a6.2 6.2 0 0 0 12.4 0C18.2 10.3 12 3.2 12 3.2z"/><path d="M9.2 15.2a2.9 2.9 0 0 0 2.6 2.6"/>'),
+  walk:ic('<circle cx="13.2" cy="4.4" r="1.9"/><path d="M10.4 21l1.9-6.2-2.6-2.5 1-4.2 3.2 2.7 2.7.7"/><path d="M12.3 14.8l2.8 1.8.7 4.4"/><path d="M10.7 8.1L7.4 9.8 6.6 13.2"/>'),
+  sprout:ic('<path d="M12 20.5V13"/><path d="M12 13c0-3.7-2.7-6.3-6.8-6.3 0 4 2.9 6.3 6.8 6.3z"/><path d="M12 11.2c0-3.1 2.3-5.4 6-5.4 0 3.4-2.5 5.4-6 5.4z"/>'),
+  sun:I.sun,flower:I.flower,heart:I.heart,people:PEOPLE,
+  free:ic('<circle cx="12" cy="12" r="8.5"/><path d="M8.6 12.2l2.3 2.3 4.6-4.8"/>')
+};
+/* who is asking her: a friend's link, the partner's link, or nobody yet */
+const jWho=()=>REFX?'朋友邀请你':(S.partner&&S.partner!=='你的伙伴'?`${esc(S.partner)} 邀请你`:'欢迎你');
+const jGo=sub=>`<button class="checkin j-go" data-act="obgo"><span>我要参加<span class="sub">${sub||'免费 · 不用下载 · 1 分钟填好'}</span></span></button>`;
+function fsMini(){return `<div class="fsmini" role="group" aria-label="字的大小"><span>字</span>${[['s','小'],['m','中'],['l','大']].map(([k,l])=>`<button data-fs="${k}" aria-pressed="${S.fs===k}">${l}</button>`).join('')}</div>`}
+/* a small paper certificate, drawn in the page: what finishing looks like */
+const miniCert=()=>`<div class="mcert" aria-hidden="true"><div class="mc-in"><p class="mc-eb">完 成 证 书</p><p class="mc-t">${esc(CHAL.name)}</p>
+  <div class="mc-p">${plantSVG(55)}</div><p class="mc-n">你的名字</p><p class="mc-l">打卡 ${CHAL.pass} 天</p><span class="mc-seal">完成</span></div></div>`;
+function joinLanding(){
+  const t=today(),c=chalOf(S,t),on=!!c&&c.phase!=='post',p=period(),pal=scenePal(p);
+  const title=on?'<span>30天，</span><span>养成 3 个好习惯</span>':'<span>每天 10 秒，</span><span>养一盆健康花</span>';
+  const when=on?(c.phase==='pre'?`${chalDay(CHAL.start)}大家一起开始`:`挑战已经开始，现在加入也可以`):'和伙伴一起，每天照顾好自己';
+  const count=on&&c.phase==='pre'?`<span class="j-soon">还有 <b>${c.soon}</b> 天</span>`:'';
+  const first=draftNut?'吃营养':'喝今天第一杯水';
+  const hero=`<section class="hero j-hero" style="${heroStyle(p)}">
+    <div class="j-top"><span class="j-badge">${J_IC.heart}${jWho()}</span>${fsMini()}</div>
+    <h1 class="j-title">${title}</h1><p class="j-when"><span>${when}</span>${count}</p>
+    <div class="h-scene j-scene">${roomSVG(p,pal)}<div class="plant" style="height:${f1((260-vbY0(grow(30)))/260*76)}%">${plantSVG(30)}</div>
+      <div class="j-pet">${petSVG(draftPet,2,'','sit',draftFur)}</div>${cupSVG(p,pal)}</div>
+    <div class="j-tags"><span>${J_IC.free}免费</span><span>${J_IC.free}不用下载</span><span>${J_IC.free}每天 10 秒</span></div>
+    ${jGo()}</section>`;
+  const three=on?`<section class="card j-card"><h2 class="j-h">每天只要 3 件小事</h2>
+      <div class="j-row"><span class="j-ic g">${J_IC.drop}</span><div><b>喝够 8 杯水</b><small>准备一个水瓶，看到就喝几口</small></div></div>
+      <div class="j-row"><span class="j-ic">${J_IC.walk}</span><div><b>走路或运动 20 分钟</b><small>饭后走一走也算，可以分两次</small></div></div>
+      <div class="j-row"><span class="j-ic y">${J_IC.sprout}</span><div><b>${first}</b><small>然后打开网页，点一下给小花浇水</small></div></div></section>`
+    :`<section class="card j-card"><h2 class="j-h">每天只要 1 分钟</h2>
+      <div class="j-row"><span class="j-ic y">${J_IC.sprout}</span><div><b>${draftNut?'吃完营养，点一下打卡':'喝完第一杯水，点一下打卡'}</b><small>小花就会长大一点</small></div></div>
+      <div class="j-row"><span class="j-ic g">${J_IC.drop}</span><div><b>做几样小任务</b><small>喝够水、多走路，做到一样点一样</small></div></div>
+      <div class="j-row"><span class="j-ic">${J_IC.people}</span><div><b>伙伴陪着你</b><small>每天早上提醒你，有问题随时问</small></div></div></section>`;
+  const grow3=`<div class="j-grow">${[[1,'第 1 天'],[10,'第 10 天'],[30,'第 30 天']].map(([n,l])=>`<figure class="jg"><div class="jg-p">${plantSVG(n)}</div><figcaption>${l}</figcaption></figure>`).join('<span class="jg-ar" aria-hidden="true">›</span>')}</div>`;
+  const prize=on?`<section class="card j-card j-prize"><h2 class="j-h">完成送你</h2><div class="j-pz">${miniCert()}<div class="j-pzt">
+      <p><b>电子完成证书</b><br>写上你的名字，可以保存、转发</p><p><b>${esc(CHAL.prize)}</b></p></div></div>
+      <p class="small muted">30 天里打卡满 ${CHAL.pass} 天就完成，漏一两天也没关系。</p></section>`
+    :`<section class="card j-card"><h2 class="j-h">打卡越久，小花越大</h2>${grow3}<p class="small muted">打卡满 7 天、三个星期、一个月，伙伴都会送你小礼物。</p></section>`;
+  const more=`<section class="card j-card"><h2 class="j-h">一起做，比较容易坚持</h2>
+      <div class="j-row"><span class="j-ic j-pt">${petThumb(draftPet,draftFur)}</span><div><b>一只陪你的小猫或小狗</b><small>摸摸它，它会跟你说话</small></div></div>
+      <div class="j-row"><span class="j-ic y">${J_IC.sun}</span><div><b>每天一张早安图</b><small>可以转发给家人朋友</small></div></div>
+      <div class="j-row"><span class="j-ic p">${J_IC.flower}</span><div><b>伙伴每天关心你</b><small>还会送花给你，有问题随时问</small></div></div>
+      ${on?`<div class="j-row"><span class="j-ic g">${J_IC.people}</span><div><b>一群朋友一起打卡</b><small>看到今天有几位朋友也打卡</small></div></div>`:''}
+      ${on?grow3:''}</section>`;
+  const faq=`<section class="card j-card j-faq"><h2 class="j-h">常常有人问</h2>
+      <div><b>要钱吗？</b><p>不用，完全免费。</p></div>
+      <div><b>要下载吗？</b><p>不用，点链接就能用，也可以放到手机桌面。</p></div>
+      <div><b>没有吃营养品，可以参加吗？</b><p>可以！你的打卡按钮是「我喝了今天第一杯水」。</p></div>
+      <div><b>我的资料安全吗？</b><p>只给你的伙伴看，你随时可以删除。</p></div></section>`;
+  const warn=CLOUD&&!S.pcode&&!PCODE&&!PI.phone?`<div class="card" style="background:var(--gold-soft);border:0"><h3>还不知道你的伙伴是谁</h3><p>请用伙伴发给你的链接打开，或请伙伴给你扫二维码。这样你的奖励和问题才会送到伙伴那里。</p></div>`:'';
+  return hero+warn+three+prize+more+faq+`<div class="j-end">${jGo(on&&c.phase==='pre'?`${chalDay(CHAL.start)}一起开始`:'')}</div>`+demoTools();
+}
+/* the five steps: name, nutrition yes / not yet, the pet, what she cares about, and the last tick */
+function joinStep(){
+  const s=obStep,ok=draftName.trim()&&draftOk;
+  const head=`<div class="j-steps"><button class="link-btn j-back" data-act="obback">‹ 上一步</button><span class="j-dots" aria-label="第 ${s} 步，共 ${OB_N} 步">${Array.from({length:OB_N},(_,i)=>`<i${i<s?' class="on"':''}></i>`).join('')}</span><span class="j-of">${s} / ${OB_N}</span></div>`;
+  const next=`<button class="checkin j-next" data-act="obnext"><span>下一步</span></button>`;
+  let body='';
+  if(s===1)body=`<label for="nm"><h2 class="j-q">我们怎么称呼你？</h2></label><input type="text" id="nm" placeholder="例如：陈姐" value="${esc(draftName)}" autocomplete="nickname" enterkeyhint="next">
+    <p class="small muted">伙伴会这样叫你，小猫小狗也会。</p><p class="j-err" id="nmerr" hidden>请先写一个名字</p>${next}`;
+  else if(s===2)body=`<h2 class="j-q">你现在有在吃营养品吗？</h2>${nutPick(draftNut)}<p class="small muted">${draftNut?'每天吃完营养，点一下打卡。':'没关系！每天喝完第一杯水，点一下打卡就好。'}</p>${next}`;
+  else if(s===3)body=`<h2 class="j-q">你想养小猫还是小狗？</h2><div class="petpick">${['cat','dog'].map(k=>`<button class="pp" data-pet="${k}" aria-pressed="${draftPet===k}">${petSVG(k,1,'','sit',k===draftPet?draftFur:'')}<span>${k==='cat'?'小猫':'小狗'}</span></button>`).join('')}</div>
+    <p class="small muted" style="margin-top:4px">选一个毛色</p>${furPick(draftPet,furOf(draftPet,draftFur).k)}
+    <label for="pn" class="small muted">给它取个名字（可以改）</label><input type="text" id="pn" maxlength="8" value="${esc(draftPetName)}">${next}`;
+  else if(s===4)body=`<h2 class="j-q">你最想照顾好哪一方面？</h2><p class="small muted" style="margin-top:-6px">以后可以在「记录」页换。</p>${planPick(draftPlan,!draftNut)}${next}`;
+  else body=`<h2 class="j-q">最后一步</h2>
+    <div class="j-sub"><h3>你的生日（可以不填）</h3><p class="small muted">生日那天，${draftPet==='dog'?'小狗':'小猫'}会戴上生日帽陪你庆祝。</p>
+      <div class="row"><select id="bm" aria-label="生日月份"><option value="">月</option>${Array.from({length:12},(_,i)=>`<option value="${i+1}"${+draftBM===i+1?' selected':''}>${i+1} 月</option>`).join('')}</select>
+      <select id="bd" aria-label="生日日期"><option value="">日</option>${Array.from({length:31},(_,i)=>`<option value="${i+1}"${+draftBD===i+1?' selected':''}>${i+1} 日</option>`).join('')}</select></div></div>
+    <label class="j-ok"><input type="checkbox" id="ok" ${draftOk?'checked':''}>
+      <span>我同意把我的打卡、感觉记录、体重（如果有填）和问题安全地存在网上，只给我的伙伴 ${esc(S.partner)} 和团队领导用来关心我的情况。我可以随时在「记录」页删除这些资料。</span></label>
+    <button class="checkin" data-act="start" ${ok?'':'disabled'}><span>种下我的健康花<span class="sub">${draftName.trim()?esc(draftName.trim())+'，':''}我们开始吧</span></span></button>`;
+  return `<section class="card j-step">${head}${body}</section>`+demoTools();
+}
+/* tapping an answer moves on by itself, a moment after she sees it chosen */
+function jAuto(from){setTimeout(()=>{if(obStep===from&&!S.onboarded){obStep=from+1;render();scrollTo(0,0)}},280)}
+
 /* ---------- render, effects, events ---------- */
 const calm=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 function render(){
-  clearTimeout(PET.t);
   document.documentElement.className='fs-'+S.fs;
-  const app=$('#app');
-  if(!S.onboarded){app.innerHTML=viewOnboard();$('#nav').hidden=true;return}
+  const app=$('#app'),key=S.onboarded?tab:'onb'+obStep;let html;
+  RENDERING=true;UIDR=0;
+  try{html=!S.onboarded?viewOnboard():tab==='today'?viewToday():tab==='log'?viewLog():viewFeel()}finally{RENDERING=false}
+  paint(app,html,key);
+  if(!S.onboarded){$('#nav').hidden=true;return}
   $('#nav').hidden=false;
-  app.innerHTML=tab==='today'?viewToday():tab==='log'?viewLog():viewFeel();
   document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-current',b.dataset.tab===tab?'page':'false'));
-  if(tab==='today'){setTimeout(petStart,0);if(S.checks[today()])morningURL().catch(()=>{});
+  heroWatch();
+  /* a pet that stayed on the sill keeps walking; a new one starts its day */
+  const pw=$('#petw');if(pw&&!pw._live){pw._live=1;setTimeout(petStart,0)}
+  if(tab==='today'){if(S.checks[today()])morningURL().catch(()=>{});
     if((S.flw||[]).some(f=>+f.id>(S.flwSeen||0)))setTimeout(()=>{if(tab==='today'&&$('#overlay').hidden)flwArrive()},700)}
 }
 let lastW=innerWidth;addEventListener('resize',()=>{if(innerWidth===lastW)return;lastW=innerWidth;if(tab==='today')petStart()});
@@ -2172,11 +2408,11 @@ document.addEventListener('click',e=>{
   if(b.dataset.m){draft[b.dataset.m]=+b.dataset.v;render();return}
   if('quiz' in b.dataset){const f=S.flips[t];if(f&&f.type==='quiz'&&f.ans==null){const L=quizList(f);f.ans=+b.dataset.quiz;const ok=f.ans===L[f.i%L.length].a;S.points+=ok?5:2;save();render();bumpPts()}return}
   if(b.dataset.plan){const k=b.dataset.plan;if(!PLANS[k])return;
-    if(!S.onboarded){keepName();draftPlan=k;render();return}
+    if(!S.onboarded){keepName();draftPlan=k;render();if(obStep===4)jAuto(4);return}
     if(planOf(S)!==k){S.plan=k;S.planD=t;draft={e:0,s:0,g:0,sk:0,kg:''};save();toast('已换成「'+PLANS[k].name+'」计划')}
     render();return}
   if('nut' in b.dataset){const v=b.dataset.nut==='1';
-    if(!S.onboarded){keepName();draftNut=v;render();return}
+    if(!S.onboarded){keepName();draftNut=v;render();if(obStep===2)jAuto(2);return}
     if(isNu(S)===v){S.nut=v;save();toast(v?'打卡按钮改成「我今天吃了营养」':'打卡按钮改成「我喝了今天第一杯水」')}
     render();return}
   if(b.dataset.task){const id=b.dataset.task,L=((S.tasks||(S.tasks={}))[t]||[]).slice(),i=L.indexOf(id);
@@ -2225,7 +2461,13 @@ document.addEventListener('click',e=>{
     case 'rename':{const v=($('#pn2')||{}).value;if(v&&v.trim()){S.petName=v.trim().slice(0,8);save();render()}break}
     case 'cos':demoCos=demoCos+1>=DEMO_COS.length?-1:demoCos+1;render();break;
     case 'cosoff':demoCos=-1;render();break;
-    case 'close':$('#overlay').hidden=true;if(!chalCheck())toDone();break;
+    case 'close':ovHide(()=>{if(!chalCheck())toDone()});break;
+    /* sign-up: the invitation's button, next and back */
+    case 'obgo':obStep=1;render();scrollTo(0,0);break;
+    case 'obnext':keepName();
+      if(obStep===1&&!draftName.trim()){const er=$('#nmerr'),n=$('#nm');if(er)er.hidden=false;if(n){n.focus();n.classList.remove('shake');void n.offsetWidth;n.classList.add('shake')}break}
+      obStep=Math.min(OB_N,obStep+1);render();scrollTo(0,0);break;
+    case 'obback':keepName();obStep=Math.max(0,obStep-1);render();scrollTo(0,0);break;
     case 'cert':showCert(false);break;
     /* demo: the same customer on a sign-up-week day, on challenge day 10, and the day her 25th check-in is due */
     case 'chpre':case 'chon':case 'chdone':{
@@ -2235,8 +2477,8 @@ document.addEventListener('click',e=>{
       S.gifts={};MILES.forEach(m=>{if(count()>=m.n)S.gifts[m.id]=st});S.seen=['s1','s2','s3','s4','st2','st3'];
       tab='today';save();render();scrollTo(0,0);break}
     case 'chfriend':{const fs=S.fs;S=fresh();S.fs=fs;S.offset=diff(ymd(new Date()),add(CHAL.open,3));S.refQ='chenjie';REFX='chenjie';
-      draftNut=false;draftName='';draftAnchor='';draftOk=false;draftPet='cat';draftFur='';draftPetName='招财';draftBM='';draftBD='';draftPlan='base';tab='today';save();render();scrollTo(0,0);break}
-    case 'nclose':$('#overlay').hidden=true;break;
+      draftNut=false;obStep=0;draftName='';draftAnchor='';draftOk=false;draftPet='cat';draftFur='';draftPetName='招财';draftBM='';draftBD='';draftPlan='base';tab='today';save();render();scrollTo(0,0);break}
+    case 'nclose':ovHide();break;
     case 'delme':cloudDelete();break;
     case 'month':showMonth(b.dataset.k);break;
     case 'mimg':showMorning();break;
@@ -2248,7 +2490,7 @@ document.addEventListener('click',e=>{
     case 'newsdemo':showNews(newsNow().card||demoNews()[2]);break;
     case 'next':S.offset=(S.offset||0)+1;save();render();scrollTo(0,0);break;
     case 'prev':if(diff(S.start,add(t,-1))>=0){S.offset=(S.offset||0)-1;save();render()}break;
-    case 'new':{const fs=S.fs;S=fresh();S.fs=fs;REFX='';draftNut=true;draftName='';draftAnchor='';draftOk=false;draftPet='cat';draftFur='';draftPetName='招财';draftBM='';draftBD='';draftPlan=PLANQ||'base';tab='today';save();render();scrollTo(0,0);break}
+    case 'new':{const fs=S.fs;S=fresh();S.fs=fs;REFX='';draftNut=true;obStep=0;draftName='';draftAnchor='';draftOk=false;draftPet='cat';draftFur='';draftPetName='招财';draftBM='';draftBD='';draftPlan=PLANQ||'base';tab='today';save();render();scrollTo(0,0);break}
     case 'sample':S=seed();tab='today';save();render();scrollTo(0,0);break;
     case 'start':keepName();if(!(draftName.trim()&&draftOk))return;
       S.name=draftName.trim();S.anchor=draftAnchor;S.plan=PLANS[draftPlan]?draftPlan:'base';S.planD=t;S.pet=draftPet;S.fur=furOf(draftPet,draftFur).k;S.petName=(draftPetName.trim()||PETN[draftPet]).slice(0,8);
@@ -2261,6 +2503,7 @@ document.addEventListener('click',e=>{
 document.addEventListener('change',e=>{if(e.target.id==='bm')draftBM=e.target.value;if(e.target.id==='bd')draftBD=e.target.value});
 document.addEventListener('input',e=>{if(e.target.id==='pn')draftPetName=e.target.value;if(e.target.id==='kg'){draft.kg=e.target.value;const er=$('#kgerr');if(er)er.hidden=true}if(e.target.id==='q'){const a=$('#askbtn');if(a)a.href=waLink(askText(e.target.value.trim()))}if(e.target.id==='nm'){draftName=e.target.value;const s=document.querySelector('[data-act=start]');if(s)s.disabled=!(draftName.trim()&&draftOk)}});
 document.addEventListener('change',e=>{if(e.target.id==='ok'){keepName();draftOk=e.target.checked;render()}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='nm'&&!S.onboarded){e.preventDefault();const b=$('[data-act=obnext]');if(b)b.click()}});
 
 S=load()||(DEMO?seed():fresh());
 if(!S.pet){S.pet='cat';S.petName='招财';S.bday=S.bday||''}

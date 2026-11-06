@@ -175,10 +175,13 @@ function monthsOf(st,t){const L=[];for(let k=1;k<=24;k++){const m=monthStats(st,
 const monthLine=(m,nu)=>m.days>=25?'这个月几乎每天都没忘记，太厉害了！':m.days>=18?(nu?'大部分日子都记得打卡，继续保持！':'大部分日子都记得吃，继续保持！'):m.days>=10?'有几天忘了没关系，下个月我们一起把天数拉高。':'这个月比较忙吧？下个月我每天早上提醒你。';
 /*END-MONTH*/
 /*SHARE-CHAL*/
-/* ---------- the 30-day challenge: everyone starts on the same Monday. She finishes with 25 check-ins inside the 30 days,
-   so a missed day or two never ends it. codes: the partner codes taking part ([] = the whole team) ---------- */
-const CHAL={name:'30天健康好习惯挑战',open:'2026-11-16',start:'2026-11-23',days:30,pass:25,ref:7,codes:[],
+/* ---------- the 30-day challenge: everyone starts on the same day (sign-up opens a week before). She finishes with 25 check-ins
+   inside the 30 days, so a missed day or two never ends it. prize: what finishing brings besides the certificate.
+   codes: the partner codes taking part ([] = the whole team). Change the dates here; every weekday and date on the page follows. ---------- */
+const CHAL={name:'30天健康好习惯挑战',open:'2026-11-23',start:'2026-12-01',days:30,pass:25,ref:7,codes:[],prize:'还有小礼物一份',
   tasks:[['water','喝够 8 杯水'],['move','走路或运动 20 分钟']]};
+/* 12月1日（星期二）: a date with its weekday, worked out from the date itself */
+const chalDay=s=>{const[a,b,c]=String(s).split('-').map(Number);return b+'月'+c+'日（星期'+'日一二三四五六'[new Date(a,b-1,c).getDay()]+'）'};
 /* a friend who joined without taking nutrition yet */
 const isNu=st=>!!st&&st.nut===false;
 /* where she stands on day t: sign-up week, the 30 days, two weeks of results, otherwise nothing */
@@ -399,15 +402,15 @@ function chalStats(L){const ph=chalPhase(),A=L.filter(x=>x.ch&&x.S.onboarded),in
   return {ph,inn,nf:inn.filter(x=>x.nu).length,fin:inn.filter(x=>x.ch.passed),todayN:inn.filter(x=>x.today).length,brought:L.filter(x=>x.refBy&&x.start&&x.start>=CHAL.open).length}}
 const chalLink=()=>SITE+'?p='+ME.code+'&nu=1';
 function chalInvite(){const ph=chalPhase();
-  return `你好！我们在办「${CHAL.name}」🌱\n${ph==='pre'?mdate(CHAL.start)+'（星期一）大家一起开始。':'现在加入也可以。'}每天三件小事：喝够水、走路 20 分钟、打开网页给小花浇水。30 天里打卡满 ${CHAL.pass} 天，就有完成证书，还有小礼物。\n没在吃营养品也可以参加，不用下载，点这里报名：\n${chalLink()}`}
+  return `你好！我们在办「${CHAL.name}」🌱\n${ph==='pre'?chalDay(CHAL.start)+'大家一起开始。':'现在加入也可以。'}每天三件小事：喝够水、走路 20 分钟、打开网页给小花浇水。30 天里打卡满 ${CHAL.pass} 天，就有完成证书，还有小礼物。\n没在吃营养品也可以参加，不用下载，点这里报名：\n${chalLink()}`}
 function chalDaily(){const ph=chalPhase(),t=today(),link=SITE+'?p='+ME.code;
-  if(ph==='pre'){const n=diff(t,CHAL.start);return `【${CHAL.name}】${n===1?'明天就开始':'还有 '+n+' 天开始'} 🌱\n${mdate(CHAL.start)}（星期一）我们一起开始：每天喝够水、走路 20 分钟，打开网页给小花浇水。30 天里打卡满 ${CHAL.pass} 天，就有完成证书。\n还没报名的，点这里：${chalLink()}\n欢迎带家人朋友一起来！`}
+  if(ph==='pre'){const n=diff(t,CHAL.start);return `【${CHAL.name}】${n===1?'明天就开始':'还有 '+n+' 天开始'} 🌱\n${chalDay(CHAL.start)}我们一起开始：每天喝够水、走路 20 分钟，打开网页给小花浇水。30 天里打卡满 ${CHAL.pass} 天，就有完成证书。\n还没报名的，点这里：${chalLink()}\n欢迎带家人朋友一起来！`}
   if(ph==='on'){const d=diff(CHAL.start,t)+1;return `【30天挑战 · 第 ${d} 天】🌱\n${CHAL_TIPS[(d-1)%CHAL_TIPS.length]}\n今天也记得喝够水、走路 20 分钟，再打开小花浇水 👉 ${link}`}
   return ''}
 const chalMsg=x=>`${x.name} 恭喜你完成「${CHAL.name}」🎉 30 天里你打卡了 ${x.ch.got} 天，真的很棒！\n你的完成证书在网页上，打开小花就能保存、转发。\n下一轮你想继续吗？也欢迎带家人朋友一起来～`+(REVIEW_URL?`\n如果你喜欢这 30 天，可以帮我留一句 Google 评价吗？谢谢你！\n${REVIEW_URL}`:'');
 function chalCard(M){
   const {ph,inn,nf,fin,todayN,brought}=chalStats(M);if(!ph)return '';
-  const head=ph==='pre'?`${mdate(CHAL.start)}（星期一）开始，还有 ${diff(today(),CHAL.start)} 天`:ph==='on'?`今天是第 ${diff(CHAL.start,today())+1} 天，一共 ${CHAL.days} 天`:`已经结束了，完成率 ${inn.length?Math.round(fin.length/inn.length*100):0}%`;
+  const head=ph==='pre'?`${chalDay(CHAL.start)}开始，还有 ${diff(today(),CHAL.start)} 天`:ph==='on'?`今天是第 ${diff(CHAL.start,today())+1} 天，一共 ${CHAL.days} 天`:`已经结束了，完成率 ${inn.length?Math.round(fin.length/inn.length*100):0}%`;
   const top=M.filter(x=>x.kids.length).map(x=>({x,n:x.kids.length,n7:x.kids.filter(k=>(+k.checks||0)>=CHAL.ref).length})).sort((a,b)=>b.n-a.n||b.n7-a.n7).slice(0,8);
   const congr=fin.filter(x=>!(GLOG[x.c.id]||new Set()).has('ch:'+CHAL.start));
   const chips=[['参加',inn.length],['新朋友',nf],...(ph==='pre'?[]:[['今天打卡',todayN+'/'+inn.length],['已完成',fin.length]]),['朋友带来的',brought]];
