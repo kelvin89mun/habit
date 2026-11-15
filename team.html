@@ -117,13 +117,13 @@ details.how summary{cursor:pointer;color:var(--coral-text);font-weight:700;font-
 <div id="toast" role="status"></div>
 <script>
 const MILES=[
-  {id:'m1',n:1,name:'启程',stage:'发芽',gift:'电子贺卡 + 伙伴语音祝福'},
-  {id:'m7',n:7,name:'第一周',stage:'长高一大截',gift:'好习惯勋章 + 团队群表扬'},
+  {id:'m1',n:1,name:'启程',stage:'发芽',gift:''},
+  {id:'m7',n:7,name:'第一周',stage:'长高一大截',gift:''},
   /* names say the period, not a day count: the gift comes after N check-ins, so a missed day or two never makes the name wrong */
   {id:'m21',n:18,name:'三个星期',stage:'长出新枝',gift:'分格营养盒'},
-  {id:'m30',n:25,name:'第一个月',stage:'结出花苞',gift:'精美保温杯'},
+  {id:'m30',n:25,name:'第一个月',stage:'结出花苞',gift:''},
   {id:'m66',n:55,name:'习惯养成',stage:'开花',gift:'营养品大礼'},
-  {id:'m90',n:75,name:'毕业',stage:'开满枝头',gift:'毕业证书 + 营养品'}
+  {id:'m90',n:75,name:'毕业',stage:'开满枝头',gift:'营养品'}
 ];
 const CARE={
   1:{t:'第 1 天 · 伙伴关心',q:'营养开始吃了吗？你打算每天什么时候吃？',o:['早餐后吃','午餐后吃','晚餐后吃','还没开始吃'],
@@ -167,7 +167,7 @@ function monthStats(st,k,t){
   const pair=key=>{const w=inW.filter(f=>typeof f[key]==='number'),p=prev.filter(f=>typeof f[key]==='number'),b=w[w.length-1],a=p.length?p[p.length-1]:w[0];return a&&b&&a!==b?[a[key],b[key]]:null};
   const feel=[['e','精神'],['s','睡眠'],['g','肠胃'],['sk','皮肤']].map(([key,l])=>{const q=pair(key);return q?{l,a:q[0],b:q[1],d:q[1]-q[0]}:null}).filter(Boolean);
   const kq=pair('kg'),kg=kq?{a:kq[0],b:kq[1],d:Math.round((kq[1]-kq[0])*10)/10}:null;
-  const gifts=MILES.filter(m=>{const v=st.gifts&&st.gifts[m.id];return typeof v==='string'&&v>=from&&v<=to}).map(m=>m.name);
+  const gifts=MILES.filter(m=>{const v=m.gift&&st.gifts&&st.gifts[m.id];return typeof v==='string'&&v>=from&&v<=to}).map(m=>m.name);
   return {k,from,to,days:ck.filter(d=>d>=from&&d<=to).length,len:MONTH_LEN,total:ck.filter(d=>d<=to).length,plan,tasks,feel,kg,gifts};
 }
 /* every finished month so far, oldest first */
@@ -284,7 +284,7 @@ function info(c){
   const months=S.onboarded?monthsOf(S,t):[],lastM=months[months.length-1],mrNew=lastM&&diff(lastM.to,t)<=10&&!done.has('mr:'+lastM.k)?lastM:null;
   const rs=restockInfo(S,done,start,t);
   const gifts=[],needs=[];
-  for(const m of MILES){const v=S.gifts&&S.gifts[m.id];if(v&&!done.has(m.id))gifts.push({key:m.id,label:m.name,gift:m.gift,date:typeof v==='string'?v:''})}
+  for(const m of MILES){const v=m.gift&&S.gifts&&S.gifts[m.id];if(v&&!done.has(m.id))gifts.push({key:m.id,label:m.name,gift:m.gift,date:typeof v==='string'?v:''})}
   for(const k of kids){const kd=/^\d{4}-\d{2}-\d{2}$/.test(k.state&&k.state.start||'')?k.state.start:'';
     /* the thank-you is for friends who joined from the sign-up week to the last challenge day */
     if((+k.checks||0)>=CHAL.ref&&kd>=CHAL.open&&kd<=add(CHAL.start,CHAL.days-1)&&!done.has('ref:'+k.id))gifts.push({key:'ref:'+k.id,label:'介绍朋友',gift:`介绍谢礼（${nmOf(k)} 打卡满 ${CHAL.ref} 天）`,date:'',friend:nmOf(k)})}
@@ -294,7 +294,7 @@ function info(c){
     if(r.a&&needFor(S,d).includes(r.a)&&!done.has('care:'+d)&&(!r.d||diff(r.d,t)<=30))needs.push({key:'care:'+d,kind:'care',text:`第 ${d} 天：${r.a}`,q:(careFor(S,d)||{}).q||''})}
   if(Array.isArray(S.questions))for(const q of S.questions){if(!q||!q.text)continue;const k='q:'+hash((q.day||'')+'|'+q.text),qd=start&&q.day?add(start,q.day-1):null;
     if(!done.has(k)&&(!qd||diff(qd,t)<=30))needs.push({key:k,kind:'ask',text:'问题：'+q.text})}
-  return {c,S,n,last,since,start,dn:start?diff(start,t)+1:0,stage:n>=56?3:n>=26?2:1,next:MILES.find(m=>n<m.n),gifts,needs,
+  return {c,S,n,last,since,start,dn:start?diff(start,t)+1:0,stage:n>=56?3:n>=26?2:1,next:MILES.find(m=>n<m.n&&m.gift),gifts,needs,
     today:!!ck[t],act7:days.filter(d=>{const x=diff(d,t);return x>=0&&x<7}).length,phone:note.phone||'',note:note.note||'',
     name:String(S.name||c.name||'（没有名字）').slice(0,40),partner:c.partner_code,plan,tk7,kg,months,mrNew,rs,nu,ch,refBy,kids}
 }
@@ -582,7 +582,7 @@ function openCus(id){
   const K=x.kg,kd=K.length>1?K[K.length-1].kg-K[0].kg:0;
   const ans=S.answers&&typeof S.answers==='object'?Object.keys(S.answers).sort((a,b)=>a-b):[];
   const qs=Array.isArray(S.questions)?S.questions:[];
-  const reached=MILES.filter(m=>S.gifts&&S.gifts[m.id]);
+  const reached=MILES.filter(m=>m.gift&&S.gifts&&S.gifts[m.id]);
   const done=GLOG[c.id]||new Set();
   $('#modal').innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(x.name)}">
     <div class="top"><div><h2>${esc(x.name)}</h2><p class="muted small">${ME.is_leader&&c.partner_code!==ME.code?esc(pname(c.partner_code))+' 的客人 · ':''}${PLANS[x.plan].emoji} ${esc(PLANS[x.plan].name)} · 第 ${x.dn} 天 · 累计 ${x.n} 天 · ${STAGE[x.stage]} · 积分 ${esc(S.points||0)}</p>
