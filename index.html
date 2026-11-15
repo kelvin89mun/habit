@@ -2153,7 +2153,7 @@ function viewToday(){
   return hero(done?'':btn+`<p class="h-note">${progLine(false)}</p>`+mk)+flwNote()+
     (done?doneCard(mk)+careCard():'')+chalRow()+(mn?monthCard(mn):'')+
     tasksCard()+tiles(done)+
-    (rows?`<section class="card list">${rows}</section>`:'')+demoTools()+footer();
+    `<section class="card list">${rows}${catalogRow()}</section>`+demoTools()+footer();
 }
 /* a finished month she hasn't opened yet (shown for ten days after it ends) */
 function monthNew(){const L=monthsOf(S,today()),m=L[L.length-1];return m&&diff(m.to,today())<=10&&!(S.seenM||[]).includes(m.k)?m:null}
@@ -2541,6 +2541,10 @@ function inviteText(){
 }
 const inviteHref=()=>'https://wa.me/?text='+encodeURIComponent(inviteText());
 const inviteRow=()=>`<a class="rowi" href="${inviteHref()}" target="_blank" rel="noopener"><span class="ri">${PEOPLE}</span><span class="rt">邀请朋友一起来<small>朋友也可以一起养一盆健康花</small></span>${CHEV}</a>`;
+/* the team's product catalogue; it carries her partner's WhatsApp number, so any question goes to her own partner */
+const PILL=ic('<rect x="2.8" y="8.6" width="18.4" height="6.8" rx="3.4" transform="rotate(-38 12 12)"/><path d="M9.9 9.3l4.2 5.4"/>');
+const catURL=()=>{const ph=String(PI.phone||(S&&S.pphone)||'').replace(/\D/g,'');return 'https://kelvin89mun.github.io/USANA-CLASS/'+(ph?'?wa='+ph:'')};
+const catalogRow=()=>`<a class="rowi" href="${catURL()}"><span class="ri">${PILL}</span><span class="rt">${isNu(S)?'看看营养品':'看看营养品 · 补货'}<small>${isNu(S)?'看哪款适合你，直接问 ':'会员价、补货，直接问 '}${esc(S.partner||'你的伙伴')}</small></span>${CHEV}</a>`;
 /* sign-up page: what she's joining, and who asked her */
 function chalWelcome(){
   const c=chalOf(S,today());
